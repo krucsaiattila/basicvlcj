@@ -94,7 +94,7 @@ public class TestPlayer extends VlcjTest {
     private final JFrame mainFrame;
     private final Canvas videoSurface;
     private final JPanel controlsPanel;
-    private final JPanel videoAdjustPanel;
+    //private final JPanel videoAdjustPanel;
 
     private final JFrame equalizerFrame;
 
@@ -178,13 +178,13 @@ public class TestPlayer extends VlcjTest {
         mediaPlayer.setEnableMouseInputHandling(false);
 
         controlsPanel = new PlayerControlsPanel(mediaPlayer);
-        videoAdjustPanel = new PlayerVideoAdjustPanel(mediaPlayer);
+        //videoAdjustPanel = new PlayerVideoAdjustPanel(mediaPlayer);
 
         mainFrame.setLayout(new BorderLayout());
         mainFrame.setBackground(Color.black);
         mainFrame.add(videoSurface, BorderLayout.CENTER);
         mainFrame.add(controlsPanel, BorderLayout.SOUTH);
-        mainFrame.add(videoAdjustPanel, BorderLayout.EAST);
+        //mainFrame.add(videoAdjustPanel, BorderLayout.EAST);
         mainFrame.setJMenuBar(buildMenuBar());
         mainFrame.pack();
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -222,7 +222,7 @@ public class TestPlayer extends VlcjTest {
                     if(keyEvent.getID() == KeyEvent.KEY_PRESSED) {
                         if(keyEvent.getKeyCode() == KeyEvent.VK_F12) {
                             controlsPanel.setVisible(!controlsPanel.isVisible());
-                            videoAdjustPanel.setVisible(!videoAdjustPanel.isVisible());
+                            //videoAdjustPanel.setVisible(!videoAdjustPanel.isVisible());
                             mainFrame.getJMenuBar().setVisible(!mainFrame.getJMenuBar().isVisible());
                             mainFrame.invalidate();
                             mainFrame.validate();
@@ -272,7 +272,7 @@ public class TestPlayer extends VlcjTest {
 
         if(mediaPlayerFactory.isEqualizerAvailable()) {
             equalizerFrame.pack();
-            equalizerFrame.setVisible(true);
+            //equalizerFrame.setVisible(true);
         }
 
         mediaPlayer.addMediaPlayerEventListener(new TestPlayerMediaPlayerEventListener());
