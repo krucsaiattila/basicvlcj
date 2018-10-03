@@ -22,10 +22,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -78,7 +75,6 @@ public class PlayerControlsPanel extends JPanel {
     private JButton captureButton;
 
     private JButton ejectButton;
-    private JButton connectButton;
 
     private JButton fullScreenButton;
 
@@ -166,10 +162,6 @@ public class PlayerControlsPanel extends JPanel {
         ejectButton.setIcon(new ImageIcon(getClass().getClassLoader().getResource("icons/control_eject_blue.png")));
         ejectButton.setToolTipText("Load/eject media");
 
-        connectButton = new JButton();
-        connectButton.setIcon(new ImageIcon(getClass().getClassLoader().getResource("icons/connect.png")));
-        connectButton.setToolTipText("Connect to media");
-
         fileChooser = new JFileChooser();
         fileChooser.setApproveButtonText("Play");
         fileChooser.addChoosableFileFilter(SwingFileFilterFactory.newVideoFileFilter());
@@ -225,7 +217,6 @@ public class PlayerControlsPanel extends JPanel {
         bottomPanel.add(captureButton);
 
         bottomPanel.add(ejectButton);
-        bottomPanel.add(connectButton);
 
         bottomPanel.add(fullScreenButton);
 
@@ -398,18 +389,6 @@ public class PlayerControlsPanel extends JPanel {
                 mediaPlayer.enableOverlay(false);
                 if(JFileChooser.APPROVE_OPTION == fileChooser.showOpenDialog(PlayerControlsPanel.this)) {
                     mediaPlayer.playMedia(fileChooser.getSelectedFile().getAbsolutePath());
-                }
-                mediaPlayer.enableOverlay(true);
-            }
-        });
-
-        connectButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                mediaPlayer.enableOverlay(false);
-                String mediaUrl = JOptionPane.showInputDialog(PlayerControlsPanel.this, "Enter a media URL", "Connect to media", JOptionPane.QUESTION_MESSAGE);
-                if(mediaUrl != null && mediaUrl.length() > 0) {
-                    mediaPlayer.playMedia(mediaUrl);
                 }
                 mediaPlayer.enableOverlay(true);
             }

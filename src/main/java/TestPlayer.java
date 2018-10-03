@@ -560,6 +560,13 @@ public class TestPlayer extends VlcjTest {
         @Override
         public void keyPressed(KeyEvent e) {
             logger.debug("keyPressed(e={})", e);
+            if(e.getKeyCode()==KeyEvent.VK_SPACE){
+                if(mediaPlayer.isPlaying() == true){
+                    mediaPlayer.setPause(true);
+                } else {
+                    mediaPlayer.setPause(false);
+                }
+            }
         }
 
         @Override
