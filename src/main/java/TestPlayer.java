@@ -94,15 +94,10 @@ public class TestPlayer extends VlcjTest {
     private final JFrame mainFrame;
     private final Canvas videoSurface;
     private final JPanel controlsPanel;
-    //private final JPanel videoAdjustPanel;
-
-    private final JFrame equalizerFrame;
 
     private MediaPlayerFactory mediaPlayerFactory;
 
     private EmbeddedMediaPlayer mediaPlayer;
-
-    private Equalizer equalizer;
 
     public static void main(final String[] args) throws Exception {
         LibVlc libVlc = LibVlcFactory.factory().create();
@@ -178,13 +173,11 @@ public class TestPlayer extends VlcjTest {
         mediaPlayer.setEnableMouseInputHandling(false);
 
         controlsPanel = new PlayerControlsPanel(mediaPlayer);
-        //videoAdjustPanel = new PlayerVideoAdjustPanel(mediaPlayer);
 
         mainFrame.setLayout(new BorderLayout());
         mainFrame.setBackground(Color.black);
         mainFrame.add(videoSurface, BorderLayout.CENTER);
         mainFrame.add(controlsPanel, BorderLayout.SOUTH);
-        //mainFrame.add(videoAdjustPanel, BorderLayout.EAST);
         mainFrame.setJMenuBar(buildMenuBar());
         mainFrame.pack();
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -205,14 +198,6 @@ public class TestPlayer extends VlcjTest {
             }
         });
 
-        if(mediaPlayerFactory.isEqualizerAvailable()) {
-            equalizer = mediaPlayerFactory.newEqualizer();
-            equalizerFrame = new EqualizerFrame(mediaPlayerFactory.getEqualizerBandFrequencies(), mediaPlayerFactory.getEqualizerPresetNames(), mediaPlayerFactory, mediaPlayer, equalizer);
-        }
-        else {
-            equalizerFrame = null;
-        }
-
         // Global AWT key handler, you're better off using Swing's InputMap and
         // ActionMap with a JFrame - that would solve all sorts of focus issues too
         Toolkit.getDefaultToolkit().addAWTEventListener(new AWTEventListener() {
@@ -222,7 +207,6 @@ public class TestPlayer extends VlcjTest {
                     if(keyEvent.getID() == KeyEvent.KEY_PRESSED) {
                         if(keyEvent.getKeyCode() == KeyEvent.VK_F12) {
                             controlsPanel.setVisible(!controlsPanel.isVisible());
-                            //videoAdjustPanel.setVisible(!videoAdjustPanel.isVisible());
                             mainFrame.getJMenuBar().setVisible(!mainFrame.getJMenuBar().isVisible());
                             mainFrame.invalidate();
                             mainFrame.validate();
@@ -269,11 +253,6 @@ public class TestPlayer extends VlcjTest {
         }, AWTEvent.KEY_EVENT_MASK);
 
         mainFrame.setVisible(true);
-
-        if(mediaPlayerFactory.isEqualizerAvailable()) {
-            equalizerFrame.pack();
-            //equalizerFrame.setVisible(true);
-        }
 
         mediaPlayer.addMediaPlayerEventListener(new TestPlayerMediaPlayerEventListener());
 
@@ -450,7 +429,7 @@ public class TestPlayer extends VlcjTest {
             }
 
             // Demo the marquee
-            mediaPlayer.setMarqueeText("vlcj java bindings for vlc");
+            //mediaPlayer.setMarqueeText("vlcj java bindings for vlc");
             mediaPlayer.setMarqueeSize(40);
             mediaPlayer.setMarqueeOpacity(95);
             mediaPlayer.setMarqueeColour(Color.white);

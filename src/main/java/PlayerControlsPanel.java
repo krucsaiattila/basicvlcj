@@ -148,7 +148,7 @@ public class PlayerControlsPanel extends JPanel {
         nextChapterButton.setToolTipText("Go to next chapter");
 
         toggleMuteButton = new JButton();
-        toggleMuteButton.setIcon(new ImageIcon(getClass().getClassLoader().getResource("icons/sound_mute.png")));
+        toggleMuteButton.setIcon(new ImageIcon(getClass().getClassLoader().getResource("icons/sound.png")));
         toggleMuteButton.setToolTipText("Toggle Mute");
 
         volumeSlider = new JSlider();
@@ -362,6 +362,11 @@ public class PlayerControlsPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 mediaPlayer.mute();
+                if(mediaPlayer.isMute()){
+                    toggleMuteButton.setIcon(new ImageIcon(getClass().getClassLoader().getResource("icons/sound.png")));
+                } else {
+                    toggleMuteButton.setIcon(new ImageIcon(getClass().getClassLoader().getResource("icons/sound_mute.png")));
+                }
             }
         });
 
@@ -372,6 +377,11 @@ public class PlayerControlsPanel extends JPanel {
                 // if(!source.getValueIsAdjusting()) {
                 mediaPlayer.setVolume(source.getValue());
                 // }
+//                if(volumeSlider.getValue() == 0){
+//                    toggleMuteButton.setIcon(new ImageIcon(getClass().getClassLoader().getResource("icons/sound_mute.png")));
+//                } else if(!mediaPlayer.isMute()){
+//                    toggleMuteButton.setIcon(new ImageIcon(getClass().getClassLoader().getResource("icons/sound.png")));
+//                }
             }
         });
 
