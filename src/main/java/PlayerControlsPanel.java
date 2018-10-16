@@ -74,6 +74,7 @@ public class PlayerControlsPanel extends JPanel {
     private JButton subTitlesButton;
 
     private JFileChooser fileChooser;
+    private JFileChooser subtitleChooser;
 
     private boolean mousePressedPlaying = false;
 
@@ -170,7 +171,14 @@ public class PlayerControlsPanel extends JPanel {
 
         subTitlesButton = new JButton();
         subTitlesButton.setIcon(new ImageIcon(getClass().getClassLoader().getResource("icons/comment.png")));
-        subTitlesButton.setToolTipText("Cycle sub-titles");
+        subTitlesButton.setToolTipText("Select subtitle");
+
+        subtitleChooser = new JFileChooser();
+        subtitleChooser.setApproveButtonText("Choose");
+        subtitleChooser.addChoosableFileFilter(SwingFileFilterFactory.newSubtitleFileFilter());
+        defaultFilter = SwingFileFilterFactory.newSubtitleFileFilter();
+        subtitleChooser.addChoosableFileFilter(defaultFilter);
+        subtitleChooser.setFileFilter(defaultFilter);
 
         previousChapterButton.getInputMap().put(KeyStroke.getKeyStroke("SPACE"), "none");
         rewindButton.getInputMap().put(KeyStroke.getKeyStroke("SPACE"), "none");
@@ -410,17 +418,22 @@ public class PlayerControlsPanel extends JPanel {
         subTitlesButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int spu = mediaPlayer.getSpu();
-                if(spu > -1) {
-                    spu ++ ;
-                    if(spu > mediaPlayer.getSpuCount()) {
-                        spu = -1;
-                    }
+                mediaPlayer.enableOverlay(false);
+                if(JFileChooser.APPROVE_OPTION == subtitleChooser.showOpenDialog(PlayerControlsPanel.this)) {
+                    mediaPlayer.setSubTitleFile(subtitleChooser.getSelectedFile().getAbsolutePath());
                 }
-                else {
-                    spu = 0;
-                }
-                mediaPlayer.setSpu(spu);
+                mediaPlayer.enableOverlay(true);
+//                int spu = mediaPlayer.getSpu();
+//                if(spu > -1) {
+//                    spu ++ ;
+//                    if(spu > mediaPlayer.getSpuCount()) {
+//                        spu = -1;
+//                    }
+//                }
+//                else {
+//                    spu = 0;
+//                }
+//                mediaPlayer.setSpu(spu);
             }
         });
     }

@@ -282,10 +282,6 @@ public class TestPlayer extends VlcjTest {
         mediaPlayFileMenuItem.setMnemonic('f');
         mediaMenu.add(mediaPlayFileMenuItem);
 
-        JMenuItem mediaPlayStreamMenuItem = new JMenuItem("Play Stream...");
-        mediaPlayFileMenuItem.setMnemonic('s');
-        mediaMenu.add(mediaPlayStreamMenuItem);
-
         mediaMenu.add(new JSeparator());
 
         JMenuItem mediaExitMenuItem = new JMenuItem("Exit");
