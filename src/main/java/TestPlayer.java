@@ -210,42 +210,12 @@ public class TestPlayer extends VlcjTest {
                             mainFrame.getJMenuBar().setVisible(!mainFrame.getJMenuBar().isVisible());
                             mainFrame.invalidate();
                             mainFrame.validate();
-                        }
-                        else if(keyEvent.getKeyCode() == KeyEvent.VK_A) {
-                            mediaPlayer.setAudioDelay(mediaPlayer.getAudioDelay() - 50000);
-                        }
-                        else if(keyEvent.getKeyCode() == KeyEvent.VK_S) {
-                            mediaPlayer.setAudioDelay(mediaPlayer.getAudioDelay() + 50000);
-                        }
-                        // else if(keyEvent.getKeyCode() == KeyEvent.VK_N) {
-                        // mediaPlayer.nextFrame();
-                        // }
-                        else if(keyEvent.getKeyCode() == KeyEvent.VK_1) {
-                            mediaPlayer.setTime(60000 * 1);
-                        }
-                        else if(keyEvent.getKeyCode() == KeyEvent.VK_2) {
-                            mediaPlayer.setTime(60000 * 2);
-                        }
-                        else if(keyEvent.getKeyCode() == KeyEvent.VK_3) {
-                            mediaPlayer.setTime(60000 * 3);
-                        }
-                        else if(keyEvent.getKeyCode() == KeyEvent.VK_4) {
-                            mediaPlayer.setTime(60000 * 4);
-                        }
-                        else if(keyEvent.getKeyCode() == KeyEvent.VK_5) {
-                            mediaPlayer.setTime(60000 * 5);
-                        }
-                        else if(keyEvent.getKeyCode() == KeyEvent.VK_6) {
-                            mediaPlayer.setTime(60000 * 6);
-                        }
-                        else if(keyEvent.getKeyCode() == KeyEvent.VK_7) {
-                            mediaPlayer.setTime(60000 * 7);
-                        }
-                        else if(keyEvent.getKeyCode() == KeyEvent.VK_8) {
-                            mediaPlayer.setTime(60000 * 8);
-                        }
-                        else if(keyEvent.getKeyCode() == KeyEvent.VK_9) {
-                            mediaPlayer.setTime(60000 * 9);
+                        } else if(keyEvent.getKeyCode()==KeyEvent.VK_SPACE){
+                            if(mediaPlayer.isPlaying()){
+                                mediaPlayer.setPause(true);
+                            } else {
+                                mediaPlayer.setPause(false);
+                            }
                         }
                     }
                 }
@@ -419,15 +389,6 @@ public class TestPlayer extends VlcjTest {
                 });
             }
 
-            // You can set a logo like this if you like...
-            File logoFile = new File("./etc/vlcj-logo.png");
-            if(logoFile.exists()) {
-                mediaPlayer.setLogoFile(logoFile.getAbsolutePath());
-                mediaPlayer.setLogoOpacity(0.5f);
-                mediaPlayer.setLogoLocation(10, 10);
-                mediaPlayer.enableLogo(true);
-            }
-
             // Demo the marquee
             //mediaPlayer.setMarqueeText("vlcj java bindings for vlc");
             mediaPlayer.setMarqueeSize(40);
@@ -556,18 +517,6 @@ public class TestPlayer extends VlcjTest {
      *
      */
     private final class TestPlayerKeyListener extends KeyAdapter {
-
-        @Override
-        public void keyPressed(KeyEvent e) {
-            logger.debug("keyPressed(e={})", e);
-            if(e.getKeyCode()==KeyEvent.VK_SPACE){
-                if(mediaPlayer.isPlaying() == true){
-                    mediaPlayer.setPause(true);
-                } else {
-                    mediaPlayer.setPause(false);
-                }
-            }
-        }
 
         @Override
         public void keyReleased(KeyEvent e) {

@@ -27,14 +27,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JSlider;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -178,6 +171,19 @@ public class PlayerControlsPanel extends JPanel {
         subTitlesButton = new JButton();
         subTitlesButton.setIcon(new ImageIcon(getClass().getClassLoader().getResource("icons/comment.png")));
         subTitlesButton.setToolTipText("Cycle sub-titles");
+
+        previousChapterButton.getInputMap().put(KeyStroke.getKeyStroke("SPACE"), "none");
+        rewindButton.getInputMap().put(KeyStroke.getKeyStroke("SPACE"), "none");
+        stopButton.getInputMap().put(KeyStroke.getKeyStroke("SPACE"), "none");
+        pauseButton.getInputMap().put(KeyStroke.getKeyStroke("SPACE"), "none");
+        playButton.getInputMap().put(KeyStroke.getKeyStroke("SPACE"), "none");
+        fastForwardButton.getInputMap().put(KeyStroke.getKeyStroke("SPACE"), "none");
+        nextChapterButton.getInputMap().put(KeyStroke.getKeyStroke("SPACE"), "none");
+        toggleMuteButton.getInputMap().put(KeyStroke.getKeyStroke("SPACE"), "none");
+        captureButton.getInputMap().put(KeyStroke.getKeyStroke("SPACE"), "none");
+        ejectButton.getInputMap().put(KeyStroke.getKeyStroke("SPACE"), "none");
+        fullScreenButton.getInputMap().put(KeyStroke.getKeyStroke("SPACE"), "none");
+        subTitlesButton.getInputMap().put(KeyStroke.getKeyStroke("SPACE"), "none");
     }
 
     private void layoutControls() {
