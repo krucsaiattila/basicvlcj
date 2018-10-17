@@ -23,6 +23,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.*;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -48,6 +49,8 @@ public class PlayerControlsPanel extends JPanel {
     private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
     private final EmbeddedMediaPlayer mediaPlayer;
+    private final JMenuBar menuBar;
+    private final JFrame mainFrame;
 
     private JLabel timeLabel;
     //    private JProgressBar positionProgressBar;
@@ -78,8 +81,14 @@ public class PlayerControlsPanel extends JPanel {
 
     private boolean mousePressedPlaying = false;
 
-    public PlayerControlsPanel(EmbeddedMediaPlayer mediaPlayer) {
+    public static List<String> SUBTITLE_LIST;
+
+    public PlayerControlsPanel(EmbeddedMediaPlayer mediaPlayer, JMenuBar menuBar, JFrame mainFrame) {
         this.mediaPlayer = mediaPlayer;
+        this.menuBar = menuBar;
+        this.mainFrame = mainFrame;
+        SUBTITLE_LIST = new ArrayList<>();
+        SUBTITLE_LIST.add("");
 
         createUI();
 
@@ -166,7 +175,7 @@ public class PlayerControlsPanel extends JPanel {
         fileChooser.setFileFilter(defaultFilter);
 
         fullScreenButton = new JButton();
-        fullScreenButton.setIcon(new ImageIcon(getClass().getClassLoader().getResource("icons/image.png")));
+        fullScreenButton.setIcon(new ImageIcon(getClass().getClassLoader().getResource("icons/arrow_out.png")));
         fullScreenButton.setToolTipText("Toggle full-screen");
 
         subTitlesButton = new JButton();
@@ -379,14 +388,7 @@ public class PlayerControlsPanel extends JPanel {
             @Override
             public void stateChanged(ChangeEvent e) {
                 JSlider source = (JSlider)e.getSource();
-                // if(!source.getValueIsAdjusting()) {
                 mediaPlayer.setVolume(source.getValue());
-                // }
-//                if(volumeSlider.getValue() == 0){
-//                    toggleMuteButton.setIcon(new ImageIcon(getClass().getClassLoader().getResource("icons/sound_mute.png")));
-//                } else if(!mediaPlayer.isMute()){
-//                    toggleMuteButton.setIcon(new ImageIcon(getClass().getClassLoader().getResource("icons/sound.png")));
-//                }
             }
         });
 
@@ -412,6 +414,10 @@ public class PlayerControlsPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 mediaPlayer.toggleFullScreen();
+                setVisible(!isVisible());
+                menuBar.setVisible(!menuBar.isVisible());
+                mainFrame.invalidate();
+                mainFrame.validate();
             }
         });
 
@@ -420,6 +426,8 @@ public class PlayerControlsPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 mediaPlayer.enableOverlay(false);
                 if(JFileChooser.APPROVE_OPTION == subtitleChooser.showOpenDialog(PlayerControlsPanel.this)) {
+                    SUBTITLE_LIST.add(subtitleChooser.getSelectedFile().toString());
+
                     mediaPlayer.setSubTitleFile(subtitleChooser.getSelectedFile().getAbsolutePath());
                 }
                 mediaPlayer.enableOverlay(true);
