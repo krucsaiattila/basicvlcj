@@ -18,10 +18,7 @@
  */
 
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import java.util.concurrent.Executors;
@@ -35,6 +32,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileFilter;
 
 import uk.co.caprica.vlcj.binding.LibVlcConst;
+import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 import uk.co.caprica.vlcj.filter.swing.SwingFileFilterFactory;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
@@ -49,8 +47,7 @@ public class PlayerControlsPanel extends JPanel {
     private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
     private final EmbeddedMediaPlayer mediaPlayer;
-    private final JMenuBar menuBar;
-    private final JFrame mainFrame;
+    private final TestPlayer testPlayer;
 
     private JLabel timeLabel;
     //    private JProgressBar positionProgressBar;
@@ -81,14 +78,9 @@ public class PlayerControlsPanel extends JPanel {
 
     private boolean mousePressedPlaying = false;
 
-    public static List<String> SUBTITLE_LIST;
-
-    public PlayerControlsPanel(EmbeddedMediaPlayer mediaPlayer, JMenuBar menuBar, JFrame mainFrame) {
+    public PlayerControlsPanel(EmbeddedMediaPlayer mediaPlayer, TestPlayer testPlayer) {
         this.mediaPlayer = mediaPlayer;
-        this.menuBar = menuBar;
-        this.mainFrame = mainFrame;
-        SUBTITLE_LIST = new ArrayList<>();
-        SUBTITLE_LIST.add("");
+        this.testPlayer = testPlayer;
 
         createUI();
 
@@ -402,11 +394,7 @@ public class PlayerControlsPanel extends JPanel {
         ejectButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                mediaPlayer.enableOverlay(false);
-                if(JFileChooser.APPROVE_OPTION == fileChooser.showOpenDialog(PlayerControlsPanel.this)) {
-                    mediaPlayer.playMedia(fileChooser.getSelectedFile().getAbsolutePath());
-                }
-                mediaPlayer.enableOverlay(true);
+                addMedia();
             }
         });
 
@@ -415,9 +403,9 @@ public class PlayerControlsPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 mediaPlayer.toggleFullScreen();
                 setVisible(!isVisible());
-                menuBar.setVisible(!menuBar.isVisible());
-                mainFrame.invalidate();
-                mainFrame.validate();
+                testPlayer.getMenuBar().setVisible(!testPlayer.getMenuBar().isVisible());
+                testPlayer.getMainFrame().invalidate();
+                testPlayer.getMainFrame().validate();
             }
         });
 
@@ -426,8 +414,8 @@ public class PlayerControlsPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 mediaPlayer.enableOverlay(false);
                 if(JFileChooser.APPROVE_OPTION == subtitleChooser.showOpenDialog(PlayerControlsPanel.this)) {
-                    SUBTITLE_LIST.add(subtitleChooser.getSelectedFile().toString());
-
+                    TestPlayer.SUBTITLE_LIST.add(subtitleChooser.getSelectedFile().toString());
+                    testPlayer.getMenuBar().refreshSubtitleItems(TestPlayer.SUBTITLE_LIST);
                     mediaPlayer.setSubTitleFile(subtitleChooser.getSelectedFile().getAbsolutePath());
                 }
                 mediaPlayer.enableOverlay(true);
@@ -495,5 +483,13 @@ public class PlayerControlsPanel extends JPanel {
 
     private void updateVolume(int value) {
         volumeSlider.setValue(value);
+    }
+
+    public void addMedia() {
+        mediaPlayer.enableOverlay(false);
+        if(JFileChooser.APPROVE_OPTION == fileChooser.showOpenDialog(PlayerControlsPanel.this)) {
+            mediaPlayer.playMedia(fileChooser.getSelectedFile().getAbsolutePath());
+        }
+        mediaPlayer.enableOverlay(true);
     }
 }

@@ -46,12 +46,14 @@ public class TestPlayer extends VlcjTest implements MouseListener {
 
     private final JFrame mainFrame;
     private final Canvas videoSurface;
-    private final JPanel controlsPanel;
-    private JMenuBar menuBar;
+    private final PlayerControlsPanel controlsPanel;
+    private MenuBar menuBar;
 
     private MediaPlayerFactory mediaPlayerFactory;
 
     private EmbeddedMediaPlayer mediaPlayer;
+
+    public static List<String> SUBTITLE_LIST;
 
     public static void main(final String[] args) throws Exception {
         LibVlc libVlc = LibVlcFactory.factory().create();
@@ -70,6 +72,8 @@ public class TestPlayer extends VlcjTest implements MouseListener {
     }
 
     public TestPlayer(String[] args) {
+        SUBTITLE_LIST = new ArrayList<>();
+
         videoSurface = new Canvas();
 
         videoSurface.setBackground(Color.black);
@@ -117,9 +121,9 @@ public class TestPlayer extends VlcjTest implements MouseListener {
         mediaPlayer.setEnableKeyInputHandling(false);
         mediaPlayer.setEnableMouseInputHandling(false);
 
-        menuBar = buildMenuBar();
+        menuBar = new MenuBar(mainFrame, this);
 
-        controlsPanel = new PlayerControlsPanel(mediaPlayer, menuBar, mainFrame);
+        controlsPanel = new PlayerControlsPanel(mediaPlayer, this);
 
         mainFrame.setLayout(new BorderLayout());
         mainFrame.setBackground(Color.black);
@@ -214,65 +218,6 @@ public class TestPlayer extends VlcjTest implements MouseListener {
             // mediaPlayer.setOverlay(test);
             // mediaPlayer.enableOverlay(true);
         }
-    }
-
-    private JMenuBar buildMenuBar() {
-
-        JMenuBar menuBar = new JMenuBar();
-
-        JMenu mediaMenu = new JMenu("Media");
-        mediaMenu.setMnemonic('m');
-
-        JMenuItem mediaPlayFileMenuItem = new JMenuItem("Play File...");
-        mediaPlayFileMenuItem.setMnemonic('f');
-        mediaMenu.add(mediaPlayFileMenuItem);
-
-        mediaMenu.add(new JSeparator());
-
-        JMenuItem mediaExitMenuItem = new JMenuItem("Exit");
-        mediaExitMenuItem.setMnemonic('x');
-        mediaMenu.add(mediaExitMenuItem);
-
-        menuBar.add(mediaMenu);
-
-        JMenu playbackMenu = new JMenu("Playback");
-        playbackMenu.setMnemonic('p');
-
-        JMenu playbackChapterMenu = new JMenu("Chapter");
-        playbackChapterMenu.setMnemonic('c');
-        for(int i = 1; i <= 25; i ++ ) {
-            JMenuItem chapterMenuItem = new JMenuItem("Chapter " + i);
-            playbackChapterMenu.add(chapterMenuItem);
-        }
-        playbackMenu.add(playbackChapterMenu);
-
-        JMenu subtitlesMenu = new JMenu("Subtitles");
-        playbackChapterMenu.setMnemonic('s');
-
-        for (String s:PlayerControlsPanel.SUBTITLE_LIST) {
-            JMenuItem subMenuItem = new JMenuItem(s);
-            subtitlesMenu.add(subMenuItem);
-        }
-
-        String[] subs = {""};
-        for(int i = 0; i < subs.length; i ++ ) {
-            JMenuItem subtitlesMenuItem = new JMenuItem(subs[i]);
-            subtitlesMenu.add(subtitlesMenuItem);
-        }
-        playbackMenu.add(subtitlesMenu);
-
-        menuBar.add(playbackMenu);
-
-        JMenu helpMenu = new JMenu("Help");
-        helpMenu.setMnemonic('h');
-
-        JMenuItem helpAboutMenuItem = new JMenuItem("About...");
-        helpAboutMenuItem.setMnemonic('a');
-        helpMenu.add(helpAboutMenuItem);
-
-        menuBar.add(helpMenu);
-
-        return menuBar;
     }
 
     @Override
@@ -475,4 +420,17 @@ public class TestPlayer extends VlcjTest implements MouseListener {
             logger.debug("keyTyped(e={})", e);
         }
     }
+
+    public JFrame getMainFrame() {
+        return mainFrame;
+    }
+
+    public PlayerControlsPanel getControlsPanel() {
+        return controlsPanel;
+    }
+
+    public MenuBar getMenuBar() {
+        return menuBar;
+    }
+
 }
