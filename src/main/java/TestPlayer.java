@@ -392,6 +392,10 @@ public class TestPlayer extends VlcjTest implements MouseMotionListener, MouseLi
         return menuBar;
     }
 
+    public EmbeddedMediaPlayer getMediaPlayer() {
+        return mediaPlayer;
+    }
+
     public boolean isControlPanelVisible() {
         return controlPanelVisible;
     }

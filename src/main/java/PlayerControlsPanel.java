@@ -394,6 +394,7 @@ public class PlayerControlsPanel extends JPanel {
         ejectButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                testPlayer.getMenuBar().removeSubtitles();
                 addMedia();
             }
         });
@@ -410,8 +411,7 @@ public class PlayerControlsPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 mediaPlayer.enableOverlay(false);
                 if(JFileChooser.APPROVE_OPTION == subtitleChooser.showOpenDialog(PlayerControlsPanel.this)) {
-                    TestPlayer.SUBTITLE_LIST.add(subtitleChooser.getSelectedFile().toString());
-                    testPlayer.getMenuBar().refreshSubtitleItems(TestPlayer.SUBTITLE_LIST);
+                    testPlayer.getMenuBar().handleSubtitles(subtitleChooser.getSelectedFile().toString());
                     mediaPlayer.setSubTitleFile(subtitleChooser.getSelectedFile().getAbsolutePath());
                 }
                 mediaPlayer.enableOverlay(true);
@@ -484,6 +484,7 @@ public class PlayerControlsPanel extends JPanel {
     public void addMedia() {
         mediaPlayer.enableOverlay(false);
         if(JFileChooser.APPROVE_OPTION == fileChooser.showOpenDialog(PlayerControlsPanel.this)) {
+            testPlayer.getMenuBar().handleSubtitles(String.valueOf(mediaPlayer.getSpu()));
             mediaPlayer.playMedia(fileChooser.getSelectedFile().getAbsolutePath());
         }
         mediaPlayer.enableOverlay(true);

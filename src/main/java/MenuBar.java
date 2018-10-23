@@ -1,7 +1,10 @@
+import org.omg.CORBA.INTERNAL;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MenuBar extends JMenuBar implements ActionListener {
@@ -14,13 +17,21 @@ public class MenuBar extends JMenuBar implements ActionListener {
     private JMenu subtitlesMenu;
     private JMenu helpMenu;
     private JMenuItem helpAboutMenuItem;
+    private JMenuItem noSubtitle;
 
     private JFrame mainFrame;
     private TestPlayer testPlayer;
 
+    private List<JMenuItem> subtitleList;
+
     public MenuBar(JFrame mainFrame, TestPlayer testPlayer){
         this.mainFrame = mainFrame;
         this.testPlayer = testPlayer;
+
+        noSubtitle = new JMenuItem("No subtitle");
+        noSubtitle.addActionListener(this);
+
+        subtitleList = new ArrayList<>();
 
         mediaMenu = new JMenu("Media");
         mediaMenu.setMnemonic('m');
@@ -51,9 +62,8 @@ public class MenuBar extends JMenuBar implements ActionListener {
         playbackMenu.add(playbackChapterMenu);
 
         subtitlesMenu = new JMenu("Subtitles");
+        subtitlesMenu.add(noSubtitle);
         playbackChapterMenu.setMnemonic('s');
-
-        refreshSubtitleItems(TestPlayer.SUBTITLE_LIST);
 
         playbackMenu.add(subtitlesMenu);
 
@@ -69,13 +79,13 @@ public class MenuBar extends JMenuBar implements ActionListener {
         add(helpMenu);
     }
 
-    public void refreshSubtitleItems(List<String> subtitles){
-        subtitlesMenu.removeAll();
-        for (String s:TestPlayer.SUBTITLE_LIST) {
-            if(!TestPlayer.SUBTITLE_LIST.contains(s)){
-                JMenuItem subMenuItem = new JMenuItem(s);
-                subtitlesMenu.add(subMenuItem);
-            }
+    public void handleSubtitles(String subtitle){
+        if(!TestPlayer.SUBTITLE_LIST.contains(subtitle)){
+            JMenuItem subMenuItem = new JMenuItem(subtitle);
+            subMenuItem.addActionListener(this);
+            subtitlesMenu.add(subMenuItem);
+            subtitleList.add(subMenuItem);
+            TestPlayer.SUBTITLE_LIST.add(subtitle);
         }
     }
 
@@ -85,7 +95,26 @@ public class MenuBar extends JMenuBar implements ActionListener {
             mainFrame.dispatchEvent(new WindowEvent(mainFrame, WindowEvent.WINDOW_CLOSING));
         } else if(e.getSource() == mediaPlayFileMenuItem){
             testPlayer.getControlsPanel().addMedia();
+        } else if (e.getSource() == noSubtitle){
+            //TODO
+            // testPlayer.getMediaPlayer().setSubTitleFile("");
+        } else {
+            for (JMenuItem i:subtitleList) {
+                if(e.getSource() == i){
+                    //TODO
+                    testPlayer.getMediaPlayer().setSpu(Integer.parseInt(i.getText()));
+
+                    //testPlayer.getMediaPlayer().setSubTitleFile(i.getText());
+                }
+            }
         }
+    }
+
+    public void removeSubtitles() {
+        subtitlesMenu.removeAll();
+        subtitlesMenu.add(noSubtitle);
+        subtitleList.clear();
+        TestPlayer.SUBTITLE_LIST.clear();
     }
 }
 
