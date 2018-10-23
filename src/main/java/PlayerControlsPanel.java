@@ -401,11 +401,7 @@ public class PlayerControlsPanel extends JPanel {
         fullScreenButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                mediaPlayer.toggleFullScreen();
-                setVisible(!isVisible());
-                testPlayer.getMenuBar().setVisible(!testPlayer.getMenuBar().isVisible());
-                testPlayer.getMainFrame().invalidate();
-                testPlayer.getMainFrame().validate();
+                testPlayer.controlFullScreen(testPlayer.isControlPanelVisible());
             }
         });
 

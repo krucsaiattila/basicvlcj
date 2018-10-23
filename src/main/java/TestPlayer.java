@@ -37,7 +37,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestPlayer extends VlcjTest implements MouseListener {
+public class TestPlayer extends VlcjTest implements MouseMotionListener, MouseListener {
 
     /**
      * Log.
@@ -54,6 +54,8 @@ public class TestPlayer extends VlcjTest implements MouseListener {
     private EmbeddedMediaPlayer mediaPlayer;
 
     public static List<String> SUBTITLE_LIST;
+
+    private boolean controlPanelVisible;
 
     public static void main(final String[] args) throws Exception {
         LibVlc libVlc = LibVlcFactory.factory().create();
@@ -74,21 +76,18 @@ public class TestPlayer extends VlcjTest implements MouseListener {
     public TestPlayer(String[] args) {
         SUBTITLE_LIST = new ArrayList<>();
 
+        controlPanelVisible = true;
+
         videoSurface = new Canvas();
 
         videoSurface.setBackground(Color.black);
         videoSurface.setSize(800, 600); // Only for initial layout
         videoSurface.addMouseListener(this);
+        videoSurface.addMouseMotionListener(this);
 
         // Since we're mixing lightweight Swing components and heavyweight AWT
         // components this is probably a good idea
         JPopupMenu.setDefaultLightWeightPopupEnabled(false);
-
-        TestPlayerMouseListener mouseListener = new TestPlayerMouseListener();
-        videoSurface.addMouseListener(mouseListener);
-        videoSurface.addMouseMotionListener(mouseListener);
-        videoSurface.addMouseWheelListener(mouseListener);
-        videoSurface.addKeyListener(new TestPlayerKeyListener());
 
         List<String> vlcArgs = new ArrayList<String>();
 
@@ -224,11 +223,7 @@ public class TestPlayer extends VlcjTest implements MouseListener {
     public void mouseClicked(MouseEvent e) {
         if (e.getClickCount() == 2 && !e.isConsumed()) {
             e.consume();
-            controlsPanel.setVisible(!controlsPanel.isVisible());
-            mediaPlayer.toggleFullScreen();
-            menuBar.setVisible(!menuBar.isVisible());
-            mainFrame.invalidate();
-            mainFrame.validate();
+            controlFullScreen(isControlPanelVisible());
         }
     }
 
@@ -250,6 +245,24 @@ public class TestPlayer extends VlcjTest implements MouseListener {
     @Override
     public void mouseExited(MouseEvent e) {
 
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        if(mediaPlayer.isFullScreen()) {
+            if (e.getYOnScreen() < 1000) {
+                controlPanelVisible = false;
+                controlsPanel.setVisible(false);
+            } else {
+                controlPanelVisible = true;
+                controlsPanel.setVisible(true);
+            }
+        }
     }
 
     private final class TestPlayerMediaPlayerEventListener extends MediaPlayerEventAdapter {
@@ -367,60 +380,6 @@ public class TestPlayer extends VlcjTest implements MouseListener {
         }
     }
 
-    /**
-     *
-     */
-    private final class TestPlayerMouseListener extends MouseAdapter {
-        public void mouseMoved(MouseEvent e) {
-            logger.trace("mouseMoved(e={})", e);
-        }
-
-        @Override
-        public void mousePressed(MouseEvent e) {
-            logger.debug("mousePressed(e={})", e);
-        }
-
-        @Override
-        public void mouseReleased(MouseEvent e) {
-            logger.debug("mouseReleased(e={})", e);
-        }
-
-        @Override
-        public void mouseClicked(MouseEvent e) {
-            logger.debug("mouseClicked(e={})", e);
-        }
-
-        public void mouseWheelMoved(MouseWheelEvent e) {
-            logger.debug("mouseWheelMoved(e={})", e);
-        }
-
-        @Override
-        public void mouseEntered(MouseEvent e) {
-            logger.debug("mouseEntered(e={})", e);
-        }
-
-        @Override
-        public void mouseExited(MouseEvent e) {
-            logger.debug("mouseExited(e={})", e);
-        }
-    }
-
-    /**
-     *
-     */
-    private final class TestPlayerKeyListener extends KeyAdapter {
-
-        @Override
-        public void keyReleased(KeyEvent e) {
-            logger.debug("keyReleased(e={})", e);
-        }
-
-        @Override
-        public void keyTyped(KeyEvent e) {
-            logger.debug("keyTyped(e={})", e);
-        }
-    }
-
     public JFrame getMainFrame() {
         return mainFrame;
     }
@@ -431,6 +390,22 @@ public class TestPlayer extends VlcjTest implements MouseListener {
 
     public MenuBar getMenuBar() {
         return menuBar;
+    }
+
+    public boolean isControlPanelVisible() {
+        return controlPanelVisible;
+    }
+
+    public void controlFullScreen(boolean b){
+        mediaPlayer.toggleFullScreen();
+        if(b){
+            controlsPanel.setVisible(controlsPanel.isVisible());
+        } else {
+            controlsPanel.setVisible(!controlsPanel.isVisible());
+        }
+        getMenuBar().setVisible(!getMenuBar().isVisible());
+        getMainFrame().invalidate();
+        getMainFrame().validate();
     }
 
 }
