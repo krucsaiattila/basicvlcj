@@ -53,7 +53,7 @@ public class TestPlayer extends VlcjTest implements MouseMotionListener, MouseLi
 
     private EmbeddedMediaPlayer mediaPlayer;
 
-    public static List<String> SUBTITLE_LIST;
+    public static List<Subtitle> SUBTITLE_LIST;
 
     private boolean controlPanelVisible;
 

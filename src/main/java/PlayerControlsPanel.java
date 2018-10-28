@@ -21,6 +21,7 @@
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -36,6 +37,7 @@ import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 import uk.co.caprica.vlcj.filter.swing.SwingFileFilterFactory;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
+import uk.co.caprica.vlcj.player.TrackDescription;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 
 public class PlayerControlsPanel extends JPanel {
@@ -413,19 +415,9 @@ public class PlayerControlsPanel extends JPanel {
                 if(JFileChooser.APPROVE_OPTION == subtitleChooser.showOpenDialog(PlayerControlsPanel.this)) {
                     testPlayer.getMenuBar().handleSubtitles(subtitleChooser.getSelectedFile().toString());
                     mediaPlayer.setSubTitleFile(subtitleChooser.getSelectedFile().getAbsolutePath());
+                    Subtitle subtitle = new Subtitle(-2, subtitleChooser.getSelectedFile().getAbsolutePath());
                 }
                 mediaPlayer.enableOverlay(true);
-//                int spu = mediaPlayer.getSpu();
-//                if(spu > -1) {
-//                    spu ++ ;
-//                    if(spu > mediaPlayer.getSpuCount()) {
-//                        spu = -1;
-//                    }
-//                }
-//                else {
-//                    spu = 0;
-//                }
-//                mediaPlayer.setSpu(spu);
             }
         });
     }
@@ -484,7 +476,6 @@ public class PlayerControlsPanel extends JPanel {
     public void addMedia() {
         mediaPlayer.enableOverlay(false);
         if(JFileChooser.APPROVE_OPTION == fileChooser.showOpenDialog(PlayerControlsPanel.this)) {
-            testPlayer.getMenuBar().handleSubtitles(String.valueOf(mediaPlayer.getSpu()));
             mediaPlayer.playMedia(fileChooser.getSelectedFile().getAbsolutePath());
         }
         mediaPlayer.enableOverlay(true);
