@@ -20,8 +20,8 @@
 
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
-import java.util.List;
+import java.io.File;
+import java.time.ZoneId;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -32,12 +32,12 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileFilter;
 
+import srt.SRTInfo;
+import srt.SRTReader;
 import uk.co.caprica.vlcj.binding.LibVlcConst;
-import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 import uk.co.caprica.vlcj.filter.swing.SwingFileFilterFactory;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
-import uk.co.caprica.vlcj.player.TrackDescription;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 
 public class PlayerControlsPanel extends JPanel {
@@ -78,6 +78,8 @@ public class PlayerControlsPanel extends JPanel {
     private JFileChooser fileChooser;
     private JFileChooser subtitleChooser;
 
+    private SRTInfo info;
+
     private boolean mousePressedPlaying = false;
 
     public PlayerControlsPanel(EmbeddedMediaPlayer mediaPlayer, TestPlayer testPlayer) {
@@ -86,7 +88,7 @@ public class PlayerControlsPanel extends JPanel {
 
         createUI();
 
-        executorService.scheduleAtFixedRate(new UpdateRunnable(mediaPlayer), 0L, 1L, TimeUnit.SECONDS);
+        executorService.scheduleAtFixedRate(new UpdateRunnable(mediaPlayer), 0L, 300L, TimeUnit.MILLISECONDS);
     }
 
     private void createUI() {
@@ -416,6 +418,7 @@ public class PlayerControlsPanel extends JPanel {
                     testPlayer.getMenuBar().handleSubtitles(subtitleChooser.getSelectedFile().toString());
                     mediaPlayer.setSubTitleFile(subtitleChooser.getSelectedFile().getAbsolutePath());
                     Subtitle subtitle = new Subtitle(-2, subtitleChooser.getSelectedFile().getAbsolutePath());
+                    info = SRTReader.read(new File(subtitleChooser.getSelectedFile().getAbsolutePath()));
                 }
                 mediaPlayer.enableOverlay(true);
             }
@@ -444,11 +447,22 @@ public class PlayerControlsPanel extends JPanel {
                 public void run() {
                     if(mediaPlayer.isPlaying()) {
                         updateTime(time);
+                        updateSubtitles(info);
                         updatePosition(position);
                         updateChapter(chapter, chapterCount);
                     }
                 }
             });
+        }
+    }
+
+    private void updateSubtitles(SRTInfo info) {
+        if(mediaPlayer.getTime() >= info.get(1).startInMilliseconds && mediaPlayer.getTime() <= info.get(1).endInMilliseconds){
+            int i = 1;
+            for(String s:info.get(1).words){
+                System.out.println(i + ": " + s);
+                i++;
+            }
         }
     }
 

@@ -45,7 +45,7 @@ public class TestPlayer extends VlcjTest implements MouseMotionListener, MouseLi
     private static final Logger logger = LoggerFactory.getLogger(TestPlayer.class);
 
     private final JFrame mainFrame;
-    private final Canvas videoSurface;
+    private final VideoSurface videoSurface;
     private final PlayerControlsPanel controlsPanel;
     private MenuBar menuBar;
 
@@ -78,7 +78,7 @@ public class TestPlayer extends VlcjTest implements MouseMotionListener, MouseLi
 
         controlPanelVisible = true;
 
-        videoSurface = new Canvas();
+        videoSurface = new VideoSurface();
 
         videoSurface.setBackground(Color.black);
         videoSurface.setSize(800, 600); // Only for initial layout
