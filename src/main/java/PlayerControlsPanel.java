@@ -22,9 +22,14 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.time.ZoneId;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -32,6 +37,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileFilter;
 
+import srt.SRT;
 import srt.SRTInfo;
 import srt.SRTReader;
 import uk.co.caprica.vlcj.binding.LibVlcConst;
@@ -79,6 +85,7 @@ public class PlayerControlsPanel extends JPanel {
     private JFileChooser subtitleChooser;
 
     private SRTInfo info;
+    private String previousWords;
 
     private boolean mousePressedPlaying = false;
 
@@ -419,6 +426,7 @@ public class PlayerControlsPanel extends JPanel {
                     mediaPlayer.setSubTitleFile(subtitleChooser.getSelectedFile().getAbsolutePath());
                     Subtitle subtitle = new Subtitle(-2, subtitleChooser.getSelectedFile().getAbsolutePath());
                     info = SRTReader.read(new File(subtitleChooser.getSelectedFile().getAbsolutePath()));
+                    previousWords = "";
                 }
                 mediaPlayer.enableOverlay(true);
             }
@@ -457,11 +465,20 @@ public class PlayerControlsPanel extends JPanel {
     }
 
     private void updateSubtitles(SRTInfo info) {
-        if(mediaPlayer.getTime() >= info.get(1).startInMilliseconds && mediaPlayer.getTime() <= info.get(1).endInMilliseconds){
-            int i = 1;
-            for(String s:info.get(1).words){
-                System.out.println(i + ": " + s);
-                i++;
+        for(SRT srt: info){
+            if(mediaPlayer.getTime() >= srt.startInMilliseconds && mediaPlayer.getTime() <= srt.endInMilliseconds && !srt.lines.toString().equals(previousWords)){
+                previousWords = srt.lines.toString();
+                for (String line: srt.lines){
+                    String [] wordsArray = line.split("\\s+");
+//                    for (int i = 0; i < wordsArray.length; i++) {
+//                        Check for non letter characters, and remove them
+//                        wordsArray[i] = wordsArray[i].replaceAll("[^\\w]", "");
+//                    }
+                    for(int i = 0; i<wordsArray.length; i++){
+                        System.out.print(wordsArray[i] + " ");
+                    }
+                    System.out.println("");
+                }
             }
         }
     }

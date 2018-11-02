@@ -39,7 +39,7 @@ public class SRT implements Comparable<SRT> {
     public final int number;
     public final Date startTime;
     public final Date endTime;
-    public List<String> words = new ArrayList<>();
+    public final List<String> lines;
     public long startInMilliseconds;
     public long endInMilliseconds;
     
@@ -55,14 +55,8 @@ public class SRT implements Comparable<SRT> {
         this.number = number;
         this.startTime = startTime;
         this.endTime = endTime;
-        for (String s: Arrays.asList(lines)){
-            String [] wordsArray = s.split("\\s+");
-            for (int i = 0; i < wordsArray.length; i++) {
-                //Check for non letter characters, and remove them
-                //wordsArray[i] = wordsArray[i].replaceAll("[^\\w]", "");
-            }
-            words = Stream.of(words, Arrays.asList(wordsArray)).flatMap(Collection::stream).collect(Collectors.toList());
-        }
+        this.lines = Arrays.asList(lines);
+
         if(startTime != null && endTime != null) {
             ZonedDateTime dateInInstant = startTime.toInstant().atZone(ZoneId.systemDefault());
             startInMilliseconds = dateInInstant.getNano() / 1000000 + dateInInstant.getSecond() * 1000 + dateInInstant.getMinute() * 60000 + dateInInstant.getHour() * 3600000;
@@ -83,14 +77,7 @@ public class SRT implements Comparable<SRT> {
         this.number = number;
         this.startTime = startTime;
         this.endTime = endTime;
-        for (String s: lines){
-            String [] wordsArray = s.split("\\s+");
-            for (int i = 0; i < wordsArray.length; i++) {
-                //Check for non letter characters, and remove them
-                //wordsArray[i] = wordsArray[i].replaceAll("[^\\w]", "");
-            }
-            words = Stream.of(words, Arrays.asList(wordsArray)).flatMap(Collection::stream).collect(Collectors.toList());
-        }
+        this.lines = lines;
         if(startTime != null && endTime != null) {
             ZonedDateTime dateInInstant = startTime.toInstant().atZone(ZoneId.systemDefault());
             startInMilliseconds = dateInInstant.getNano() / 1000000 + dateInInstant.getSecond() * 1000 + dateInInstant.getMinute() * 60000 + dateInInstant.getHour() * 3600000;
@@ -140,7 +127,7 @@ public class SRT implements Comparable<SRT> {
         StringBuilder builder = new StringBuilder();
         builder.append("SRT [number=").append(number).append(", startTime=")
             .append(startTime).append(", endTime=").append(endTime).append(", text=")
-            .append(words).append("]");
+            .append(lines).append("]");
         return builder.toString();
     }
 }

@@ -22,11 +22,8 @@
  */
 package srt;
 
-import java.io.BufferedReader;
-import java.io.EOFException;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -78,7 +75,8 @@ public class SRTReader {
         }
 
         SRTInfo srtInfo = new SRTInfo();
-        try (BufferedReader br = new BufferedReader(new FileReader(srtFile))) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(
+                new FileInputStream(srtFile), StandardCharsets.ISO_8859_1))) {
             BufferedLineReader reader = new BufferedLineReader(br);
             while (true) {
                 srtInfo.add(parse(reader));
