@@ -1,3 +1,5 @@
+package videoplayer;
+
 public class Subtitle {
 
     private int spu;

@@ -1,4 +1,4 @@
-/*
+package videoplayer;/*
  * This file is part of VLCJ.
  *
  * VLCJ is free software: you can redistribute it and/or modify
@@ -17,17 +17,11 @@
  * Copyright 2009-2018 Caprica Software Limited.
 */
 
-import java.awt.Dimension;
-import java.awt.FontMetrics;
-
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JSlider;
+import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import java.awt.*;
 
 /**
  * Composite slider control, used only for this test example.

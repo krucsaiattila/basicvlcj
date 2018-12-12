@@ -1,4 +1,4 @@
-/*
+package videoplayer;/*
  * This file is part of VLCJ.
  *
  * VLCJ is free software: you can redistribute it and/or modify
@@ -17,15 +17,12 @@
  * Copyright 2009, 2010, 2011, 2012, 2013, 2014 Caprica Software Limited.
  */
 
-import javax.swing.UIManager;
-import javax.swing.UIManager.LookAndFeelInfo;
-
-import org.slf4j.LoggerFactory;
-
+import com.sun.jna.NativeLibrary;
 import uk.co.caprica.vlcj.runtime.RuntimeUtil;
 import uk.co.caprica.vlcj.runtime.x.LibXUtil;
 
-import com.sun.jna.NativeLibrary;
+import javax.swing.*;
+import javax.swing.UIManager.LookAndFeelInfo;
 
 
 /**

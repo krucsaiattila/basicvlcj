@@ -1,4 +1,4 @@
-/*
+package videoplayer;/*
  * This file is part of VLCJ.
  *
  * VLCJ is free software: you can redistribute it and/or modify
@@ -18,22 +18,16 @@
  */
 
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import uk.co.caprica.vlcj.binding.LibVlcConst;
+import uk.co.caprica.vlcj.player.MediaPlayer;
 
-import javax.swing.BoxLayout;
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JSlider;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-
-import uk.co.caprica.vlcj.binding.LibVlcConst;
-import uk.co.caprica.vlcj.player.MediaPlayer;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class PlayerVideoAdjustPanel extends JPanel {
 

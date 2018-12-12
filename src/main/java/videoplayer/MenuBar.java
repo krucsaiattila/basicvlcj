@@ -1,3 +1,5 @@
+package videoplayer;
+
 import uk.co.caprica.vlcj.player.TrackDescription;
 
 import javax.swing.*;
@@ -108,6 +110,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
             TestPlayer.SUBTITLE_LIST.add(subtitle);
         }
     }
+
     public void  handleListOfSubtitles(List<TrackDescription> trackDescriptions){
 
         trackDescriptions.forEach(t -> {

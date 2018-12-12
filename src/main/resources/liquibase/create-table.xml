@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+    <changeSet id="1" author="krucsai.attila">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="KEYWORD"/>
+            </not>
+        </preConditions>
+        <createTable tableName="ASD">
+            <column name="TEST" remarks="TEST" type="NUMBER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <rollback>
+            <dropTable tableName="ASD"/>
+        </rollback>
+    </changeSet>
+    <changeSet id="2" author="krucsai.attila">
+        <preConditions>
+            <not>
+                <primaryKeyExists primaryKeyName="ASD_PK"/>
+            </not>
+        </preConditions>
+        <addPrimaryKey tableName="ASD" columnNames="TEST" constraintName="TEST_PK"/>
+        <rollback>
+            <dropPrimaryKey constraintName="TEST_PK" tableName="ASD"/>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

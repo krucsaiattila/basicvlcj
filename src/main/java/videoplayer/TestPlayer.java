@@ -1,4 +1,4 @@
-/*
+package videoplayer;/*
  * This file is part of VLCJ.
  *
  * VLCJ is free software: you can redistribute it and/or modify
@@ -20,8 +20,6 @@
 
 import com.sun.awt.AWTUtilities;
 import com.sun.jna.platform.WindowUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import uk.co.caprica.vlcj.binding.LibVlc;
 import uk.co.caprica.vlcj.binding.LibVlcFactory;
 import uk.co.caprica.vlcj.binding.internal.libvlc_media_t;
@@ -53,19 +51,19 @@ public class TestPlayer extends VlcjTest implements MouseMotionListener, MouseLi
 
     private boolean controlPanelVisible;
 
-    public static void main(final String[] args) throws Exception {
+    public static void main(final String[] args) {
         LibVlc libVlc = LibVlcFactory.factory().create();
 
         setLookAndFeel();
 
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                new TestPlayer(args);
+                new TestPlayer();
             }
         });
     }
 
-    public TestPlayer(String[] args) {
+    public TestPlayer() {
         SUBTITLE_LIST = new ArrayList<>();
 
         controlPanelVisible = true;
