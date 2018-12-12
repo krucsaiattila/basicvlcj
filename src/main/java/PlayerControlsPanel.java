@@ -474,10 +474,17 @@ public class PlayerControlsPanel extends JPanel {
 //                        Check for non letter characters, and remove them
 //                        wordsArray[i] = wordsArray[i].replaceAll("[^\\w]", "");
 //                    }
+                    //TODO itt kellene rajzolni valamit
                     for(int i = 0; i<wordsArray.length; i++){
-                        System.out.print(wordsArray[i] + " ");
+                        //System.out.print(wordsArray[i] + " ");
+                        if(wordsArray[i].equals("-")){
+                            testPlayer.getVideoSurface().drawSubtitles(wordsArray[i] + wordsArray[i+1]);
+                            i++;
+                        } else {
+                            testPlayer.getVideoSurface().drawSubtitles(wordsArray[i]);
+                        }
                     }
-                    System.out.println("");
+                    //System.out.println("");
                 }
             }
         }

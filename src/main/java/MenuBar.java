@@ -1,5 +1,3 @@
-import com.sun.org.apache.xml.internal.security.transforms.implementations.TransformEnvelopedSignature;
-import org.omg.CORBA.INTERNAL;
 import uk.co.caprica.vlcj.player.TrackDescription;
 
 import javax.swing.*;
@@ -138,11 +136,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
                     TestPlayer.SUBTITLE_LIST.forEach(s -> {
                         if(i.getText() == s.getDescription()){
                             if(i.getText().equals(s.getDescription())){
-                                if(s.getSpu() != -2){
-                                    testPlayer.getMediaPlayer().setSpu(s.getSpu());
-                                } else {
-                                    testPlayer.getMediaPlayer().setSubTitleFile(s.getDescription());
-                                }
+                                //TODO
                             }
                         }
                     });

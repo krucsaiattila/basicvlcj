@@ -39,12 +39,8 @@ import java.util.List;
 
 public class TestPlayer extends VlcjTest implements MouseMotionListener, MouseListener {
 
-    /**
-     * Log.
-     */
-    private static final Logger logger = LoggerFactory.getLogger(TestPlayer.class);
-
     private final JFrame mainFrame;
+
     private final VideoSurface videoSurface;
     private final PlayerControlsPanel controlsPanel;
     private MenuBar menuBar;
@@ -59,10 +55,6 @@ public class TestPlayer extends VlcjTest implements MouseMotionListener, MouseLi
 
     public static void main(final String[] args) throws Exception {
         LibVlc libVlc = LibVlcFactory.factory().create();
-
-        logger.info("  version: {}", libVlc.libvlc_get_version());
-        logger.info(" compiler: {}", libVlc.libvlc_get_compiler());
-        logger.info("changeset: {}", libVlc.libvlc_get_changeset());
 
         setLookAndFeel();
 
@@ -97,8 +89,6 @@ public class TestPlayer extends VlcjTest implements MouseMotionListener, MouseLi
         vlcArgs.add("--intf");
         vlcArgs.add("dummy");
 
-        logger.debug("vlcArgs={}", vlcArgs);
-
         mainFrame = new JFrame("VLCJ Test Player");
 //        mainFrame.setIconImage(new ImageIcon(getClass().getResource("/icons/vlcj-logo.png")).getImage());
 
@@ -108,15 +98,10 @@ public class TestPlayer extends VlcjTest implements MouseMotionListener, MouseLi
         mediaPlayerFactory.setUserAgent("vlcj test player");
 
         List<AudioOutput> audioOutputs = mediaPlayerFactory.getAudioOutputs();
-        logger.debug("audioOutputs={}", audioOutputs);
 
         mediaPlayer = mediaPlayerFactory.newEmbeddedMediaPlayer(fullScreenStrategy);
         mediaPlayer.setVideoSurface(mediaPlayerFactory.newVideoSurface(videoSurface));
         mediaPlayer.setPlaySubItems(true);
-        // BEÉGETETT FILE
-        String file = "starwars.mkv";
-        mediaPlayer.prepareMedia(file);
-
         mediaPlayer.setEnableKeyInputHandling(false);
         mediaPlayer.setEnableMouseInputHandling(false);
 
@@ -134,7 +119,6 @@ public class TestPlayer extends VlcjTest implements MouseMotionListener, MouseLi
         mainFrame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent evt) {
-                logger.debug("windowClosing(evt={})", evt);
 
                 if(mediaPlayer != null) {
                     mediaPlayer.release();
@@ -187,8 +171,6 @@ public class TestPlayer extends VlcjTest implements MouseMotionListener, MouseLi
         catch(Exception e) {
             transparentWindowsSupport = false;
         }
-
-        logger.debug("transparentWindowsSupport={}", transparentWindowsSupport);
 
         if(transparentWindowsSupport) {
             final Window test = new Window(null, WindowUtils.getAlphaCompatibleGraphicsConfiguration()) {
@@ -268,46 +250,39 @@ public class TestPlayer extends VlcjTest implements MouseMotionListener, MouseLi
     private final class TestPlayerMediaPlayerEventListener extends MediaPlayerEventAdapter {
         @Override
         public void mediaChanged(MediaPlayer mediaPlayer, libvlc_media_t media, String mrl) {
-            logger.debug("mediaChanged(mediaPlayer={},media={},mrl={})", mediaPlayer, media, mrl);
+
         }
 
         @Override
         public void finished(MediaPlayer mediaPlayer) {
-            logger.debug("finished(mediaPlayer={})", mediaPlayer);
+
         }
 
         @Override
         public void paused(MediaPlayer mediaPlayer) {
-            logger.debug("paused(mediaPlayer={})", mediaPlayer);
+
         }
 
         @Override
         public void playing(MediaPlayer mediaPlayer) {
-            logger.debug("playing(mediaPlayer={})", mediaPlayer);
             MediaDetails mediaDetails = mediaPlayer.getMediaDetails();
-            logger.info("mediaDetails={}", mediaDetails);
         }
 
         @Override
-        public void stopped(MediaPlayer mediaPlayer) {
-            logger.debug("stopped(mediaPlayer={})", mediaPlayer);
+        public void stopped(MediaPlayer mediaPlayer){
         }
 
         @Override
         public void videoOutput(MediaPlayer mediaPlayer, int newCount) {
-            logger.debug("videoOutput(mediaPlayer={},newCount={})", mediaPlayer, newCount);
             if(newCount == 0) {
                 return;
             }
 
             MediaDetails mediaDetails = mediaPlayer.getMediaDetails();
-            logger.info("mediaDetails={}", mediaDetails);
 
             MediaMeta mediaMeta = mediaPlayer.getMediaMeta();
-            logger.info("mediaMeta={}", mediaMeta);
 
             final Dimension dimension = mediaPlayer.getVideoDimension();
-            logger.debug("dimension={}", dimension);
             if(dimension != null) {
                 SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
@@ -328,38 +303,31 @@ public class TestPlayer extends VlcjTest implements MouseMotionListener, MouseLi
         }
 
         @Override
-        public void error(MediaPlayer mediaPlayer) {
-            logger.debug("error(mediaPlayer={})", mediaPlayer);
+        public void error(MediaPlayer mediaPlayer){
         }
 
         @Override
         public void mediaSubItemAdded(MediaPlayer mediaPlayer, libvlc_media_t subItem) {
-            logger.debug("mediaSubItemAdded(mediaPlayer={},subItem={})", mediaPlayer, subItem);
         }
 
         @Override
         public void mediaDurationChanged(MediaPlayer mediaPlayer, long newDuration) {
-            logger.debug("mediaDurationChanged(mediaPlayer={},newDuration={})", mediaPlayer, newDuration);
         }
 
         @Override
         public void mediaParsedChanged(MediaPlayer mediaPlayer, int newStatus) {
-            logger.debug("mediaParsedChanged(mediaPlayer={},newStatus={})", mediaPlayer, newStatus);
         }
 
         @Override
-        public void mediaFreed(MediaPlayer mediaPlayer) {
-            logger.debug("mediaFreed(mediaPlayer={})", mediaPlayer);
+        public void mediaFreed(MediaPlayer mediaPlayer){
         }
 
         @Override
         public void mediaStateChanged(MediaPlayer mediaPlayer, int newState) {
-            logger.debug("mediaStateChanged(mediaPlayer={},newState={})", mediaPlayer, newState);
         }
 
         @Override
         public void mediaMetaChanged(MediaPlayer mediaPlayer, int metaType) {
-            logger.debug("mediaMetaChanged(mediaPlayer={},metaType={})", mediaPlayer, metaType);
         }
     }
 
@@ -370,7 +338,6 @@ public class TestPlayer extends VlcjTest implements MouseMotionListener, MouseLi
      */
     @SuppressWarnings("unused")
     private void enableMousePointer(boolean enable) {
-        logger.debug("enableMousePointer(enable={})", enable);
         if(enable) {
             videoSurface.setCursor(null);
         }
@@ -396,6 +363,8 @@ public class TestPlayer extends VlcjTest implements MouseMotionListener, MouseLi
         return mediaPlayer;
     }
 
+    public VideoSurface getVideoSurface() { return videoSurface; }
+
     public boolean isControlPanelVisible() {
         return controlPanelVisible;
     }
@@ -411,5 +380,4 @@ public class TestPlayer extends VlcjTest implements MouseMotionListener, MouseLi
         getMainFrame().invalidate();
         getMainFrame().validate();
     }
-
 }
