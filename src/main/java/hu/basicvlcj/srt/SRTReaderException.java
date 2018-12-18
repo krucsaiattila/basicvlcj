@@ -20,35 +20,35 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package srt;
+package hu.basicvlcj.srt;
 
 /**
- * An exception for an invalid SRT format.
+ * An exception while reading an SRT file.
  * 
  * @author fredy
  */
-public class InvalidSRTException extends SRTException {
+public class SRTReaderException extends SRTException {
     private static final long serialVersionUID = 1L;
 
     /**
      * @param message the exception message
      * @param cause the cause
      */
-    public InvalidSRTException(String message, Throwable cause) {
+    public SRTReaderException(String message, Throwable cause) {
         super(message, cause);
     }
 
     /**
      * @param message the exception message
      */
-    public InvalidSRTException(String message) {
+    public SRTReaderException(String message) {
         super(message);
     }
 
     /**
      * @param cause the cause
      */
-    public InvalidSRTException(Throwable cause) {
+    public SRTReaderException(Throwable cause) {
         super(cause);
     }
 }

@@ -1,4 +1,4 @@
-package videoplayer;
+package hu.basicvlcj.videoplayer;
 
 import uk.co.caprica.vlcj.player.TrackDescription;
 

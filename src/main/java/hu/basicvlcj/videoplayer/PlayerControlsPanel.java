@@ -1,4 +1,4 @@
-package videoplayer;/*
+package hu.basicvlcj.videoplayer;/*
  * This file is part of VLCJ.
  *
  * VLCJ is free software: you can redistribute it and/or modify
@@ -18,9 +18,9 @@ package videoplayer;/*
  */
 
 
-import srt.SRT;
-import srt.SRTInfo;
-import srt.SRTReader;
+import hu.basicvlcj.srt.SRT;
+import hu.basicvlcj.srt.SRTInfo;
+import hu.basicvlcj.srt.SRTReader;
 import uk.co.caprica.vlcj.binding.LibVlcConst;
 import uk.co.caprica.vlcj.filter.swing.SwingFileFilterFactory;
 import uk.co.caprica.vlcj.player.MediaPlayer;

@@ -1,4 +1,4 @@
-package videoplayer;/*
+package hu.basicvlcj.videoplayer;/*
  * This file is part of VLCJ.
  *
  * VLCJ is free software: you can redistribute it and/or modify

@@ -1,4 +1,4 @@
-package videoplayer;
+package hu.basicvlcj.videoplayer;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;

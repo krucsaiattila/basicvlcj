@@ -1,4 +1,4 @@
-package videoplayer;/*
+package hu.basicvlcj.videoplayer;/*
  * This file is part of VLCJ.
  *
  * VLCJ is free software: you can redistribute it and/or modify
@@ -20,8 +20,6 @@ package videoplayer;/*
 
 import com.sun.awt.AWTUtilities;
 import com.sun.jna.platform.WindowUtils;
-import uk.co.caprica.vlcj.binding.LibVlc;
-import uk.co.caprica.vlcj.binding.LibVlcFactory;
 import uk.co.caprica.vlcj.binding.internal.libvlc_media_t;
 import uk.co.caprica.vlcj.player.*;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
@@ -35,7 +33,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestPlayer extends VlcjTest implements MouseMotionListener, MouseListener {
+public class TestPlayer implements MouseMotionListener, MouseListener {
 
     private final JFrame mainFrame;
 
@@ -50,18 +48,6 @@ public class TestPlayer extends VlcjTest implements MouseMotionListener, MouseLi
     public static List<Subtitle> SUBTITLE_LIST;
 
     private boolean controlPanelVisible;
-
-    public static void main(final String[] args) {
-        LibVlc libVlc = LibVlcFactory.factory().create();
-
-        setLookAndFeel();
-
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                new TestPlayer();
-            }
-        });
-    }
 
     public TestPlayer() {
         SUBTITLE_LIST = new ArrayList<>();

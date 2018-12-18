@@ -1,4 +1,4 @@
-package videoplayer;
+package hu.basicvlcj.videoplayer;
 
 public class Subtitle {
 
