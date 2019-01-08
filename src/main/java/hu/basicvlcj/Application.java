@@ -1,13 +1,14 @@
 package hu.basicvlcj;
 
 import hu.basicvlcj.model.Word;
+import hu.basicvlcj.pdf.PDFGenerator;
+import hu.basicvlcj.service.WordsService;
 import hu.basicvlcj.videoplayer.TestPlayer;
 import hu.basicvlcj.videoplayer.VlcjTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
-import hu.basicvlcj.service.WordsService;
 import uk.co.caprica.vlcj.binding.LibVlc;
 import uk.co.caprica.vlcj.binding.LibVlcFactory;
 
@@ -41,5 +42,12 @@ public class Application extends VlcjTest {
         word.setForeignWord("apple");
         word.setMeaning("alma");
         testService.create(word);
+
+        try {
+            PDFGenerator pdf = new PDFGenerator();
+            pdf.createDictionary();
+        } catch (Exception e) {
+            System.out.println("Exception");
+        }
     }
 }

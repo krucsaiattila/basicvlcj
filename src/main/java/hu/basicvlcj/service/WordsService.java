@@ -1,10 +1,11 @@
 package hu.basicvlcj.service;
 
 import hu.basicvlcj.model.Word;
+import hu.basicvlcj.repositories.WordsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import hu.basicvlcj.repositories.WordsRepository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -22,6 +23,10 @@ public class WordsService {
             //TODO
             return new Word();
         }
+    }
+
+    public List<Word> getAll() {
+        return wordsRepository.findAll();
     }
 
     public void create(Word word){
