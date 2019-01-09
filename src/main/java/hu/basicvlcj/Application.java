@@ -1,7 +1,8 @@
 package hu.basicvlcj;
 
+import com.itextpdf.text.DocumentException;
 import hu.basicvlcj.model.Word;
-import hu.basicvlcj.pdf.PDFGenerator;
+import hu.basicvlcj.service.PDFGeneratorService;
 import hu.basicvlcj.service.WordsService;
 import hu.basicvlcj.videoplayer.TestPlayer;
 import hu.basicvlcj.videoplayer.VlcjTest;
@@ -14,12 +15,16 @@ import uk.co.caprica.vlcj.binding.LibVlcFactory;
 
 import javax.annotation.PostConstruct;
 import javax.swing.*;
+import java.io.FileNotFoundException;
 
-@SpringBootApplication(scanBasePackages = {"hu.basicvlcj.service", "hu.basicvlcj.repositories"})
+@SpringBootApplication(scanBasePackages = {"hu.basicvlcj"})
 public class Application extends VlcjTest {
 
     @Autowired
     private WordsService testService;
+
+    @Autowired
+    private PDFGeneratorService pdfGeneratorService;
 
     public static void main(String[] args) {
         ConfigurableApplicationContext ctx = new SpringApplicationBuilder(Application.class)
@@ -44,10 +49,11 @@ public class Application extends VlcjTest {
         testService.create(word);
 
         try {
-            PDFGenerator pdf = new PDFGenerator();
-            pdf.createDictionary();
-        } catch (Exception e) {
-            System.out.println("Exception");
+            pdfGeneratorService.createDictionary("dictionary");
+        } catch (DocumentException e1) {
+            e1.printStackTrace();
+        } catch (FileNotFoundException e1) {
+            e1.printStackTrace();
         }
     }
 }

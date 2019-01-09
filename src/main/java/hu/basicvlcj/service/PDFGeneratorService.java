@@ -1,16 +1,25 @@
-package hu.basicvlcj.pdf;
+package hu.basicvlcj.service;
 
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import hu.basicvlcj.model.Word;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.stream.Stream;
 
-public class PDFGenerator {
+@Service
+public class PDFGeneratorService {
+
+    @Autowired
+    private WordsService wordsService;
 
     private void addTableHeader(PdfPTable table) {
         Stream.of("Word", "Meaning")
@@ -37,17 +46,18 @@ public class PDFGenerator {
         table.addCell(meaningCell);
     }
 
-    public void createDictionary() throws Exception {
+    public void createDictionary(String filename) throws FileNotFoundException, DocumentException {
         Document document = new Document();
-        PdfWriter.getInstance(document, new FileOutputStream("dictionary.pdf"));
+        PdfWriter.getInstance(document, new FileOutputStream(filename + ".pdf"));
 
         document.open();
-        //Font font = FontFactory.getFont(FontFactory.COURIER, 16, BaseColor.BLACK);
-        //Chunk chunk = new Chunk("Hello World", font);
 
         PdfPTable table = new PdfPTable(2);
         addTableHeader(table);
-        addRow(table, "apple", "alma");
+
+        for (Word word : wordsService.getAll()) {
+            addRow(table, word.getForeignWord(), word.getMeaning());
+        }
 
         document.add(table);
         document.close();
