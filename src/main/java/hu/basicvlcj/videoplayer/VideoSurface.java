@@ -9,7 +9,9 @@ import java.util.Map;
 
 public class VideoSurface extends Canvas implements MouseListener {
 
-    private Map<String, Rectangle2D> subtitleMap = new HashMap<>();
+	private static final long serialVersionUID = 313711816457114840L;
+
+	private Map<String, Rectangle2D> subtitleMap = new HashMap<>();
 
     private String tmp = "TMP";
 
