@@ -20,6 +20,7 @@ package hu.basicvlcj.videoplayer;/*
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
+import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -57,13 +58,14 @@ import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
 import uk.co.caprica.vlcj.player.MediaPlayerFactory;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 import uk.co.caprica.vlcj.player.embedded.FullScreenStrategy;
+import uk.co.caprica.vlcj.player.embedded.videosurface.VideoSurface;
 import uk.co.caprica.vlcj.player.embedded.windows.Win32FullScreenStrategy;
 
 public class TestPlayer implements MouseMotionListener, MouseListener {
 
     private final JFrame mainFrame;
 
-    private final VideoSurface videoSurface;
+    private Canvas videoSurface;
     private final PlayerControlsPanel controlsPanel;
     private MenuBar menuBar;
 
@@ -71,21 +73,16 @@ public class TestPlayer implements MouseMotionListener, MouseListener {
 
     private EmbeddedMediaPlayer mediaPlayer;
 
-    public static List<Subtitle> SUBTITLE_LIST;
-
     private boolean controlPanelVisible;
 
     public TestPlayer() {
-        SUBTITLE_LIST = new ArrayList<>();
 
         controlPanelVisible = true;
 
-        videoSurface = new VideoSurface();
+        videoSurface = new Canvas();
 
         videoSurface.setBackground(Color.black);
-        videoSurface.setSize(800, 600); // Only for initial layout
-        videoSurface.addMouseListener(this);
-        videoSurface.addMouseMotionListener(this);
+        //videoSurface.setSize(800, 600); // Only for initial layout
 
         // Since we're mixing lightweight Swing components and heavyweight AWT
         // components this is probably a good idea
@@ -209,6 +206,11 @@ public class TestPlayer implements MouseMotionListener, MouseListener {
             // mediaPlayer.setOverlay(test);
             // mediaPlayer.enableOverlay(true);
         }
+        
+        mediaPlayer.setOverlay(new SubtitleOverlay(mainFrame));
+        mediaPlayer.enableOverlay(true);
+        
+        
     }
 
     @Override
@@ -373,7 +375,7 @@ public class TestPlayer implements MouseMotionListener, MouseListener {
         return mediaPlayer;
     }
 
-    public VideoSurface getVideoSurface() { return videoSurface; }
+    public Canvas getVideoSurface() { return videoSurface; }
 
     public boolean isControlPanelVisible() {
         return controlPanelVisible;

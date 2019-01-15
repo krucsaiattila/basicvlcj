@@ -42,6 +42,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+
+/**
+ * 
+ * A class which is responsible for all the controls attached to the video player.
+ * Such as browse media, play, stop, volume adjustment, positions slider and more.
+ *
+ */
 public class PlayerControlsPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
@@ -251,7 +258,7 @@ public class PlayerControlsPanel extends JPanel {
      * Broken out position setting, handles updating mediaPlayer
      */
     private void setSliderBasedPosition() {
-        if(!mediaPlayer.isSeekable()) {
+    	if(!mediaPlayer.isSeekable()) {
             return;
         }
         float positionValue = positionSlider.getValue() / 1000.0f;
@@ -305,7 +312,8 @@ public class PlayerControlsPanel extends JPanel {
         positionSlider.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                if(mediaPlayer.isPlaying()) {
+            	
+            	if(mediaPlayer.isPlaying()) {
                     mousePressedPlaying = true;
                     mediaPlayer.pause();
                 }
@@ -395,13 +403,15 @@ public class PlayerControlsPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 mediaPlayer.saveSnapshot();
+                mediaPlayer.enableOverlay(false);
+                ((SubtitleOverlay)mediaPlayer.getOverlay()).setActSubtitle("foscsi");
+                mediaPlayer.enableOverlay(true);
             }
         });
 
         ejectButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                testPlayer.getMenuBar().removeSubtitles();
                 addMedia();
             }
         });
@@ -418,10 +428,9 @@ public class PlayerControlsPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 mediaPlayer.enableOverlay(false);
                 if(JFileChooser.APPROVE_OPTION == subtitleChooser.showOpenDialog(PlayerControlsPanel.this)) {
-                    testPlayer.getMenuBar().handleSubtitles(subtitleChooser.getSelectedFile().toString());
                     mediaPlayer.setSubTitleFile(subtitleChooser.getSelectedFile().getAbsolutePath());
-                    Subtitle subtitle = new Subtitle(-2, subtitleChooser.getSelectedFile().getAbsolutePath());
                     info = SRTReader.read(new File(subtitleChooser.getSelectedFile().getAbsolutePath()));
+                    System.out.println(info);
                     previousWords = "";
                 }
                 mediaPlayer.enableOverlay(true);
@@ -451,7 +460,7 @@ public class PlayerControlsPanel extends JPanel {
                 public void run() {
                     if(mediaPlayer.isPlaying()) {
                         updateTime(time);
-                        updateSubtitles(info);
+                        //updateSubtitles(info);
                         updatePosition(position);
                         updateChapter(chapter, chapterCount);
                     }
@@ -474,10 +483,10 @@ public class PlayerControlsPanel extends JPanel {
                     for(int i = 0; i<wordsArray.length; i++){
                         //System.out.print(wordsArray[i] + " ");
                         if(wordsArray[i].equals("-")){
-                            testPlayer.getVideoSurface().drawSubtitles(wordsArray[i] + wordsArray[i+1]);
+                            //testPlayer.getVideoSurface().drawSubtitles(wordsArray[i] + wordsArray[i+1]);
                             i++;
                         } else {
-                            testPlayer.getVideoSurface().drawSubtitles(wordsArray[i]);
+                            //testPlayer.getVideoSurface().drawSubtitles(wordsArray[i]);
                         }
                     }
                     //System.out.println("");
