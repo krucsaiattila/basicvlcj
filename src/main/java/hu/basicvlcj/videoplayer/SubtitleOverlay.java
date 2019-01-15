@@ -22,6 +22,9 @@ public class SubtitleOverlay extends Window {
 	private EmbeddedMediaPlayer mediaPlayer;
 	private String actSubtitle = "";
 	
+	// offset from the bottom of the overlay
+	private int subtitleYOffset = 20;
+	
 	public SubtitleOverlay(Window owner, EmbeddedMediaPlayer mediaPlayer) {
         super(owner, WindowUtils.getAlphaCompatibleGraphicsConfiguration());
         this.mediaPlayer = mediaPlayer;
@@ -45,7 +48,15 @@ public class SubtitleOverlay extends Window {
 
         g2.setFont(new Font("Serif", Font.PLAIN, 16)); 
         g2.setColor(new Color(255, 255, 255));
-        g2.drawString(actSubtitle, 100, 100);
+        
+        //calculate the center position for X coord
+        int stringLen = (int) g2.getFontMetrics().getStringBounds(actSubtitle, g2).getWidth();
+        int startX = this.getWidth()/2 - stringLen/2;
+        
+        int stringHeight = (int) g2.getFontMetrics().getStringBounds(actSubtitle, g2).getHeight();
+        int startY = this.getHeight() - stringHeight - subtitleYOffset;
+        
+        g2.drawString(actSubtitle, startX, startY);
     }
 
 	public void update() {
