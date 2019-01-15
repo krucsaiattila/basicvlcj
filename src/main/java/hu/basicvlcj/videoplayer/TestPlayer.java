@@ -165,7 +165,11 @@ public class TestPlayer implements MouseMotionListener, MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (e.getClickCount() == 2 && !e.isConsumed()) {
+        if(e.getClickCount() == 1) {
+        	((SubtitleOverlay)(mediaPlayer.getOverlay())).dispatchEvent(e);
+        }
+    	
+    	if (e.getClickCount() == 2 && !e.isConsumed()) {
             e.consume();
             controlFullScreen();
         }
