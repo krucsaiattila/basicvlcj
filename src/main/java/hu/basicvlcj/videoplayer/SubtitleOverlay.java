@@ -38,9 +38,10 @@ public class SubtitleOverlay extends Window implements MouseListener {
 
 	// offset from the bottom of the overlay
 	private int subtitleYOffset = 20;
-	private int fontSize = 16; // size of the subtitle
+	private int fontSize = 20; // size of the subtitle
 	private int lineSpacing = 10; // pixels between lines
 
+	
 	public SubtitleOverlay(Window owner, EmbeddedMediaPlayer mediaPlayer) {
 		super(owner, WindowUtils.getAlphaCompatibleGraphicsConfiguration());
 		this.mediaPlayer = mediaPlayer;
@@ -53,6 +54,26 @@ public class SubtitleOverlay extends Window implements MouseListener {
 		    }});
 
 		setLayout(null);
+	}
+
+	public void increaseYOffset(int d) {
+		subtitleYOffset += d;
+		update(true);
+	}
+	
+	public void decreaseYOffset(int d) {
+		subtitleYOffset -= d;
+		update(true);
+	}
+	
+	public void increaseFontSize(int d) {
+		fontSize += d;
+		update(true);
+	}
+	
+	public void decreaseFontSize(int d) {
+		fontSize -= d;
+		update(true);
 	}
 
 	public void setSRTInfo(SRTInfo info) {
@@ -77,17 +98,9 @@ public class SubtitleOverlay extends Window implements MouseListener {
 		
 		calculateSubtitleBoundingBox(g2, actSubtitle);
 
-		// draw the actual subtitle
-		
-		
-		// g2.drawString(actSubtitle, (int)rect.getX(), (int)(rect.getY()+rect.getHeight()));
-		// g2.drawRect((int)rect.getX(), (int)rect.getY(), (int)rect.getWidth(),
-		// (int)rect.getHeight());
-
 		// draw all bounding boxes and the subtitle
 		for (Entry<String, Rectangle2D> box : boundingBoxes) {
-			g2.drawRect((int) box.getValue().getX(), (int) box.getValue().getY(), (int) box.getValue().getWidth(),
-					(int) box.getValue().getHeight());
+			//g2.drawRect((int) box.getValue().getX(), (int) box.getValue().getY(), (int) box.getValue().getWidth(), (int) box.getValue().getHeight());
 			g2.drawString(box.getKey(), (int)box.getValue().getX(), (int)(box.getValue().getY()+box.getValue().getHeight()));
 		}
 
@@ -166,7 +179,11 @@ public class SubtitleOverlay extends Window implements MouseListener {
 				return oldSubtitle != actSubtitle;
 			}
 		}
-
+		
+		
+		actSubtitle = new ArrayList<String>();
+		actSubtitle.add("");
+		
 		return oldSubtitle != actSubtitle;
 
 	}

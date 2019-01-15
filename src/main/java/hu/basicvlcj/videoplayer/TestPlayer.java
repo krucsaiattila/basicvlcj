@@ -146,6 +146,19 @@ public class TestPlayer implements MouseMotionListener, MouseListener {
                                 mainFrame.validate();
                             }
                         }
+                        else if((keyEvent.getKeyCode() == KeyEvent.VK_UP) && ((keyEvent.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
+                        	((SubtitleOverlay)(mediaPlayer.getOverlay())).increaseYOffset(5);
+                        }
+                        else if((keyEvent.getKeyCode() == KeyEvent.VK_DOWN) && ((keyEvent.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
+                        	((SubtitleOverlay)(mediaPlayer.getOverlay())).decreaseYOffset(5);
+                        }
+                        else if((keyEvent.getKeyCode() == KeyEvent.VK_ADD)) {
+                        	((SubtitleOverlay)(mediaPlayer.getOverlay())).increaseFontSize(2);
+                        }
+                        else if((keyEvent.getKeyCode() == KeyEvent.VK_SUBTRACT)) {
+                        	((SubtitleOverlay)(mediaPlayer.getOverlay())).decreaseFontSize(2);
+                        }
+                        
                     }
                 }
             }
@@ -204,10 +217,12 @@ public class TestPlayer implements MouseMotionListener, MouseListener {
     @Override
     public void mouseMoved(MouseEvent e) {
     	if(mediaPlayer.isFullScreen()) {
-            if (e.getYOnScreen() < 1000) {
+            if (e.getYOnScreen() < 1000 && controlsPanel.isVisible()) {
                 controlsPanel.setVisible(false);
-            } else {
+                ((SubtitleOverlay)(mediaPlayer.getOverlay())).decreaseYOffset(controlsPanel.getHeight());
+            } else if(e.getYOnScreen() >= 1000 && !controlsPanel.isVisible()) {
                 controlsPanel.setVisible(true);
+                ((SubtitleOverlay)(mediaPlayer.getOverlay())).increaseYOffset(controlsPanel.getHeight());
             }
         }
     }
