@@ -460,7 +460,7 @@ public class PlayerControlsPanel extends JPanel {
     }
 
     private void updateSubtitles() {
-        ((SubtitleOverlay)mediaPlayer.getOverlay()).update();
+        ((SubtitleOverlay)mediaPlayer.getOverlay()).update(false);
     }
 
     private void updateTime(long millis) {

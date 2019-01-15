@@ -7,6 +7,9 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.Window;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.Rectangle2D;
@@ -44,6 +47,10 @@ public class SubtitleOverlay extends Window implements MouseListener {
 		AWTUtilities.setWindowOpaque(this, false);
 
 		this.addMouseListener(this);
+		this.addComponentListener(new ComponentAdapter() {
+		    public void componentResized(ComponentEvent componentEvent) {
+		    	update(true); // force a subtitle update
+		    }});
 
 		setLayout(null);
 	}
@@ -123,13 +130,17 @@ public class SubtitleOverlay extends Window implements MouseListener {
 
 	}
 
-	public void update() {
+	/**
+	 * Updates the subtitle.
+	 * @param force: Updates it anyway (even if the subtitle did not changed).
+	 */
+	public void update(boolean force) {
 		mediaPlayer.setSpu(-1);
 
 		long time = mediaPlayer.getTime();
 
 		// no update was needed
-		if (!seekActSubtitle(time)) {
+		if (!seekActSubtitle(time) && !force) {
 			return;
 		}
 		mediaPlayer.enableOverlay(false);
@@ -194,4 +205,5 @@ public class SubtitleOverlay extends Window implements MouseListener {
 	@Override
 	public void mouseReleased(MouseEvent e) {
 	}
+
 }
