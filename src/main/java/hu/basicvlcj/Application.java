@@ -17,6 +17,13 @@ import javax.annotation.PostConstruct;
 import javax.swing.*;
 import java.io.FileNotFoundException;
 
+/**
+ * 
+ * Main entry point for the player.
+ * It configures the Spring context, initializes the LibVLC, sets the look and feel.
+ * It then instantiates a {@link hu.basicvlcj.videoplayer.TestPlayer} which is the main class for the player.
+ *
+ */
 @SpringBootApplication(scanBasePackages = {"hu.basicvlcj"})
 public class Application extends VlcjTest {
 
