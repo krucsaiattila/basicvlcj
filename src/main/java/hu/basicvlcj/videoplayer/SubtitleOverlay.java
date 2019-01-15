@@ -1,6 +1,7 @@
 package hu.basicvlcj.videoplayer;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -9,31 +10,30 @@ import java.awt.Window;
 import com.sun.awt.AWTUtilities;
 import com.sun.jna.platform.WindowUtils;
 
+import hu.basicvlcj.srt.SRT;
+import hu.basicvlcj.srt.SRTInfo;
+import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
+
 public class SubtitleOverlay extends Window {
 
 	private static final long serialVersionUID = 1L;
 	
-	private String actSubtitle;
+	private SRTInfo subtitle;
+	private EmbeddedMediaPlayer mediaPlayer;
+	private String actSubtitle = "";
 	
-	public SubtitleOverlay(Window owner) {
+	public SubtitleOverlay(Window owner, EmbeddedMediaPlayer mediaPlayer) {
         super(owner, WindowUtils.getAlphaCompatibleGraphicsConfiguration());
-
+        this.mediaPlayer = mediaPlayer;
         AWTUtilities.setWindowOpaque(this, false);
 
         setLayout(null);
-        
-        actSubtitle = "Subtitle mothafucka";
     }
 	
-	public String getActSubtitle() {
-		return actSubtitle;
+	public void setSRTInfo(SRTInfo info) {
+		this.subtitle = info;
 	}
-
-	public void setActSubtitle(String actSubtitle) {
-		this.actSubtitle = actSubtitle;
-		this.repaint();
-	}
-
+	
 	@Override
     public void paint(Graphics g) {
         super.paint(g);
@@ -43,8 +43,47 @@ public class SubtitleOverlay extends Window {
         Graphics2D g2 = (Graphics2D)g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        
+        g2.setFont(new Font("Serif", Font.PLAIN, 16)); 
         g2.setColor(new Color(255, 255, 255));
         g2.drawString(actSubtitle, 100, 100);
     }
+
+	public void update() {
+		mediaPlayer.setSpu(-1);
+		
+		long time = mediaPlayer.getTime();
+		
+		// no update was needed
+		if(!seekActSubtitle(time)) {
+			return;
+		}
+		mediaPlayer.enableOverlay(false);
+		this.repaint();
+		mediaPlayer.enableOverlay(true);
+	}
+
+	/**
+	 * 
+	 * @param time
+	 * @return true if the act subtitle is updated, false if not
+	 */
+	private boolean seekActSubtitle(long time) {
+		String oldSubtitle = actSubtitle;
+		
+		if(subtitle == null) {
+			actSubtitle = "";
+			return  !oldSubtitle.equals(actSubtitle);
+		}
+		
+		for(SRT s : subtitle) {
+			if(s.startInMilliseconds <= time && s.endInMilliseconds >= time) {
+				actSubtitle = String.join(" ", s.lines);
+				return !oldSubtitle.equals(actSubtitle);
+			}
+		}
+		
+		actSubtitle = "";
+		return !oldSubtitle.equals(actSubtitle);
+		
+	}
 }

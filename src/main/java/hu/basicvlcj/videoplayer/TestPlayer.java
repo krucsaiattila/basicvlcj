@@ -23,12 +23,7 @@ import java.awt.BorderLayout;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.awt.Toolkit;
-import java.awt.Window;
 import java.awt.event.AWTEventListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -42,9 +37,6 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
-
-import com.sun.awt.AWTUtilities;
-import com.sun.jna.platform.WindowUtils;
 
 import uk.co.caprica.vlcj.binding.internal.libvlc_media_t;
 import uk.co.caprica.vlcj.player.MediaPlayer;
@@ -163,49 +155,11 @@ public class TestPlayer implements MouseMotionListener, MouseListener {
 
         mediaPlayer.addMediaPlayerEventListener(new TestPlayerMediaPlayerEventListener());
 
-        // Won't work with OpenJDK or JDK1.7, requires a Sun/Oracle JVM (currently)
-        boolean transparentWindowsSupport = true;
-        try {
-            Class.forName("com.sun.awt.AWTUtilities");
-        }
-        catch(Exception e) {
-            transparentWindowsSupport = false;
-        }
-
-        if(transparentWindowsSupport) {
-            final Window test = new Window(null, WindowUtils.getAlphaCompatibleGraphicsConfiguration()) {
-                private static final long serialVersionUID = 1L;
-
-                @Override
-                public void paint(Graphics g) {
-                    Graphics2D g2 = (Graphics2D)g;
-
-                    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                    g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);
-
-                    g.setColor(Color.white);
-                    g.fillRoundRect(100, 150, 100, 100, 32, 32);
-
-                    g.setFont(new Font("Sans", Font.BOLD, 32));
-                    g.drawString("Heavyweight overlay test", 100, 300);
-                }
-            };
-
-            AWTUtilities.setWindowOpaque(test, false); // Doesn't work in full-screen exclusive
-            // mode, you would have to use 'simulated'
-            // full-screen - requires Sun/Oracle JDK
-            test.setBackground(new Color(0, 0, 0, 0)); // This is what you do in JDK7
-
-            // mediaPlayer.setOverlay(test);
-            // mediaPlayer.enableOverlay(true);
-        }
-        
         videoSurface.addMouseListener(this);
         videoSurface.addMouseMotionListener(this);
         
-        mediaPlayer.setOverlay(new SubtitleOverlay(mainFrame));
+        mediaPlayer.setOverlay(new SubtitleOverlay(mainFrame, mediaPlayer));
         mediaPlayer.enableOverlay(true);
-        
         
     }
 
@@ -245,7 +199,6 @@ public class TestPlayer implements MouseMotionListener, MouseListener {
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        System.out.println(e.getYOnScreen());
     	if(mediaPlayer.isFullScreen()) {
             if (e.getYOnScreen() < 1000) {
                 controlsPanel.setVisible(false);
