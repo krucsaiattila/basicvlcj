@@ -17,7 +17,7 @@ public class Translator {
     OkHttpClient client = new OkHttpClient();
 
     // This function performs a POST request.
-    public List<String> Post(String from, String to, String string) throws IOException {
+    public TranslateResponse[] Post(String from, String to, String string) throws IOException {
         List<String> meanings = new ArrayList<>();
 
         url += from + "&to=";
@@ -34,18 +34,6 @@ public class Translator {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         TranslateResponse[] translateResponse = gson.fromJson(response.body().string(), TranslateResponse[].class);
 
-        Arrays.asList(translateResponse[0].getTranslations()).forEach(translation -> {
-            translation.forEach(target -> {
-                meanings.add(target.getNormalizedTarget());
-            });
-        });
-
-        return meanings;
+        return translateResponse;
     }
-
-    // This function prettifies the json response.
-//    public static String prettify(String jsonText) {
-//
-//        return gson.toJson(json);
-//    }
 }

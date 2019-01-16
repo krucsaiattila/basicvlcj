@@ -4,7 +4,6 @@ import com.itextpdf.text.DocumentException;
 import hu.basicvlcj.model.Word;
 import hu.basicvlcj.service.PDFGeneratorService;
 import hu.basicvlcj.service.WordsService;
-import hu.basicvlcj.translate.Translator;
 import hu.basicvlcj.videoplayer.TestPlayer;
 import hu.basicvlcj.videoplayer.VlcjTest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,6 @@ import uk.co.caprica.vlcj.binding.LibVlcFactory;
 import javax.annotation.PostConstruct;
 import javax.swing.*;
 import java.io.FileNotFoundException;
-import java.util.List;
 
 /**
  * 
@@ -64,9 +62,6 @@ public class Application extends VlcjTest {
         }
 
         try {
-            Translator translateRequest = new Translator();
-            List<String> response = translateRequest.Post("hu", "en", "szép");
-            System.out.println(response.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }

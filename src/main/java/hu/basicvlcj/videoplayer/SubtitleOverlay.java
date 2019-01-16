@@ -13,17 +13,29 @@ import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.Rectangle2D;
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
 import com.sun.awt.AWTUtilities;
 import com.sun.jna.platform.WindowUtils;
 
+import hu.basicvlcj.model.Word;
+import hu.basicvlcj.service.WordsService;
 import hu.basicvlcj.srt.SRT;
 import hu.basicvlcj.srt.SRTInfo;
+import hu.basicvlcj.translate.TranslateResponse;
+import hu.basicvlcj.translate.Translation;
+import hu.basicvlcj.translate.Translator;
+import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
+import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 
 public class SubtitleOverlay extends Window implements MouseListener {
@@ -41,11 +53,13 @@ public class SubtitleOverlay extends Window implements MouseListener {
 	private int fontSize = 20; // size of the subtitle
 	private int lineSpacing = 10; // pixels between lines
 
-	
-	public SubtitleOverlay(Window owner, EmbeddedMediaPlayer mediaPlayer) {
+	@Autowired
+	private WordsService wordsService;
+
+	public SubtitleOverlay(Window owner, @Lazy EmbeddedMediaPlayer mediaPlayer) {
 		super(owner, WindowUtils.getAlphaCompatibleGraphicsConfiguration());
-		this.mediaPlayer = mediaPlayer;
 		AWTUtilities.setWindowOpaque(this, false);
+		this.mediaPlayer = mediaPlayer;
 
 		this.addMouseListener(this);
 		this.addComponentListener(new ComponentAdapter() {
@@ -203,7 +217,50 @@ public class SubtitleOverlay extends Window implements MouseListener {
 	public void mouseClicked(MouseEvent e) {
 		String clickedWord = seekWord(e.getPoint());
 		if (clickedWord != null) {
-			System.out.println(clickedWord);
+
+			//saving the clicked word with the translation to the database
+			Translator translator = new Translator();
+			try {
+				String parsedWord = clickedWord.replaceAll("[-+.^:,]","");
+				TranslateResponse[] response = translator.Post("hu", "en", parsedWord);
+
+				Word word = new Word();
+
+				//the original word
+				word.setForeignWord(response[0].getNormalizedSource());
+
+				List<String> translations = new ArrayList<>();
+
+				Arrays.asList(response[0].getTranslations()).forEach(translation -> {
+					translation.forEach(target -> {
+            			translations.add(target.getNormalizedTarget());
+            		});
+				});
+
+				//creating the translation string in readable format
+				String finalWordTranslation = "";
+				for(int i = 0; i<translations.size(); i++){
+					if(i != translations.size()-1){
+						finalWordTranslation += (translations.get(i) + ", ");
+					} else {
+						finalWordTranslation += (translations.get(i));
+					}
+				}
+
+				word.setMeaning(finalWordTranslation);
+
+				String finalExampleSentence = "";
+				for(int i = 0; i<actSubtitle.size(); i++){
+					finalExampleSentence += actSubtitle.get(i);
+				}
+				word.setExample(finalExampleSentence);
+
+				//TODO save not working
+				System.out.println(word.toString());
+				wordsService.create(word);
+			} catch (Exception ex){
+				ex.printStackTrace();
+			}
 		}
 	}
 

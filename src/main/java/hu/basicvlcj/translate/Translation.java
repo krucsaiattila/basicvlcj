@@ -9,7 +9,7 @@ public class Translation {
 
     private String displayTarget;
 
-    private String postag;
+    private String posTag;
 
     private double confidence;
 

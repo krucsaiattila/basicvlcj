@@ -170,7 +170,7 @@ public class TestPlayer implements MouseMotionListener, MouseListener {
 
         videoSurface.addMouseListener(this);
         videoSurface.addMouseMotionListener(this);
-        
+
         mediaPlayer.setOverlay(new SubtitleOverlay(mainFrame, mediaPlayer));
         mediaPlayer.enableOverlay(true);
         
