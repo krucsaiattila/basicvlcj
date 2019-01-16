@@ -42,6 +42,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+
+/**
+ * 
+ * A class which is responsible for all the controls attached to the video player.
+ * Such as browse media, play, stop, volume adjustment, positions slider and more.
+ *
+ */
 public class PlayerControlsPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
@@ -79,9 +86,6 @@ public class PlayerControlsPanel extends JPanel {
 
     private JFileChooser fileChooser;
     private JFileChooser subtitleChooser;
-
-    private SRTInfo info;
-    private String previousWords;
 
     private boolean mousePressedPlaying = false;
 
@@ -251,7 +255,7 @@ public class PlayerControlsPanel extends JPanel {
      * Broken out position setting, handles updating mediaPlayer
      */
     private void setSliderBasedPosition() {
-        if(!mediaPlayer.isSeekable()) {
+    	if(!mediaPlayer.isSeekable()) {
             return;
         }
         float positionValue = positionSlider.getValue() / 1000.0f;
@@ -305,7 +309,8 @@ public class PlayerControlsPanel extends JPanel {
         positionSlider.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                if(mediaPlayer.isPlaying()) {
+            	
+            	if(mediaPlayer.isPlaying()) {
                     mousePressedPlaying = true;
                     mediaPlayer.pause();
                 }
@@ -401,7 +406,6 @@ public class PlayerControlsPanel extends JPanel {
         ejectButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                testPlayer.getMenuBar().removeSubtitles();
                 addMedia();
             }
         });
@@ -409,22 +413,17 @@ public class PlayerControlsPanel extends JPanel {
         fullScreenButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                testPlayer.controlFullScreen(testPlayer.isControlPanelVisible());
+                testPlayer.controlFullScreen();
             }
         });
 
         subTitlesButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                mediaPlayer.enableOverlay(false);
                 if(JFileChooser.APPROVE_OPTION == subtitleChooser.showOpenDialog(PlayerControlsPanel.this)) {
-                    testPlayer.getMenuBar().handleSubtitles(subtitleChooser.getSelectedFile().toString());
-                    mediaPlayer.setSubTitleFile(subtitleChooser.getSelectedFile().getAbsolutePath());
-                    Subtitle subtitle = new Subtitle(-2, subtitleChooser.getSelectedFile().getAbsolutePath());
-                    info = SRTReader.read(new File(subtitleChooser.getSelectedFile().getAbsolutePath()));
-                    previousWords = "";
+                    SRTInfo info = SRTReader.read(new File(subtitleChooser.getSelectedFile().getAbsolutePath()));
+                    ((SubtitleOverlay)mediaPlayer.getOverlay()).setSRTInfo(info);
                 }
-                mediaPlayer.enableOverlay(true);
             }
         });
     }
@@ -451,7 +450,7 @@ public class PlayerControlsPanel extends JPanel {
                 public void run() {
                     if(mediaPlayer.isPlaying()) {
                         updateTime(time);
-                        updateSubtitles(info);
+                        updateSubtitles();
                         updatePosition(position);
                         updateChapter(chapter, chapterCount);
                     }
@@ -460,30 +459,8 @@ public class PlayerControlsPanel extends JPanel {
         }
     }
 
-    private void updateSubtitles(SRTInfo info) {
-        for(SRT srt: info){
-            if(mediaPlayer.getTime() >= srt.startInMilliseconds && mediaPlayer.getTime() <= srt.endInMilliseconds && !srt.lines.toString().equals(previousWords)){
-                previousWords = srt.lines.toString();
-                for (String line: srt.lines){
-                    String [] wordsArray = line.split("\\s+");
-//                    for (int i = 0; i < wordsArray.length; i++) {
-//                        Check for non letter characters, and remove them
-//                        wordsArray[i] = wordsArray[i].replaceAll("[^\\w]", "");
-//                    }
-                    //TODO itt kellene rajzolni valamit
-                    for(int i = 0; i<wordsArray.length; i++){
-                        //System.out.print(wordsArray[i] + " ");
-                        if(wordsArray[i].equals("-")){
-                            testPlayer.getVideoSurface().drawSubtitles(wordsArray[i] + wordsArray[i+1]);
-                            i++;
-                        } else {
-                            testPlayer.getVideoSurface().drawSubtitles(wordsArray[i]);
-                        }
-                    }
-                    //System.out.println("");
-                }
-            }
-        }
+    private void updateSubtitles() {
+        ((SubtitleOverlay)mediaPlayer.getOverlay()).update(false);
     }
 
     private void updateTime(long millis) {

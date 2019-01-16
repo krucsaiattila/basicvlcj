@@ -20,16 +20,10 @@ package hu.basicvlcj.videoplayer;/*
 
 import java.awt.AWTEvent;
 import java.awt.BorderLayout;
+import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.RenderingHints;
 import java.awt.Toolkit;
-import java.awt.Window;
 import java.awt.event.AWTEventListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -37,7 +31,6 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,13 +38,7 @@ import javax.swing.JFrame;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 
-import com.sun.awt.AWTUtilities;
-import com.sun.jna.platform.WindowUtils;
-
 import uk.co.caprica.vlcj.binding.internal.libvlc_media_t;
-import uk.co.caprica.vlcj.player.AudioOutput;
-import uk.co.caprica.vlcj.player.MediaDetails;
-import uk.co.caprica.vlcj.player.MediaMeta;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
 import uk.co.caprica.vlcj.player.MediaPlayerFactory;
@@ -59,11 +46,16 @@ import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 import uk.co.caprica.vlcj.player.embedded.FullScreenStrategy;
 import uk.co.caprica.vlcj.player.embedded.windows.Win32FullScreenStrategy;
 
+/**
+ * 
+ * 
+ *
+ */
 public class TestPlayer implements MouseMotionListener, MouseListener {
 
     private final JFrame mainFrame;
 
-    private final VideoSurface videoSurface;
+    private Canvas videoSurface;
     private final PlayerControlsPanel controlsPanel;
     private MenuBar menuBar;
 
@@ -71,21 +63,13 @@ public class TestPlayer implements MouseMotionListener, MouseListener {
 
     private EmbeddedMediaPlayer mediaPlayer;
 
-    public static List<Subtitle> SUBTITLE_LIST;
-
-    private boolean controlPanelVisible;
 
     public TestPlayer() {
-        SUBTITLE_LIST = new ArrayList<>();
 
-        controlPanelVisible = true;
-
-        videoSurface = new VideoSurface();
+        videoSurface = new Canvas();
 
         videoSurface.setBackground(Color.black);
-        videoSurface.setSize(800, 600); // Only for initial layout
-        videoSurface.addMouseListener(this);
-        videoSurface.addMouseMotionListener(this);
+        //videoSurface.setSize(800, 600); // Only for initial layout
 
         // Since we're mixing lightweight Swing components and heavyweight AWT
         // components this is probably a good idea
@@ -106,8 +90,6 @@ public class TestPlayer implements MouseMotionListener, MouseListener {
 
         mediaPlayerFactory = new MediaPlayerFactory(vlcArgs.toArray(new String[vlcArgs.size()]));
         mediaPlayerFactory.setUserAgent("vlcj test player");
-
-        List<AudioOutput> audioOutputs = mediaPlayerFactory.getAudioOutputs();
 
         mediaPlayer = mediaPlayerFactory.newEmbeddedMediaPlayer(fullScreenStrategy);
         mediaPlayer.setVideoSurface(mediaPlayerFactory.newVideoSurface(videoSurface));
@@ -164,6 +146,19 @@ public class TestPlayer implements MouseMotionListener, MouseListener {
                                 mainFrame.validate();
                             }
                         }
+                        else if((keyEvent.getKeyCode() == KeyEvent.VK_UP) && ((keyEvent.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
+                        	((SubtitleOverlay)(mediaPlayer.getOverlay())).increaseYOffset(5);
+                        }
+                        else if((keyEvent.getKeyCode() == KeyEvent.VK_DOWN) && ((keyEvent.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
+                        	((SubtitleOverlay)(mediaPlayer.getOverlay())).decreaseYOffset(5);
+                        }
+                        else if((keyEvent.getKeyCode() == KeyEvent.VK_ADD)) {
+                        	((SubtitleOverlay)(mediaPlayer.getOverlay())).increaseFontSize(2);
+                        }
+                        else if((keyEvent.getKeyCode() == KeyEvent.VK_SUBTRACT)) {
+                        	((SubtitleOverlay)(mediaPlayer.getOverlay())).decreaseFontSize(2);
+                        }
+                        
                     }
                 }
             }
@@ -173,50 +168,25 @@ public class TestPlayer implements MouseMotionListener, MouseListener {
 
         mediaPlayer.addMediaPlayerEventListener(new TestPlayerMediaPlayerEventListener());
 
-        // Won't work with OpenJDK or JDK1.7, requires a Sun/Oracle JVM (currently)
-        boolean transparentWindowsSupport = true;
-        try {
-            Class.forName("com.sun.awt.AWTUtilities");
-        }
-        catch(Exception e) {
-            transparentWindowsSupport = false;
-        }
-
-        if(transparentWindowsSupport) {
-            final Window test = new Window(null, WindowUtils.getAlphaCompatibleGraphicsConfiguration()) {
-                private static final long serialVersionUID = 1L;
-
-                @Override
-                public void paint(Graphics g) {
-                    Graphics2D g2 = (Graphics2D)g;
-
-                    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                    g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_LCD_HRGB);
-
-                    g.setColor(Color.white);
-                    g.fillRoundRect(100, 150, 100, 100, 32, 32);
-
-                    g.setFont(new Font("Sans", Font.BOLD, 32));
-                    g.drawString("Heavyweight overlay test", 100, 300);
-                }
-            };
-
-            AWTUtilities.setWindowOpaque(test, false); // Doesn't work in full-screen exclusive
-            // mode, you would have to use 'simulated'
-            // full-screen - requires Sun/Oracle JDK
-            test.setBackground(new Color(0, 0, 0, 0)); // This is what you do in JDK7
-
-            // mediaPlayer.setOverlay(test);
-            // mediaPlayer.enableOverlay(true);
-        }
+        videoSurface.addMouseListener(this);
+        videoSurface.addMouseMotionListener(this);
+        
+        mediaPlayer.setOverlay(new SubtitleOverlay(mainFrame, mediaPlayer));
+        mediaPlayer.enableOverlay(true);
+        
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (e.getClickCount() == 2 && !e.isConsumed()) {
-            e.consume();
-            controlFullScreen(isControlPanelVisible());
+        if(e.getClickCount() == 1) {
+        	((SubtitleOverlay)(mediaPlayer.getOverlay())).dispatchEvent(e);
         }
+    	
+    	if (e.getClickCount() == 2 && !e.isConsumed()) {
+            e.consume();
+            controlFullScreen();
+        }
+    	
     }
 
     @Override
@@ -246,13 +216,13 @@ public class TestPlayer implements MouseMotionListener, MouseListener {
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        if(mediaPlayer.isFullScreen()) {
-            if (e.getYOnScreen() < 1000) {
-                controlPanelVisible = false;
+    	if(mediaPlayer.isFullScreen()) {
+            if (e.getYOnScreen() < 1000 && controlsPanel.isVisible()) {
                 controlsPanel.setVisible(false);
-            } else {
-                controlPanelVisible = true;
+                ((SubtitleOverlay)(mediaPlayer.getOverlay())).decreaseYOffset(controlsPanel.getHeight());
+            } else if(e.getYOnScreen() >= 1000 && !controlsPanel.isVisible()) {
                 controlsPanel.setVisible(true);
+                ((SubtitleOverlay)(mediaPlayer.getOverlay())).increaseYOffset(controlsPanel.getHeight());
             }
         }
     }
@@ -275,7 +245,6 @@ public class TestPlayer implements MouseMotionListener, MouseListener {
 
         @Override
         public void playing(MediaPlayer mediaPlayer) {
-            MediaDetails mediaDetails = mediaPlayer.getMediaDetails();
         }
 
         @Override
@@ -288,10 +257,6 @@ public class TestPlayer implements MouseMotionListener, MouseListener {
                 return;
             }
 
-            MediaDetails mediaDetails = mediaPlayer.getMediaDetails();
-
-            MediaMeta mediaMeta = mediaPlayer.getMediaMeta();
-
             final Dimension dimension = mediaPlayer.getVideoDimension();
             if(dimension != null) {
                 SwingUtilities.invokeLater(new Runnable() {
@@ -303,7 +268,6 @@ public class TestPlayer implements MouseMotionListener, MouseListener {
             }
 
             // Demo the marquee
-            //mediaPlayer.setMarqueeText("vlcj java bindings for vlc");
             mediaPlayer.setMarqueeSize(40);
             mediaPlayer.setMarqueeOpacity(95);
             mediaPlayer.setMarqueeColour(Color.white);
@@ -341,22 +305,6 @@ public class TestPlayer implements MouseMotionListener, MouseListener {
         }
     }
 
-    /**
-     *
-     *
-     * @param enable
-     */
-    @SuppressWarnings("unused")
-    private void enableMousePointer(boolean enable) {
-        if(enable) {
-            videoSurface.setCursor(null);
-        }
-        else {
-            Image blankImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
-            videoSurface.setCursor(Toolkit.getDefaultToolkit().createCustomCursor(blankImage, new Point(0, 0), ""));
-        }
-    }
-
     public JFrame getMainFrame() {
         return mainFrame;
     }
@@ -373,20 +321,19 @@ public class TestPlayer implements MouseMotionListener, MouseListener {
         return mediaPlayer;
     }
 
-    public VideoSurface getVideoSurface() { return videoSurface; }
+    public Canvas getVideoSurface() { return videoSurface; }
 
-    public boolean isControlPanelVisible() {
-        return controlPanelVisible;
-    }
-
-    public void controlFullScreen(boolean b){
+    public void controlFullScreen(){
         mediaPlayer.toggleFullScreen();
-        if(b){
-            controlsPanel.setVisible(controlsPanel.isVisible());
+        
+        if(mediaPlayer.isFullScreen()){
+            controlsPanel.setVisible(false);
+            getMenuBar().setVisible(false);
         } else {
-            controlsPanel.setVisible(!controlsPanel.isVisible());
+            controlsPanel.setVisible(true);
+            getMenuBar().setVisible(true);
         }
-        getMenuBar().setVisible(!getMenuBar().isVisible());
+        
         getMainFrame().invalidate();
         getMainFrame().validate();
     }
