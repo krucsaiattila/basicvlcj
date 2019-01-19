@@ -423,7 +423,6 @@ public class PlayerControlsPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(actualFile != null){
-                    System.out.println(actualFile.getAbsolutePath());
                     subtitleChooser.setCurrentDirectory(actualFile);
                 }
                 if(JFileChooser.APPROVE_OPTION == subtitleChooser.showOpenDialog(PlayerControlsPanel.this)) {
