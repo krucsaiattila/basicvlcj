@@ -1,48 +1,34 @@
 package hu.basicvlcj.videoplayer;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.RenderingHints;
-import java.awt.Window;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.geom.Rectangle2D;
-import java.util.*;
-import java.util.Map.Entry;
-
 import com.sun.awt.AWTUtilities;
 import com.sun.jna.platform.WindowUtils;
-
 import hu.basicvlcj.model.Word;
+import hu.basicvlcj.popupwindow.PopupMessageBuilder;
 import hu.basicvlcj.service.WordsService;
 import hu.basicvlcj.srt.SRT;
 import hu.basicvlcj.srt.SRTInfo;
 import hu.basicvlcj.translate.TranslateResponse;
-import hu.basicvlcj.translate.Translation;
 import hu.basicvlcj.translate.Translator;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Service;
-import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
+
+import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.geom.Rectangle2D;
+import java.util.*;
+import java.util.List;
+import java.util.Map.Entry;
 
 public class SubtitleOverlay extends Window implements MouseListener {
 
 	private static final long serialVersionUID = 1L;
 
 	private SRTInfo subtitle;
+	@Setter
 	private EmbeddedMediaPlayer mediaPlayer;
 	private List<String> actSubtitle;
 
@@ -56,11 +42,11 @@ public class SubtitleOverlay extends Window implements MouseListener {
 	@Autowired
 	private WordsService wordsService;
 
-	public SubtitleOverlay(Window owner, @Lazy EmbeddedMediaPlayer mediaPlayer) {
+	public SubtitleOverlay(Window owner, EmbeddedMediaPlayer mediaPlayer) {
 		super(owner, WindowUtils.getAlphaCompatibleGraphicsConfiguration());
 		AWTUtilities.setWindowOpaque(this, false);
-		this.mediaPlayer = mediaPlayer;
 
+		this.mediaPlayer = mediaPlayer;
 		this.addMouseListener(this);
 		this.addComponentListener(new ComponentAdapter() {
 		    public void componentResized(ComponentEvent componentEvent) {
@@ -74,17 +60,17 @@ public class SubtitleOverlay extends Window implements MouseListener {
 		subtitleYOffset += d;
 		update(true);
 	}
-	
+
 	public void decreaseYOffset(int d) {
 		subtitleYOffset -= d;
 		update(true);
 	}
-	
+
 	public void increaseFontSize(int d) {
 		fontSize += d;
 		update(true);
 	}
-	
+
 	public void decreaseFontSize(int d) {
 		fontSize -= d;
 		update(true);
@@ -237,27 +223,19 @@ public class SubtitleOverlay extends Window implements MouseListener {
             		});
 				});
 
-				//creating the translation string in readable format
-				String finalWordTranslation = "";
-				for(int i = 0; i<translations.size(); i++){
-					if(i != translations.size()-1){
-						finalWordTranslation += (translations.get(i) + ", ");
-					} else {
-						finalWordTranslation += (translations.get(i));
-					}
-				}
+				word.setMeaning(String.join(", ", translations));
 
-				word.setMeaning(finalWordTranslation);
-
-				String finalExampleSentence = "";
-				for(int i = 0; i<actSubtitle.size(); i++){
-					finalExampleSentence += actSubtitle.get(i);
-				}
-				word.setExample(finalExampleSentence);
+				word.setExample(String.join(" ", actSubtitle));
 
 				//TODO save not working
-				System.out.println(word.toString());
-				wordsService.create(word);
+				if(!word.getMeaning().isEmpty()){
+					//wordsService.create(word);
+					System.out.println(word.toString());
+					new PopupMessageBuilder().at(new Point((int) e.getPoint().getX(), e.getY()-100)).withDelay(3000).withMessage(word.getMeaning()).show();
+				} else {
+					new PopupMessageBuilder().at(new Point((int) e.getPoint().getX(), e.getY()-100)).withDelay(3000).withMessage("No translations available").show();
+				}
+
 			} catch (Exception ex){
 				ex.printStackTrace();
 			}

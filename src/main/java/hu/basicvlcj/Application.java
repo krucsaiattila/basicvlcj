@@ -28,7 +28,7 @@ import java.io.FileNotFoundException;
 public class Application extends VlcjTest {
 
     @Autowired
-    private WordsService testService;
+    private WordsService wordsService;
 
     @Autowired
     private PDFGeneratorService pdfGeneratorService;
@@ -53,7 +53,7 @@ public class Application extends VlcjTest {
         Word word = new Word();
         word.setForeignWord("apple");
         word.setMeaning("alma");
-        testService.create(word);
+        wordsService.create(word);
 
         try {
             pdfGeneratorService.createDictionary("dictionary");

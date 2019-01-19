@@ -1,7 +1,7 @@
 package hu.basicvlcj.service;
 
 import hu.basicvlcj.model.Word;
-import hu.basicvlcj.repositories.WordsRepository;
+import hu.basicvlcj.repository.WordsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
