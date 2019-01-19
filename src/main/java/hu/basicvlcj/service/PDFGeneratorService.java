@@ -19,7 +19,7 @@ import java.util.stream.Stream;
 public class PDFGeneratorService {
 
     @Autowired
-    private WordsService wordsService;
+    private WordService wordService;
 
     private void addTableHeader(PdfPTable table) {
         Stream.of("Word", "Meaning")
@@ -55,7 +55,7 @@ public class PDFGeneratorService {
         PdfPTable table = new PdfPTable(2);
         addTableHeader(table);
 
-        for (Word word : wordsService.getAll()) {
+        for (Word word : wordService.getAll()) {
             addRow(table, word.getForeignWord(), word.getMeaning());
         }
 

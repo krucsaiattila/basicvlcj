@@ -3,7 +3,7 @@ package hu.basicvlcj;
 import com.itextpdf.text.DocumentException;
 import hu.basicvlcj.model.Word;
 import hu.basicvlcj.service.PDFGeneratorService;
-import hu.basicvlcj.service.WordsService;
+import hu.basicvlcj.service.WordService;
 import hu.basicvlcj.videoplayer.TestPlayer;
 import hu.basicvlcj.videoplayer.VlcjTest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ import java.io.FileNotFoundException;
 public class Application extends VlcjTest {
 
     @Autowired
-    private WordsService wordsService;
+    private WordService wordService;
 
     @Autowired
     private PDFGeneratorService pdfGeneratorService;
@@ -53,7 +53,7 @@ public class Application extends VlcjTest {
         Word word = new Word();
         word.setForeignWord("apple");
         word.setMeaning("alma");
-        wordsService.create(word);
+        wordService.create(word);
 
         try {
             pdfGeneratorService.createDictionary("dictionary");

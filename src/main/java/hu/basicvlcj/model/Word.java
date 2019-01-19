@@ -24,4 +24,7 @@ public class Word {
     private String meaning;
 
     private String example;
+
+    @NotEmpty
+    private String filename;
 }

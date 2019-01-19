@@ -1,7 +1,7 @@
 package hu.basicvlcj.service;
 
 import hu.basicvlcj.model.Word;
-import hu.basicvlcj.repository.WordsRepository;
+import hu.basicvlcj.repository.WordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,13 +10,13 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class WordsService {
+public class WordService {
 
     @Autowired
-    WordsRepository wordsRepository;
+    WordRepository wordRepository;
 
     public Word getByName(String foreginWord){
-        Optional<Word> word = wordsRepository.findByForeignWord(foreginWord);
+        Optional<Word> word = wordRepository.findByForeignWord(foreginWord);
         if(word.isPresent()){
             return word.get();
         } else {
@@ -25,30 +25,35 @@ public class WordsService {
         }
     }
 
+    public List<Word> getAllByFilename(String filename){
+        return wordRepository.findAllByFilename(filename);
+    }
+
+
     public List<Word> getAll() {
-        return wordsRepository.findAll();
+        return wordRepository.findAll();
     }
 
     public void create(Word word){
         word.setId(UUID.randomUUID().toString());
-        wordsRepository.save(word);
+        wordRepository.save(word);
     }
 
     public void update(String id, Word word){
-        Optional<Word> optionalWord = wordsRepository.findById(id);
+        Optional<Word> optionalWord = wordRepository.findById(id);
         if(optionalWord.isPresent()){
             Word finalWord = optionalWord.get();
             finalWord.setId(word.getId());
             finalWord.setForeignWord(word.getForeignWord());
             finalWord.setMeaning(word.getMeaning());
             finalWord.setExample(word.getExample());
-            wordsRepository.save(finalWord);
+            wordRepository.save(finalWord);
         } else {
             //TODO
         }
     }
 
     public void delete(Word word){
-        wordsRepository.delete(word);
+        wordRepository.delete(word);
     }
 }

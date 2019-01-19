@@ -21,6 +21,8 @@
             </column>
             <column name="EXAMPLE" remarks="Example sentence" type="VARCHAR(300)">
             </column>
+            <column name="FILENAME" remarks="Name of the media file" type="VARCHAR(100)">
+            </column>
         </createTable>
         <rollback>
             <dropTable tableName="WORDS"/>

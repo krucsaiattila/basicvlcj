@@ -4,13 +4,15 @@ import com.sun.awt.AWTUtilities;
 import com.sun.jna.platform.WindowUtils;
 import hu.basicvlcj.model.Word;
 import hu.basicvlcj.popupwindow.PopupMessageBuilder;
-import hu.basicvlcj.service.WordsService;
+import hu.basicvlcj.service.WordService;
 import hu.basicvlcj.srt.SRT;
 import hu.basicvlcj.srt.SRTInfo;
 import hu.basicvlcj.translate.TranslateResponse;
 import hu.basicvlcj.translate.Translator;
+import lombok.Data;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 
 import java.awt.*;
@@ -19,6 +21,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.Rectangle2D;
+import java.io.File;
 import java.util.*;
 import java.util.List;
 import java.util.Map.Entry;
@@ -28,9 +31,10 @@ public class SubtitleOverlay extends Window implements MouseListener {
 	private static final long serialVersionUID = 1L;
 
 	private SRTInfo subtitle;
-	@Setter
 	private EmbeddedMediaPlayer mediaPlayer;
 	private List<String> actSubtitle;
+	@Setter
+	private File actualFile;
 
 	private List<Entry<String, Rectangle2D>> boundingBoxes = new ArrayList<Map.Entry<String, Rectangle2D>>();
 
@@ -40,7 +44,7 @@ public class SubtitleOverlay extends Window implements MouseListener {
 	private int lineSpacing = 10; // pixels between lines
 
 	@Autowired
-	private WordsService wordsService;
+	private WordService wordsService;
 
 	public SubtitleOverlay(Window owner, EmbeddedMediaPlayer mediaPlayer) {
 		super(owner, WindowUtils.getAlphaCompatibleGraphicsConfiguration());
@@ -224,8 +228,8 @@ public class SubtitleOverlay extends Window implements MouseListener {
 				});
 
 				word.setMeaning(String.join(", ", translations));
-
 				word.setExample(String.join(" ", actSubtitle));
+				word.setFilename(actualFile.getName());
 
 				//TODO save not working
 				if(!word.getMeaning().isEmpty()){

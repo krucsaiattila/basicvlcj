@@ -23,14 +23,17 @@ import com.github.wtekiela.opensub4j.impl.OpenSubtitlesClientImpl;
 import com.github.wtekiela.opensub4j.response.SubtitleInfo;
 import hu.basicvlcj.srt.SRTInfo;
 import hu.basicvlcj.srt.SRTReader;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.xmlrpc.XmlRpcException;
-import sun.misc.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import uk.co.caprica.vlcj.binding.LibVlcConst;
 import uk.co.caprica.vlcj.filter.swing.SwingFileFilterFactory;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 
+import javax.annotation.PostConstruct;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
@@ -44,14 +47,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
-import java.nio.charset.Charset;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -77,7 +76,6 @@ public class PlayerControlsPanel extends JPanel {
     private final TestPlayer testPlayer;
 
     private JLabel timeLabel;
-    //    private JProgressBar positionProgressBar;
     private JSlider positionSlider;
     private JLabel chapterLabel;
 
@@ -101,6 +99,7 @@ public class PlayerControlsPanel extends JPanel {
 
     private boolean mousePressedPlaying = false;
 
+    @Getter
     private File actualFile;
 
     public PlayerControlsPanel(EmbeddedMediaPlayer mediaPlayer, TestPlayer testPlayer) {
@@ -120,12 +119,6 @@ public class PlayerControlsPanel extends JPanel {
 
     private void createControls() {
         timeLabel = new JLabel("hh:mm:ss");
-
-        // positionProgressBar = new JProgressBar();
-        // positionProgressBar.setMinimum(0);
-        // positionProgressBar.setMaximum(1000);
-        // positionProgressBar.setValue(0);
-        // positionProgressBar.setToolTipText("Time");
 
         positionSlider = new JSlider();
         positionSlider.setMinimum(0);
@@ -446,8 +439,10 @@ public class PlayerControlsPanel extends JPanel {
                 }
                 if(JFileChooser.APPROVE_OPTION == subtitleChooser.showOpenDialog(PlayerControlsPanel.this)) {
                     actualFile = new File(subtitleChooser.getSelectedFile().getAbsolutePath());
+                    SubtitleOverlay subtitleOverlay = (SubtitleOverlay)mediaPlayer.getOverlay();
                     SRTInfo info = SRTReader.read(actualFile);
-                    ((SubtitleOverlay)mediaPlayer.getOverlay()).setSRTInfo(info);
+                    subtitleOverlay.setSRTInfo(info);
+                    subtitleOverlay.setActualFile(actualFile);
                 }
             }
         });
@@ -618,6 +613,7 @@ public class PlayerControlsPanel extends JPanel {
 
         public NotEditableTableModel(List<SubtitleInfo> subtitles){
             columnNames = new String[]{"Name", "Language", "Times downloaded", "Download"};
+
             data = new Object[subtitles.size()][4];
             for(int i = 0; i < subtitles.size(); i++){
                 data[i][0] = subtitles.get(i).getFileName();
@@ -645,6 +641,11 @@ public class PlayerControlsPanel extends JPanel {
         @Override
         public boolean isCellEditable(int rowIndex, int columnIndex){
             return false;
+        }
+
+        @Override
+        public String getColumnName(int column) {
+            return columnNames[column];
         }
 
     }
