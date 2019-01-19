@@ -89,6 +89,8 @@ public class PlayerControlsPanel extends JPanel {
 
     private boolean mousePressedPlaying = false;
 
+    private File actualFile;
+
     public PlayerControlsPanel(EmbeddedMediaPlayer mediaPlayer, TestPlayer testPlayer) {
         this.mediaPlayer = mediaPlayer;
         this.testPlayer = testPlayer;
@@ -420,8 +422,13 @@ public class PlayerControlsPanel extends JPanel {
         subTitlesButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if(actualFile != null){
+                    System.out.println(actualFile.getAbsolutePath());
+                    subtitleChooser.setCurrentDirectory(actualFile);
+                }
                 if(JFileChooser.APPROVE_OPTION == subtitleChooser.showOpenDialog(PlayerControlsPanel.this)) {
-                    SRTInfo info = SRTReader.read(new File(subtitleChooser.getSelectedFile().getAbsolutePath()));
+                    actualFile = new File(subtitleChooser.getSelectedFile().getAbsolutePath());
+                    SRTInfo info = SRTReader.read(actualFile);
                     ((SubtitleOverlay)mediaPlayer.getOverlay()).setSRTInfo(info);
                 }
             }
@@ -486,8 +493,12 @@ public class PlayerControlsPanel extends JPanel {
 
     public void addMedia() {
         mediaPlayer.enableOverlay(false);
+        if(actualFile != null){
+            fileChooser.setCurrentDirectory(actualFile);
+        }
         if(JFileChooser.APPROVE_OPTION == fileChooser.showOpenDialog(PlayerControlsPanel.this)) {
-            mediaPlayer.playMedia(fileChooser.getSelectedFile().getAbsolutePath());
+            actualFile = new File(fileChooser.getSelectedFile().getAbsolutePath());
+            mediaPlayer.playMedia(actualFile.getAbsolutePath());
             positionSlider.setValue(0);
         }
         mediaPlayer.enableOverlay(true);
