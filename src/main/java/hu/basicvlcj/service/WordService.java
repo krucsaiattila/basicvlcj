@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * A service class that is responsible for communicating with the {@link hu.basicvlcj.repository.WordRepository}.
+ */
 @Service
 public class WordService {
 

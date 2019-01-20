@@ -19,8 +19,6 @@ package hu.basicvlcj.videoplayer;/*
 
 
 import lombok.Getter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import uk.co.caprica.vlcj.binding.internal.libvlc_media_t;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
@@ -37,16 +35,19 @@ import java.util.List;
 
 /**
  * 
- * 
+ * A class that is the core of the mediaplayer.
+ * It manages the controls panel, the menubar and the screen surface.
  *
  */
+@Getter
 public class TestPlayer implements MouseMotionListener, MouseListener {
 
     private final JFrame mainFrame;
 
     private Canvas videoSurface;
-    @Getter
+
     private final PlayerControlsPanel controlsPanel;
+
     private MenuBar menuBar;
 
     private MediaPlayerFactory mediaPlayerFactory;
@@ -59,7 +60,7 @@ public class TestPlayer implements MouseMotionListener, MouseListener {
         videoSurface = new Canvas();
 
         videoSurface.setBackground(Color.black);
-        //videoSurface.setSize(800, 600); // Only for initial layout
+        videoSurface.setSize(800, 600); // Only for initial layout
 
         // Since we're mixing lightweight Swing components and heavyweight AWT
         // components this is probably a good idea
@@ -294,24 +295,6 @@ public class TestPlayer implements MouseMotionListener, MouseListener {
         public void mediaMetaChanged(MediaPlayer mediaPlayer, int metaType) {
         }
     }
-
-    public JFrame getMainFrame() {
-        return mainFrame;
-    }
-
-    public PlayerControlsPanel getControlsPanel() {
-        return controlsPanel;
-    }
-
-    public MenuBar getMenuBar() {
-        return menuBar;
-    }
-
-    public EmbeddedMediaPlayer getMediaPlayer() {
-        return mediaPlayer;
-    }
-
-    public Canvas getVideoSurface() { return videoSurface; }
 
     public void controlFullScreen(){
         mediaPlayer.toggleFullScreen();

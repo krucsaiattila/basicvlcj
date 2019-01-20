@@ -7,8 +7,11 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Class that is responsible for the database operations.
+ */
 @Repository
 public interface WordRepository extends JpaRepository<Word, String> {
-    public Optional<Word> findByForeignWord(String foreignWord);
-    public List<Word> findAllByFilename(String filename);
+    Optional<Word> findByForeignWord(String foreignWord);
+    List<Word> findAllByFilename(String filename);
 }

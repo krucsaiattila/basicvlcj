@@ -9,12 +9,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * A class that is responsible for the translation. It uses the Microsoft Translate API.
+ */
 public class Translator {
 
-    String subscriptionKey = "69be7b5e75ff473492695708eebc332d";
-    String url = "https://api.cognitive.microsofttranslator.com/dictionary/lookup?api-version=3.0&from=";
+    private String subscriptionKey = "69be7b5e75ff473492695708eebc332d";
+    private String url = "https://api.cognitive.microsofttranslator.com/dictionary/lookup?api-version=3.0&from=";
 
-    OkHttpClient client = new OkHttpClient();
+    private OkHttpClient client = new OkHttpClient();
 
     // This function performs a POST request.
     public TranslateResponse[] Post(String from, String to, String string) throws IOException {

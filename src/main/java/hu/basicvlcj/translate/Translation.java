@@ -2,6 +2,9 @@ package hu.basicvlcj.translate;
 
 import lombok.Data;
 
+/**
+ * A class that contains the translations of a given word.
+ */
 @Data
 public class Translation {
 

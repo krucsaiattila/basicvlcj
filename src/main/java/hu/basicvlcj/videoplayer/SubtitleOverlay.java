@@ -234,7 +234,6 @@ public class SubtitleOverlay extends Window implements MouseListener {
 				//TODO save not working
 				if(!word.getMeaning().isEmpty()){
 					//wordsService.create(word);
-					System.out.println(word.toString());
 					new PopupMessageBuilder().at(new Point((int) e.getPoint().getX(), e.getY()-100)).withDelay(3000).withMessage(word.getMeaning()).show();
 				} else {
 					new PopupMessageBuilder().at(new Point((int) e.getPoint().getX(), e.getY()-100)).withDelay(3000).withMessage("No translations available").show();

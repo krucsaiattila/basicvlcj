@@ -1,21 +1,15 @@
 package hu.basicvlcj.videoplayer;
 
-import hu.basicvlcj.QuizFrame;
-import hu.basicvlcj.service.WordService;
-import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import uk.co.caprica.vlcj.player.TrackDescription;
-
 import javax.swing.*;
-import javax.swing.event.MenuEvent;
-import javax.swing.event.MenuListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A class that represents the menubar on the top of the window.
+ */
 public class MenuBar extends JMenuBar implements ActionListener {
 
     private JMenu mediaMenu;

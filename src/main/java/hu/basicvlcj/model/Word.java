@@ -8,6 +8,10 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 
+
+/**
+ * Entity class that represents a given word that has been translated to other language.
+ */
 @Data
 @Entity
 @Table(name = "WORDS")
