@@ -21,6 +21,7 @@ package hu.basicvlcj.videoplayer;/*
 import com.github.wtekiela.opensub4j.api.OpenSubtitlesClient;
 import com.github.wtekiela.opensub4j.impl.OpenSubtitlesClientImpl;
 import com.github.wtekiela.opensub4j.response.SubtitleInfo;
+import hu.basicvlcj.LanguageSelectorFrame;
 import hu.basicvlcj.srt.SRTInfo;
 import hu.basicvlcj.srt.SRTReader;
 import lombok.Getter;
@@ -93,6 +94,7 @@ public class PlayerControlsPanel extends JPanel {
     private JButton fullScreenButton;
     private JButton subTitlesButton;
     private JButton searchForSubtitlesButton;
+    private JButton languageSelectorButton;
 
     private JFileChooser fileChooser;
     private JFileChooser subtitleChooser;
@@ -203,6 +205,10 @@ public class PlayerControlsPanel extends JPanel {
         searchForSubtitlesButton.setToolTipText("Search for subtitles online");
         searchForSubtitlesButton.setIcon(new ImageIcon(getClass().getClassLoader().getResource("icons/world.png")));
 
+        languageSelectorButton = new JButton();
+        languageSelectorButton.setToolTipText("Select translator languages");
+        languageSelectorButton.setIcon(new ImageIcon(getClass().getClassLoader().getResource("icons/text_replace.png")));
+
         previousChapterButton.getInputMap().put(KeyStroke.getKeyStroke("SPACE"), "none");
         rewindButton.getInputMap().put(KeyStroke.getKeyStroke("SPACE"), "none");
         stopButton.getInputMap().put(KeyStroke.getKeyStroke("SPACE"), "none");
@@ -216,6 +222,7 @@ public class PlayerControlsPanel extends JPanel {
         fullScreenButton.getInputMap().put(KeyStroke.getKeyStroke("SPACE"), "none");
         subTitlesButton.getInputMap().put(KeyStroke.getKeyStroke("SPACE"), "none");
         searchForSubtitlesButton.getInputMap().put(KeyStroke.getKeyStroke("SPACE"), "none");
+        languageSelectorButton.getInputMap().put(KeyStroke.getKeyStroke("SPACE"), "none");
     }
 
     private void layoutControls() {
@@ -259,6 +266,8 @@ public class PlayerControlsPanel extends JPanel {
         bottomPanel.add(fullScreenButton);
 
         bottomPanel.add(subTitlesButton);
+
+        bottomPanel.add(languageSelectorButton);
 
         bottomPanel.add(searchForSubtitlesButton);
 
@@ -444,6 +453,8 @@ public class PlayerControlsPanel extends JPanel {
                     subtitleOverlay.setSRTInfo(info);
                     subtitleOverlay.setActualFile(actualFile);
                 }
+                LanguageSelectorFrame.currentFromLanguage = "Detect language";
+                LanguageSelectorFrame.currentToLanguage = System.getProperty("user.language");
             }
         });
 
@@ -452,6 +463,17 @@ public class PlayerControlsPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 if(actualFile != null){
                     searchForSubtitles();
+                } else {
+                    JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "No file selected!");
+                }
+            }
+        });
+
+        languageSelectorButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(actualFile != null){
+                    new LanguageSelectorFrame();
                 } else {
                     JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "No file selected!");
                 }
@@ -529,7 +551,7 @@ public class PlayerControlsPanel extends JPanel {
     }
 
     /**
-     * searches for subtitles online via subtitles.org API
+     * Searches for subtitles online via subtitles.org API
      */
     private void searchForSubtitles() {
         try{

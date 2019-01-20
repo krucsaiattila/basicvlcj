@@ -2,11 +2,13 @@ package hu.basicvlcj.videoplayer;
 
 import com.sun.awt.AWTUtilities;
 import com.sun.jna.platform.WindowUtils;
+import hu.basicvlcj.LanguageSelectorFrame;
 import hu.basicvlcj.model.Word;
 import hu.basicvlcj.popupwindow.PopupMessageBuilder;
 import hu.basicvlcj.service.WordService;
 import hu.basicvlcj.srt.SRT;
 import hu.basicvlcj.srt.SRTInfo;
+import hu.basicvlcj.translate.DetectedLanguageResponse;
 import hu.basicvlcj.translate.TranslateResponse;
 import hu.basicvlcj.translate.Translator;
 import lombok.Data;
@@ -15,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -212,22 +215,37 @@ public class SubtitleOverlay extends Window implements MouseListener {
 			Translator translator = new Translator();
 			try {
 				String parsedWord = clickedWord.replaceAll("[-+.^:,]","");
-				TranslateResponse[] response = translator.Post("hu", "en", parsedWord);
 
+				TranslateResponse response;
+				DetectedLanguageResponse[] detectedLanguageResponse;
+				//language detection
+				if(LanguageSelectorFrame.currentFromLanguage.equals("Detect language")){
+					detectedLanguageResponse = translator.PostWithLanguageDetection(parsedWord);
+
+					//now we look up in the dictionary
+					response = translator.PostWithGivenLanguages(detectedLanguageResponse[0].getLanguage(), LanguageSelectorFrame.currentToLanguage, parsedWord);
+
+					System.out.println(response);
+				//chosen languages
+				} else {
+					response = translator.PostWithGivenLanguages(LanguageSelectorFrame.currentFromLanguage, LanguageSelectorFrame.currentToLanguage, parsedWord);
+					System.out.println(response);
+				}
 				Word word = new Word();
 
+
 				//the original word
-				word.setForeignWord(response[0].getNormalizedSource());
+//				word.setForeignWord(response[0].getNormalizedSource());
+//
+//				List<String> translations = new ArrayList<>();
+//
+//				Arrays.asList(response[0].getTranslations()).forEach(translation -> {
+//					translation.forEach(target -> {
+//            			translations.add(target.getNormalizedTarget());
+//            		});
+//				});
 
-				List<String> translations = new ArrayList<>();
-
-				Arrays.asList(response[0].getTranslations()).forEach(translation -> {
-					translation.forEach(target -> {
-            			translations.add(target.getNormalizedTarget());
-            		});
-				});
-
-				word.setMeaning(String.join(", ", translations));
+				//word.setMeaning(String.join(", ", translations));
 				word.setExample(String.join(" ", actSubtitle));
 				word.setFilename(actualFile.getName());
 
