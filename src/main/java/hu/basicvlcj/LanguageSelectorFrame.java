@@ -1,7 +1,5 @@
 package hu.basicvlcj;
 
-import lombok.Getter;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -21,34 +19,41 @@ public class LanguageSelectorFrame extends JFrame implements ActionListener {
 
     private JButton okButton;
 
+    private JToggleButton detectLanguageRadioButton;
+
     private Map<String, String> languageAndLanguageCodes;
 
     public LanguageSelectorFrame(){
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setTitle("Select languages");
-        setSize(400, 120);
+        setSize(600, 120);
         setAlwaysOnTop(true);
         setMinimumSize(new Dimension(400, 120));
 
+        detectLanguageRadioButton = new JToggleButton();
+        detectLanguageRadioButton.setText("Detect source language");
+        detectLanguageRadioButton.addActionListener(this);
+
         setLanguages();
         toComboBox = new JComboBox((languageAndLanguageCodes.keySet().toArray()));
-        languageAndLanguageCodes.put("Detect language", "");
-
         fromComboBox = new JComboBox(languageAndLanguageCodes.keySet().toArray());
+
+        toComboBox.addActionListener(this);
+        fromComboBox.addActionListener(this);
+
+        if (currentFromLanguage.equals("Detect language")) {
+            detectLanguageRadioButton.setSelected(true);
+            fromComboBox.setEnabled(false);
+        }
 
         Iterator it = languageAndLanguageCodes.entrySet().iterator();
         while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry)it.next();
-            if(pair.getValue().equals("")){
-                fromComboBox.setSelectedItem("Detect language");
-                toComboBox.setSelectedItem(pair.getKey());
-            } else {
-                if(pair.getValue().equals(currentFromLanguage)){
-                    fromComboBox.setSelectedItem((String) pair.getKey());
-                }
-                if(pair.getValue().equals(currentToLanguage)){
-                    toComboBox.setSelectedItem((String) pair.getKey());
-                }
+            Map.Entry pair = (Map.Entry) it.next();
+            if (pair.getValue().equals(currentFromLanguage)) {
+                fromComboBox.setSelectedItem(pair.getKey());
+            }
+            if (pair.getValue().equals(currentToLanguage)) {
+                toComboBox.setSelectedItem(pair.getValue());
             }
             it.remove();
         }
@@ -60,6 +65,7 @@ public class LanguageSelectorFrame extends JFrame implements ActionListener {
 
         panel.setLayout(new FlowLayout());
 
+        panel.add(detectLanguageRadioButton);
         panel.add(new JLabel("From:"));
         panel.add(fromComboBox);
         panel.add(new JLabel("To:"));
@@ -130,20 +136,58 @@ public class LanguageSelectorFrame extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == okButton){
             setLanguages();
-            languageAndLanguageCodes.put("Detect language", "");
             Iterator it = languageAndLanguageCodes.entrySet().iterator();
-            while (it.hasNext()) {
-                Map.Entry pair = (Map.Entry)it.next();
 
-                if(pair.getKey().equals((String)fromComboBox.getSelectedItem())){
-                    currentFromLanguage = (String) pair.getValue();
+            if (detectLanguageRadioButton.isSelected()) {
+                currentFromLanguage = "";
+                while (it.hasNext()) {
+                    Map.Entry pair = (Map.Entry) it.next();
+                    if (pair.getKey().equals(toComboBox.getSelectedItem())) {
+                        currentToLanguage = (String) pair.getValue();
+                    }
+                    it.remove();
                 }
-                if(pair.getKey().equals((String)toComboBox.getSelectedItem())){
-                    currentToLanguage = (String) pair.getValue();
+            } else {
+                while (it.hasNext()) {
+                    Map.Entry pair = (Map.Entry) it.next();
+                    if (pair.getKey().equals(toComboBox.getSelectedItem())) {
+                        currentFromLanguage = (String) pair.getValue();
+                    }
+                    if (pair.getKey().equals(toComboBox.getSelectedItem())) {
+                        currentToLanguage = (String) pair.getValue();
+                    }
+                    it.remove();
                 }
-                it.remove();
             }
+            System.out.println(currentFromLanguage + "  " + currentToLanguage);
             this.dispose();
+        } else if (e.getSource() == fromComboBox) {
+            if (!detectLanguageRadioButton.isSelected()) {
+                if (!fromComboBox.getSelectedItem().equals("English")) {
+                    toComboBox.setSelectedItem("English");
+                    toComboBox.setEnabled(false);
+                } else {
+                    toComboBox.setEnabled(true);
+                }
+            }
+        } else if (e.getSource() == toComboBox) {
+            if (!detectLanguageRadioButton.isSelected()) {
+                if (!toComboBox.getSelectedItem().equals("English")) {
+                    fromComboBox.setSelectedItem("English");
+                    fromComboBox.setEnabled(false);
+                } else {
+                    fromComboBox.setEnabled(true);
+                }
+            }
+        } else if (e.getSource() == detectLanguageRadioButton) {
+            if (detectLanguageRadioButton.isSelected()) {
+                fromComboBox.setEnabled(false);
+                currentFromLanguage = "Detect language";
+            } else {
+                fromComboBox.setEnabled(true);
+                toComboBox.setSelectedItem("English");
+                toComboBox.setEnabled(false);
+            }
         }
     }
 }

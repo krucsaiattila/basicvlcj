@@ -469,7 +469,7 @@ public class PlayerControlsPanel extends JPanel {
         languageSelectorButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(actualFile != null){
+                if (actualFile != null || LanguageSelectorFrame.currentFromLanguage != null) {
                     new LanguageSelectorFrame();
                 } else {
                     JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "No file selected!");
