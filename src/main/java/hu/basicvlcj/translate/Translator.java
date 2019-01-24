@@ -2,14 +2,9 @@ package hu.basicvlcj.translate;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 import com.squareup.okhttp.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * A class that is responsible for the translation. It uses the Microsoft Translate API.
@@ -23,7 +18,7 @@ public class Translator {
     private OkHttpClient client = new OkHttpClient();
 
     // This function performs a POST request.
-    public TranslateResponse PostWithGivenLanguages(String from, String to, String string) throws IOException {
+    public TranslateResponse[] PostWithGivenLanguages(String from, String to, String string) throws IOException {
         givenLanguageUrl += from + "&to=";
         givenLanguageUrl += to;
         MediaType mediaType = MediaType.parse("application/json");
@@ -36,7 +31,7 @@ public class Translator {
         Response response = client.newCall(request).execute();
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        TranslateResponse translateResponse = gson.fromJson(response.body().string(), TranslateResponse.class);
+        TranslateResponse[] translateResponse = gson.fromJson(response.body().string(), TranslateResponse[].class);
 
         return translateResponse;
     }
@@ -53,7 +48,7 @@ public class Translator {
         Response response = client.newCall(request).execute();
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        DetectedLanguageResponse translateResponse[] = gson.fromJson(response.body().string(), DetectedLanguageResponse[].class);
+        DetectedLanguageResponse[] translateResponse = gson.fromJson(response.body().string(), DetectedLanguageResponse[].class);
 
         return translateResponse;
     }

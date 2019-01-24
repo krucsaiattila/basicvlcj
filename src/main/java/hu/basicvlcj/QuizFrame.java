@@ -1,12 +1,9 @@
 package hu.basicvlcj;
 
 import hu.basicvlcj.model.Word;
-import hu.basicvlcj.repository.WordRepository;
 import hu.basicvlcj.service.WordService;
 import hu.basicvlcj.videoplayer.PlayerControlsPanel;
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,11 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-@Service
 @Data
 public class QuizFrame extends JFrame implements ActionListener {
 
-    @Autowired
     private WordService wordService;
 
     private PlayerControlsPanel playerControlsPanel;
@@ -31,9 +26,23 @@ public class QuizFrame extends JFrame implements ActionListener {
     private List<Word> wordList;
     List<Integer> alreadyUsedWordsIndex = new ArrayList<>();
 
+    public QuizFrame(PlayerControlsPanel controlsPanel) {
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setTitle("Quiz");
+        setSize(500, 400);
+
+        createBeginTestWindow(getContentPane());
+
+        setVisible(true);
+
+        this.playerControlsPanel = controlsPanel;
+        wordService = new WordService();
+    }
+
     private void addComponentsToPane(Container pane) {
         pane.removeAll();
         wordList = wordService.getAllByFilename(playerControlsPanel.getActualFile().getName());
+        System.out.println(wordList.toString());
 
         pane.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
@@ -92,16 +101,6 @@ public class QuizFrame extends JFrame implements ActionListener {
         beginQuizButton.addActionListener(this);
 
         pane.add(beginQuizButton, c);
-    }
-
-    public void display(){
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setTitle("Quiz");
-        setSize(500, 400);
-
-        createBeginTestWindow(getContentPane());
-
-        setVisible(true);
     }
 
     @Override

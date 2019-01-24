@@ -25,16 +25,13 @@ import hu.basicvlcj.LanguageSelectorFrame;
 import hu.basicvlcj.srt.SRTInfo;
 import hu.basicvlcj.srt.SRTReader;
 import lombok.Getter;
-import lombok.Setter;
 import org.apache.xmlrpc.XmlRpcException;
-import org.springframework.beans.factory.annotation.Autowired;
 import uk.co.caprica.vlcj.binding.LibVlcConst;
 import uk.co.caprica.vlcj.filter.swing.SwingFileFilterFactory;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 
-import javax.annotation.PostConstruct;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
@@ -560,7 +557,7 @@ public class PlayerControlsPanel extends JPanel {
 
             osClient.login("atesz0505", "basicvlcj", "en", "TemporaryUserAgent");
 
-            List<SubtitleInfo> subtitles = osClient.searchSubtitles("en", new File(actualFile.getAbsolutePath())).stream().filter(sub -> sub.getFormat().equals("srt")).collect(Collectors.toList());
+            List<SubtitleInfo> subtitles = osClient.searchSubtitles("eng", new File(actualFile.getAbsolutePath())).stream().filter(sub -> sub.getFormat().equals("srt")).collect(Collectors.toList());
             if(!subtitles.isEmpty()){
                 JFrame availableSubtitlesFrame = new JFrame("Available subtitles online");
                 availableSubtitlesFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -595,7 +592,7 @@ public class PlayerControlsPanel extends JPanel {
 
             osClient.logout();
         } catch (IOException |XmlRpcException e){
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "An unexpected error has occured. Please check your internet connection.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 

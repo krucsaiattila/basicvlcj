@@ -1,11 +1,14 @@
 package hu.basicvlcj.videoplayer;
 
+import com.itextpdf.text.DocumentException;
+import hu.basicvlcj.QuizFrame;
+import hu.basicvlcj.service.PDFGeneratorService;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.FileNotFoundException;
 
 /**
  * A class that represents the menubar on the top of the window.
@@ -19,17 +22,15 @@ public class MenuBar extends JMenuBar implements ActionListener {
     private JMenuItem quizMenuItem;
     private JMenu helpMenu;
     private JMenuItem helpAboutMenuItem;
+    private JMenu generateMenu;
+    private JMenuItem generatePdfMenuItem;
 
     private JFrame mainFrame;
     private TestPlayer testPlayer;
 
-    private List<JMenuItem> subtitleList;
-
     public MenuBar(JFrame mainFrame, TestPlayer testPlayer){
         this.mainFrame = mainFrame;
         this.testPlayer = testPlayer;
-
-        subtitleList = new ArrayList<>();
 
         mediaMenu = new JMenu("Media");
         mediaMenu.setMnemonic('m');
@@ -63,6 +64,13 @@ public class MenuBar extends JMenuBar implements ActionListener {
         quizMenu.add(quizMenuItem);
 
         add(quizMenu);
+
+        generateMenu = new JMenu("Generate");
+        generatePdfMenuItem = new JMenuItem("Generate PDF from unknown words");
+        generatePdfMenuItem.addActionListener(this);
+        generateMenu.add(generatePdfMenuItem);
+
+        add(generateMenu);
     }
 
     @Override
@@ -72,8 +80,14 @@ public class MenuBar extends JMenuBar implements ActionListener {
         } else if(e.getSource() == mediaPlayFileMenuItem){
             testPlayer.getControlsPanel().addMedia();
         } else if(e.getSource() == quizMenuItem){
-            //quizFrame.setPlayerControlsPanel(testPlayer.getControlsPanel());
-            //quizFrame.display();
+            new QuizFrame(testPlayer.getControlsPanel());
+        } else if (e.getSource() == generatePdfMenuItem) {
+            try {
+                new PDFGeneratorService().createDictionary(testPlayer.getControlsPanel().getActualFile().getName());
+                JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "PDF file successfully created");
+            } catch (FileNotFoundException | DocumentException e1) {
+                JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Failed to create PDF file", "Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 }

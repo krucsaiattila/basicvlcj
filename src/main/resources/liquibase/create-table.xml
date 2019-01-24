@@ -16,7 +16,7 @@
             <column name="FOREIGN_WORD" remarks="Foreign word" type="VARCHAR(50)">
                 <constraints nullable="false"/>
             </column>
-            <column name="MEANING" remarks="Meaning of a word word" type="VARCHAR(50)">
+            <column name="MEANING" remarks="Meaning of a word word" type="VARCHAR(100)">
                 <constraints nullable="false"/>
             </column>
             <column name="EXAMPLE" remarks="Example sentence" type="VARCHAR(300)">

@@ -11,10 +11,7 @@ import hu.basicvlcj.srt.SRTInfo;
 import hu.basicvlcj.translate.DetectedLanguageResponse;
 import hu.basicvlcj.translate.TranslateResponse;
 import hu.basicvlcj.translate.Translator;
-import lombok.Data;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 
 import javax.swing.*;
@@ -25,8 +22,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.Map.Entry;
 
 public class SubtitleOverlay extends Window implements MouseListener {
@@ -46,8 +43,7 @@ public class SubtitleOverlay extends Window implements MouseListener {
 	private int fontSize = 20; // size of the subtitle
 	private int lineSpacing = 10; // pixels between lines
 
-	@Autowired
-	private WordService wordsService;
+	private WordService wordsService = new WordService();
 
 	public SubtitleOverlay(Window owner, EmbeddedMediaPlayer mediaPlayer) {
 		super(owner, WindowUtils.getAlphaCompatibleGraphicsConfiguration());
@@ -216,7 +212,7 @@ public class SubtitleOverlay extends Window implements MouseListener {
 			try {
 				String parsedWord = clickedWord.replaceAll("[-+.^:,]","");
 
-				TranslateResponse response;
+				TranslateResponse[] response;
 				DetectedLanguageResponse[] detectedLanguageResponse;
 				//language detection
 				if(LanguageSelectorFrame.currentFromLanguage.equals("Detect language")){
@@ -225,40 +221,38 @@ public class SubtitleOverlay extends Window implements MouseListener {
 					//now we look up in the dictionary
 					response = translator.PostWithGivenLanguages(detectedLanguageResponse[0].getLanguage(), LanguageSelectorFrame.currentToLanguage, parsedWord);
 
-					System.out.println(response);
 				//chosen languages
 				} else {
 					response = translator.PostWithGivenLanguages(LanguageSelectorFrame.currentFromLanguage, LanguageSelectorFrame.currentToLanguage, parsedWord);
-					System.out.println(response);
+					System.out.println(response[0].getTranslations());
 				}
 				Word word = new Word();
 
 
 				//the original word
-//				word.setForeignWord(response[0].getNormalizedSource());
-//
-//				List<String> translations = new ArrayList<>();
-//
-//				Arrays.asList(response[0].getTranslations()).forEach(translation -> {
-//					translation.forEach(target -> {
-//            			translations.add(target.getNormalizedTarget());
-//            		});
-//				});
+				word.setForeignWord(response[0].getNormalizedSource());
 
-				//word.setMeaning(String.join(", ", translations));
+				List<String> translations = new ArrayList<>();
+
+				Arrays.asList(response[0].getTranslations()).forEach(translation -> {
+					translation.forEach(target -> {
+						translations.add(target.getNormalizedTarget());
+					});
+				});
+
+				word.setMeaning(String.join(", ", translations));
 				word.setExample(String.join(" ", actSubtitle));
 				word.setFilename(actualFile.getName());
 
-				//TODO save not working
-				if(!word.getMeaning().isEmpty()){
-					//wordsService.create(word);
+				if (word.getMeaning() != null) {
+					wordsService.create(word);
 					new PopupMessageBuilder().at(new Point((int) e.getPoint().getX(), e.getY()-100)).withDelay(3000).withMessage(word.getMeaning()).show();
 				} else {
 					new PopupMessageBuilder().at(new Point((int) e.getPoint().getX(), e.getY()-100)).withDelay(3000).withMessage("No translations available").show();
 				}
 
 			} catch (Exception ex){
-				ex.printStackTrace();
+				JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "An unexpected error has occured", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	}
@@ -278,5 +272,4 @@ public class SubtitleOverlay extends Window implements MouseListener {
 	@Override
 	public void mouseReleased(MouseEvent e) {
 	}
-
 }
