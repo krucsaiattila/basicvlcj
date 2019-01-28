@@ -450,7 +450,8 @@ public class PlayerControlsPanel extends JPanel {
                     subtitleOverlay.setSRTInfo(info);
                     subtitleOverlay.setActualFile(actualFile);
                 }
-                LanguageSelectorFrame.currentFromLanguage = "Detect language";
+                LanguageSelectorFrame.languageDetection = true;
+                LanguageSelectorFrame.currentFromLanguage = "";
                 LanguageSelectorFrame.currentToLanguage = System.getProperty("user.language");
             }
         });

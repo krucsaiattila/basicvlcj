@@ -215,16 +215,14 @@ public class SubtitleOverlay extends Window implements MouseListener {
 				TranslateResponse[] response;
 				DetectedLanguageResponse[] detectedLanguageResponse;
 				//language detection
-				if(LanguageSelectorFrame.currentFromLanguage.equals("Detect language")){
+				if (LanguageSelectorFrame.currentFromLanguage.equals("")) {
 					detectedLanguageResponse = translator.PostWithLanguageDetection(parsedWord);
-
 					//now we look up in the dictionary
 					response = translator.PostWithGivenLanguages(detectedLanguageResponse[0].getLanguage(), LanguageSelectorFrame.currentToLanguage, parsedWord);
 
 				//chosen languages
 				} else {
 					response = translator.PostWithGivenLanguages(LanguageSelectorFrame.currentFromLanguage, LanguageSelectorFrame.currentToLanguage, parsedWord);
-					System.out.println(response[0].getTranslations());
 				}
 				Word word = new Word();
 
