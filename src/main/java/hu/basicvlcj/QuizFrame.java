@@ -20,60 +20,59 @@ public class QuizFrame extends JFrame implements ActionListener {
 
     private PlayerControlsPanel playerControlsPanel;
 
+    private JTextField answerField;
+
     private JButton beginQuizButton;
     private JButton nextButton;
 
     private List<Word> wordList;
     List<Integer> alreadyUsedWordsIndex = new ArrayList<>();
+    private String actualAnswer;
 
     public QuizFrame(PlayerControlsPanel controlsPanel) {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setTitle("Quiz");
         setSize(500, 400);
 
-        createBeginTestWindow(getContentPane());
-
-        setVisible(true);
-
         this.playerControlsPanel = controlsPanel;
         wordService = new WordService();
+
+        createBeginTestWindow(getContentPane());
+        setVisible(true);
     }
 
-    private void addComponentsToPane(Container pane) {
-        pane.removeAll();
-        wordList = wordService.getAllByFilename(playerControlsPanel.getActualFile().getName());
-        System.out.println(wordList.toString());
+    private void createQuestion() {
+        dispose();
+        JFrame frame = new JFrame();
+        frame.setLayout(new GridLayout(3, 1));
+        frame.setSize(500, 400);
+        frame.setTitle("Task");
 
-        pane.setLayout(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
+        JPanel header = new JPanel();
+        header.setLayout(new FlowLayout());
 
+        header.add(new JLabel("Translate the given word(s) to the original language!"));
 
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.ipadx = 30;
-        c.gridx = 1;
-        c.gridy = 0;
-        pane.add(new JLabel("Translate the given word(s) to the original language!"), c);
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(1, 2));
 
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.ipadx = 30;
-        c.gridx = 1;
-        c.gridy = 1;
-        pane.add(createForeignWordLabel(wordList), c);
+        panel.add(createForeignWordLabel(wordList));
 
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 1;
-        c.gridy = 2;
-        JTextField answer = new JTextField();
-        pane.add(answer, c);
+        answerField = new JTextField();
+        answerField.setMinimumSize(new Dimension(100, 10));
+        panel.add(answerField);
 
+        JPanel next = new JPanel();
         nextButton = new JButton("Next");
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.ipady = 0;
-        c.anchor = GridBagConstraints.PAGE_END;
-        c.insets = new Insets(10,0,0,0);  //top padding
-        c.gridx = 1;
-        c.gridy = 3;
+        nextButton.addActionListener(this);
+        next.add(nextButton);
 
+        frame.add(header);
+        frame.add(panel);
+        frame.add(next);
+
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     private JLabel createForeignWordLabel(List<Word> wordList) {
@@ -86,6 +85,7 @@ public class QuizFrame extends JFrame implements ActionListener {
                 randomNumber = rand.nextInt(wordList.size());
                 alreadyUsedWordsIndex.add(randomNumber);
             }
+            actualAnswer = wordList.get(randomNumber).getMeaning();
             return new JLabel(wordList.get(randomNumber).getForeignWord());
         } else {
             return new JLabel("ELFOGYOTT");
@@ -106,7 +106,17 @@ public class QuizFrame extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == beginQuizButton) {
-            addComponentsToPane(getContentPane());
+            wordList = wordService.getAllByFilename(playerControlsPanel.getActualFile().getName());
+            createQuestion();
+        } else if (e.getSource() == nextButton) {
+            System.out.println(actualAnswer);
+            if (answerField.getText().equals(actualAnswer)) {
+                JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Correct answer", "Correct", JOptionPane.YES_OPTION);
+                createQuestion();
+            } else {
+                JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Incorrect answer", "Incorrect", JOptionPane.ERROR_MESSAGE);
+                createQuestion();
+            }
         }
     }
 }
