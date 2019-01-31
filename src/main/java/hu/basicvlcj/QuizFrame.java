@@ -10,6 +10,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -22,12 +23,16 @@ public class QuizFrame extends JFrame implements ActionListener {
 
     private JTextField answerField;
 
+    private JFrame questionFrame;
+
     private JButton beginQuizButton;
     private JButton nextButton;
 
+    private boolean isFinished;
+
     private List<Word> wordList;
-    List<Integer> alreadyUsedWordsIndex = new ArrayList<>();
-    private String actualAnswer;
+    private List<Integer> alreadyUsedWordsIndex = new ArrayList<>();
+    private List<String> actualAnswers;
 
     public QuizFrame(PlayerControlsPanel controlsPanel) {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -36,17 +41,20 @@ public class QuizFrame extends JFrame implements ActionListener {
 
         this.playerControlsPanel = controlsPanel;
         wordService = new WordService();
+        isFinished = false;
 
         createBeginTestWindow(getContentPane());
         setVisible(true);
     }
 
     private void createQuestion() {
-        dispose();
-        JFrame frame = new JFrame();
-        frame.setLayout(new GridLayout(3, 1));
-        frame.setSize(500, 400);
-        frame.setTitle("Task");
+        if (questionFrame != null) {
+            questionFrame.dispose();
+        }
+        questionFrame = new JFrame();
+        questionFrame.setLayout(new GridLayout(3, 1));
+        questionFrame.setSize(500, 400);
+        questionFrame.setTitle("Task");
 
         JPanel header = new JPanel();
         header.setLayout(new FlowLayout());
@@ -67,12 +75,16 @@ public class QuizFrame extends JFrame implements ActionListener {
         nextButton.addActionListener(this);
         next.add(nextButton);
 
-        frame.add(header);
-        frame.add(panel);
-        frame.add(next);
+        questionFrame.add(header);
+        questionFrame.add(panel);
+        questionFrame.add(next);
 
-        frame.setVisible(true);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        if (isFinished) {
+            questionFrame.dispose();
+        } else {
+            questionFrame.setVisible(true);
+        }
+        questionFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
 
     private JLabel createForeignWordLabel(List<Word> wordList) {
@@ -83,12 +95,16 @@ public class QuizFrame extends JFrame implements ActionListener {
         if(alreadyUsedWordsIndex.size() != wordList.size()){
             while (alreadyUsedWordsIndex.contains(randomNumber)){
                 randomNumber = rand.nextInt(wordList.size());
-                alreadyUsedWordsIndex.add(randomNumber);
             }
-            actualAnswer = wordList.get(randomNumber).getMeaning();
+            actualAnswers = Arrays.asList(wordList.get(randomNumber).getMeaning().split(", "));
+            alreadyUsedWordsIndex.add(randomNumber);
             return new JLabel(wordList.get(randomNumber).getForeignWord());
         } else {
-            return new JLabel("ELFOGYOTT");
+            JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Finished quiz", "Finish", JOptionPane.YES_OPTION);
+            isFinished = true;
+            questionFrame.dispose();
+            this.dispose();
+            return new JLabel();
         }
     }
 
@@ -106,15 +122,16 @@ public class QuizFrame extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == beginQuizButton) {
+            dispose();
             wordList = wordService.getAllByFilename(playerControlsPanel.getActualFile().getName());
             createQuestion();
         } else if (e.getSource() == nextButton) {
-            System.out.println(actualAnswer);
-            if (answerField.getText().equals(actualAnswer)) {
-                JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Correct answer", "Correct", JOptionPane.YES_OPTION);
+            System.out.println(actualAnswers);
+            if (actualAnswers.contains(answerField.getText())) {
+                JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Correct answer", "Correct", JOptionPane.OK_OPTION);
                 createQuestion();
             } else {
-                JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Incorrect answer", "Incorrect", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Incorrect answer", "Incorrect", JOptionPane.YES_OPTION);
                 createQuestion();
             }
         }
