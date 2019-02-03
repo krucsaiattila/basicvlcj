@@ -2,7 +2,6 @@ package hu.basicvlcj.videoplayer;
 
 import com.sun.awt.AWTUtilities;
 import com.sun.jna.platform.WindowUtils;
-import hu.basicvlcj.LanguageSelectorFrame;
 import hu.basicvlcj.model.Word;
 import hu.basicvlcj.popupwindow.PopupMessageBuilder;
 import hu.basicvlcj.service.WordService;

@@ -21,7 +21,6 @@ package hu.basicvlcj.videoplayer;/*
 import com.github.wtekiela.opensub4j.api.OpenSubtitlesClient;
 import com.github.wtekiela.opensub4j.impl.OpenSubtitlesClientImpl;
 import com.github.wtekiela.opensub4j.response.SubtitleInfo;
-import hu.basicvlcj.LanguageSelectorFrame;
 import hu.basicvlcj.srt.SRTInfo;
 import hu.basicvlcj.srt.SRTReader;
 import lombok.Getter;
@@ -53,7 +52,6 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 
 /**
@@ -558,7 +556,8 @@ public class PlayerControlsPanel extends JPanel {
 
             osClient.login("atesz0505", "basicvlcj", "en", "TemporaryUserAgent");
 
-            List<SubtitleInfo> subtitles = osClient.searchSubtitles("eng", new File(actualFile.getAbsolutePath())).stream().filter(sub -> sub.getFormat().equals("srt")).collect(Collectors.toList());
+            //List<SubtitleInfo> subtitles = osClient.searchSubtitles("eng", new File(actualFile.getAbsolutePath())).stream().filter(sub -> sub.getFormat().equals("srt")).collect(Collectors.toList());
+            List<SubtitleInfo> subtitles = osClient.searchSubtitles("eng", "Friends", "1", "1");
             if(!subtitles.isEmpty()){
                 JFrame availableSubtitlesFrame = new JFrame("Available subtitles online");
                 availableSubtitlesFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

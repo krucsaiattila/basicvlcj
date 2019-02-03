@@ -1,8 +1,9 @@
 package hu.basicvlcj.videoplayer;
 
 import com.itextpdf.text.DocumentException;
-import hu.basicvlcj.QuizFrame;
+import hu.basicvlcj.Quiz;
 import hu.basicvlcj.service.PDFGeneratorService;
+import hu.basicvlcj.service.WordService;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -80,7 +81,11 @@ public class MenuBar extends JMenuBar implements ActionListener {
         } else if(e.getSource() == mediaPlayFileMenuItem){
             testPlayer.getControlsPanel().addMedia();
         } else if(e.getSource() == quizMenuItem){
-            new QuizFrame(testPlayer.getControlsPanel());
+            if (new WordService().getAllByFilename(testPlayer.getControlsPanel().getActualFile().getName()).size() < 6) {
+                JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Not enough words to generate quiz!", "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+                new Quiz(testPlayer.getControlsPanel());
+            }
         } else if (e.getSource() == generatePdfMenuItem) {
             try {
                 new PDFGeneratorService().createDictionary(testPlayer.getControlsPanel().getActualFile().getName());
