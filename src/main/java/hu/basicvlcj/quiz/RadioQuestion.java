@@ -1,4 +1,4 @@
-package hu.basicvlcj;
+package hu.basicvlcj.quiz;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

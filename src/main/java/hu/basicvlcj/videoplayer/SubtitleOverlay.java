@@ -11,6 +11,7 @@ import hu.basicvlcj.translate.DetectedLanguageResponse;
 import hu.basicvlcj.translate.TranslateResponse;
 import hu.basicvlcj.translate.Translator;
 import lombok.Setter;
+import org.apache.logging.log4j.util.Strings;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 
 import javax.swing.*;
@@ -241,8 +242,10 @@ public class SubtitleOverlay extends Window implements MouseListener {
 				word.setExample(String.join(" ", actSubtitle));
 				word.setFilename(actualFile.getName());
 
-				if (word.getMeaning() != null) {
-					wordsService.create(word);
+				if (word.getMeaning() != null && !Strings.isBlank(word.getMeaning())) {
+					if (!new WordService().isAlreadySaved(word.getForeignWord())) {
+						wordsService.create(word);
+					}
 					new PopupMessageBuilder().at(new Point((int) e.getPoint().getX(), e.getY()-100)).withDelay(3000).withMessage(word.getMeaning()).show();
 				} else {
 					new PopupMessageBuilder().at(new Point((int) e.getPoint().getX(), e.getY()-100)).withDelay(3000).withMessage("No translations available").show();

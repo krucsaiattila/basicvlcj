@@ -1,7 +1,7 @@
 package hu.basicvlcj.videoplayer;
 
 import com.itextpdf.text.DocumentException;
-import hu.basicvlcj.Quiz;
+import hu.basicvlcj.quiz.Quiz;
 import hu.basicvlcj.service.PDFGeneratorService;
 import hu.basicvlcj.service.WordService;
 
