@@ -20,7 +20,7 @@ package hu.basicvlcj.videoplayer;/*
 
 import hu.basicvlcj.srt.SRTInfo;
 import hu.basicvlcj.srt.SRTReader;
-import hu.basicvlcj.srt.SrtSearchFrame;
+import hu.basicvlcj.srt.SRTSearchFrame;
 import hu.basicvlcj.translate.LanguageSelectorFrame;
 import lombok.Getter;
 import uk.co.caprica.vlcj.binding.LibVlcConst;
@@ -60,7 +60,7 @@ public class PlayerControlsPanel extends JPanel {
     private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
     private final EmbeddedMediaPlayer mediaPlayer;
-    private final TestPlayer testPlayer;
+    private final MainPlayer mainPlayer;
 
     private JLabel timeLabel;
     private JSlider positionSlider;
@@ -90,9 +90,9 @@ public class PlayerControlsPanel extends JPanel {
     @Getter
     private File actualFile;
 
-    public PlayerControlsPanel(EmbeddedMediaPlayer mediaPlayer, TestPlayer testPlayer) {
+    public PlayerControlsPanel(EmbeddedMediaPlayer mediaPlayer, MainPlayer mainPlayer) {
         this.mediaPlayer = mediaPlayer;
-        this.testPlayer = testPlayer;
+        this.mainPlayer = mainPlayer;
 
         createUI();
 
@@ -415,7 +415,7 @@ public class PlayerControlsPanel extends JPanel {
         fullScreenButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                testPlayer.controlFullScreen();
+                mainPlayer.controlFullScreen();
             }
         });
 
@@ -446,7 +446,7 @@ public class PlayerControlsPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(actualFile != null){
-                    new SrtSearchFrame();
+                    new SRTSearchFrame();
                 } else {
                     JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "No file has been selected!");
                 }

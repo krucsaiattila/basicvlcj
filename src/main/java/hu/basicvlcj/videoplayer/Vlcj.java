@@ -39,7 +39,7 @@ import javax.swing.UIManager.LookAndFeelInfo;
  * <p>
  * You can also set the log level here.
  */
-public abstract class VlcjTest {
+public abstract class Vlcj {
 
     /**
      * Change this to point to your own vlc installation, or comment out the code if you want to use

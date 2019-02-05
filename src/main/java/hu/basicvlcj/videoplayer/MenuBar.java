@@ -32,11 +32,11 @@ public class MenuBar extends JMenuBar implements ActionListener {
     private JMenuItem subtitleDelayMenuItem;
 
     private JFrame mainFrame;
-    private TestPlayer testPlayer;
+    private MainPlayer mainPlayer;
 
-    public MenuBar(JFrame mainFrame, TestPlayer testPlayer){
+    public MenuBar(JFrame mainFrame, MainPlayer mainPlayer) {
         this.mainFrame = mainFrame;
-        this.testPlayer = testPlayer;
+        this.mainPlayer = mainPlayer;
 
         mediaMenu = new JMenu("Media");
         mediaMenu.setMnemonic('m');
@@ -98,12 +98,6 @@ public class MenuBar extends JMenuBar implements ActionListener {
 
             }
         });
-//        subtitleSizeMenuItem = new JMenuItem("Set subtitle size");
-//        subtitleSizeMenuItem.addActionListener(this);
-//        optionsMenu.add(subtitleSizeMenuItem);
-//        subtitleDelayMenuItem = new JMenuItem("Set subtitle delay");
-//        subtitleDelayMenuItem.addActionListener(this);
-//        optionsMenu.add(subtitleDelayMenuItem);
 
         add(optionsMenu);
     }
@@ -113,17 +107,17 @@ public class MenuBar extends JMenuBar implements ActionListener {
         if(e.getSource() == mediaExitMenuItem){
             mainFrame.dispatchEvent(new WindowEvent(mainFrame, WindowEvent.WINDOW_CLOSING));
         } else if(e.getSource() == mediaPlayFileMenuItem){
-            testPlayer.getControlsPanel().addMedia();
+            mainPlayer.getControlsPanel().addMedia();
         } else if(e.getSource() == quizMenuItem){
-            if (new WordService().getAllByFilename(testPlayer.getControlsPanel().getActualFile().getName()).size() < 6) {
+            if (new WordService().getAllByFilename(mainPlayer.getControlsPanel().getActualFile().getName()).size() < 6) {
                 JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Not enough words to generate quiz!", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
-                new Quiz(testPlayer.getControlsPanel());
+                new Quiz(mainPlayer.getControlsPanel());
             }
         } else if (e.getSource() == generatePdfMenuItem) {
             try {
                 PDFGeneratorService pdf = new PDFGeneratorService();
-                pdf.createDictionary(testPlayer.getControlsPanel().getActualFile().getName());
+                pdf.createDictionary(mainPlayer.getControlsPanel().getActualFile().getName());
                 JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "PDF file successfully created");
             } catch (FileNotFoundException | DocumentException e1) {
                 JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Failed to create PDF file", "Error", JOptionPane.ERROR_MESSAGE);

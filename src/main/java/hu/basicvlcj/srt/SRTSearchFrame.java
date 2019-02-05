@@ -20,7 +20,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class SrtSearchFrame extends JFrame implements ActionListener {
+public class SRTSearchFrame extends JFrame implements ActionListener {
 
     private JTextField nameTextField;
     private JTextField seasonTextField;
@@ -30,7 +30,7 @@ public class SrtSearchFrame extends JFrame implements ActionListener {
 
     private JToggleButton isSerial;
 
-    public SrtSearchFrame() {
+    public SRTSearchFrame() {
         setTitle("Search for subtitles online");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(700, 100);

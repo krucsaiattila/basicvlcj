@@ -40,7 +40,7 @@ import java.util.List;
  *
  */
 @Getter
-public class TestPlayer implements MouseMotionListener, MouseListener {
+public class MainPlayer implements MouseMotionListener, MouseListener {
 
     private final JFrame mainFrame;
 
@@ -55,7 +55,7 @@ public class TestPlayer implements MouseMotionListener, MouseListener {
     private EmbeddedMediaPlayer mediaPlayer;
 
 
-    public TestPlayer() {
+    public MainPlayer() {
 
         videoSurface = new Canvas();
 
