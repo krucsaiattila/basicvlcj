@@ -23,6 +23,7 @@ import com.github.wtekiela.opensub4j.impl.OpenSubtitlesClientImpl;
 import com.github.wtekiela.opensub4j.response.SubtitleInfo;
 import hu.basicvlcj.srt.SRTInfo;
 import hu.basicvlcj.srt.SRTReader;
+import hu.basicvlcj.wget.Wget;
 import lombok.Getter;
 import org.apache.xmlrpc.XmlRpcException;
 import uk.co.caprica.vlcj.binding.LibVlcConst;
@@ -45,8 +46,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -576,8 +575,8 @@ public class PlayerControlsPanel extends JPanel {
                     public void mouseClicked(MouseEvent e) {
                         int row = subtitlesTable.rowAtPoint(e.getPoint());
                         try {
-                            Desktop.getDesktop().browse(new URI(subtitles.get(row).getDownloadLink()));
-                        } catch (IOException | URISyntaxException ex) {
+                            Wget.wGet(subtitles.get(row).getFileName() + ".zip", subtitles.get(row).getDownloadLink());
+                        } catch (Exception ex) {
                             JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Failed to download subtitle file", "Error", JOptionPane.ERROR_MESSAGE);
                         }
                     }
