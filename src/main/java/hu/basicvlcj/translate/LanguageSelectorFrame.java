@@ -1,4 +1,4 @@
-package hu.basicvlcj.videoplayer;
+package hu.basicvlcj.translate;
 
 import javax.swing.*;
 import java.awt.*;

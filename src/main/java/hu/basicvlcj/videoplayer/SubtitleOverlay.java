@@ -8,6 +8,7 @@ import hu.basicvlcj.service.WordService;
 import hu.basicvlcj.srt.SRT;
 import hu.basicvlcj.srt.SRTInfo;
 import hu.basicvlcj.translate.DetectedLanguageResponse;
+import hu.basicvlcj.translate.LanguageSelectorFrame;
 import hu.basicvlcj.translate.TranslateResponse;
 import hu.basicvlcj.translate.Translator;
 import lombok.Setter;
