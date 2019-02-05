@@ -19,7 +19,7 @@ import java.util.stream.Stream;
 public class PDFGeneratorService {
 
     private void addTableHeader(PdfPTable table) {
-        Stream.of("Word", "Meaning")
+        Stream.of("Word", "Meaning", "Example")
                 .forEach(columnTitle -> {
                     PdfPCell header = new PdfPCell();
                     header.setBackgroundColor(BaseColor.LIGHT_GRAY);
@@ -29,18 +29,22 @@ public class PDFGeneratorService {
                 });
     }
 
-    private void addRow(PdfPTable table, String word, String meaning) {
+    private void addRow(PdfPTable table, String word, String meaning, String example) {
         PdfPCell wordCell = new PdfPCell();
         PdfPCell meaningCell = new PdfPCell();
+        PdfPCell exampleCell = new PdfPCell();
 
         wordCell.setBorderWidth(0);
         meaningCell.setBorderWidth(0);
+        exampleCell.setBorderWidth(0);
 
         wordCell.setPhrase(new Phrase(word));
         meaningCell.setPhrase(new Phrase(meaning));
+        exampleCell.setPhrase(new Phrase(example));
 
         table.addCell(wordCell);
         table.addCell(meaningCell);
+        table.addCell(exampleCell);
     }
 
     /**
@@ -56,11 +60,11 @@ public class PDFGeneratorService {
 
         document.open();
 
-        PdfPTable table = new PdfPTable(2);
+        PdfPTable table = new PdfPTable(3);
         addTableHeader(table);
 
-        for (Word word : new WordService().getAllByFilename("SOMETHING")) {
-            addRow(table, word.getForeignWord(), word.getMeaning());
+        for (Word word : new WordService().getAllByFilename(filename)) {
+            addRow(table, word.getForeignWord(), word.getMeaning(), word.getExample());
         }
 
         document.add(table);

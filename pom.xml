@@ -13,11 +13,6 @@
             <id>opensubtitles</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
         </repository>
-
-        <repository>
-            <id>uibuilder-snapshots</id>
-            <url>http://nexus.devbench.io/content/repositories/public/</url>
-        </repository>
     </repositories>
 
     <build>

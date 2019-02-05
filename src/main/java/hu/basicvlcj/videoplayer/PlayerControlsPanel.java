@@ -438,19 +438,23 @@ public class PlayerControlsPanel extends JPanel {
         subTitlesButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(actualFile != null){
-                    subtitleChooser.setCurrentDirectory(actualFile);
+                try {
+                    if (actualFile != null) {
+                        subtitleChooser.setCurrentDirectory(actualFile);
+                    }
+                    if (JFileChooser.APPROVE_OPTION == subtitleChooser.showOpenDialog(PlayerControlsPanel.this)) {
+                        actualFile = new File(subtitleChooser.getSelectedFile().getAbsolutePath());
+                        SubtitleOverlay subtitleOverlay = (SubtitleOverlay) mediaPlayer.getOverlay();
+                        SRTInfo info = SRTReader.read(actualFile);
+                        subtitleOverlay.setSRTInfo(info);
+                        subtitleOverlay.setActualFile(actualFile);
+                    }
+                    LanguageSelectorFrame.languageDetection = true;
+                    LanguageSelectorFrame.currentFromLanguage = "";
+                    LanguageSelectorFrame.currentToLanguage = System.getProperty("user.language");
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Unexpected error has occured!", "Error", JOptionPane.ERROR_MESSAGE);
                 }
-                if(JFileChooser.APPROVE_OPTION == subtitleChooser.showOpenDialog(PlayerControlsPanel.this)) {
-                    actualFile = new File(subtitleChooser.getSelectedFile().getAbsolutePath());
-                    SubtitleOverlay subtitleOverlay = (SubtitleOverlay)mediaPlayer.getOverlay();
-                    SRTInfo info = SRTReader.read(actualFile);
-                    subtitleOverlay.setSRTInfo(info);
-                    subtitleOverlay.setActualFile(actualFile);
-                }
-                LanguageSelectorFrame.languageDetection = true;
-                LanguageSelectorFrame.currentFromLanguage = "";
-                LanguageSelectorFrame.currentToLanguage = System.getProperty("user.language");
             }
         });
 
@@ -556,6 +560,7 @@ public class PlayerControlsPanel extends JPanel {
 
             osClient.login("atesz0505", "basicvlcj", "en", "TemporaryUserAgent");
 
+            //List<SubtitleInfo> subtitles = osClient.searchSubtitles("en", new File("C:\\Users\\Dell\\Downloads\\Friends.S01E01.DVDrip.XviD-SAiNTS_(ENGLISH)_DJJ.HOME.SAPO.PT.srt"));
             //List<SubtitleInfo> subtitles = osClient.searchSubtitles("eng", new File(actualFile.getAbsolutePath())).stream().filter(sub -> sub.getFormat().equals("srt")).collect(Collectors.toList());
             List<SubtitleInfo> subtitles = osClient.searchSubtitles("eng", "Friends", "1", "1");
             if(!subtitles.isEmpty()){
@@ -592,6 +597,7 @@ public class PlayerControlsPanel extends JPanel {
 
             osClient.logout();
         } catch (IOException |XmlRpcException e){
+            e.printStackTrace();
             JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "An unexpected error has occured. Please check your internet connection.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }

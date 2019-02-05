@@ -88,7 +88,8 @@ public class MenuBar extends JMenuBar implements ActionListener {
             }
         } else if (e.getSource() == generatePdfMenuItem) {
             try {
-                new PDFGeneratorService().createDictionary(testPlayer.getControlsPanel().getActualFile().getName());
+                PDFGeneratorService pdf = new PDFGeneratorService();
+                pdf.createDictionary(testPlayer.getControlsPanel().getActualFile().getName());
                 JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "PDF file successfully created");
             } catch (FileNotFoundException | DocumentException e1) {
                 JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Failed to create PDF file", "Error", JOptionPane.ERROR_MESSAGE);
