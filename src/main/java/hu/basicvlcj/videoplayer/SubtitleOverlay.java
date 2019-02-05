@@ -104,7 +104,6 @@ public class SubtitleOverlay extends Window implements MouseListener {
 
 		// draw all bounding boxes and the subtitle
 		for (Entry<String, Rectangle2D> box : boundingBoxes) {
-			//g2.drawRect((int) box.getValue().getX(), (int) box.getValue().getY(), (int) box.getValue().getWidth(), (int) box.getValue().getHeight());
 			g2.drawString(box.getKey(), (int)box.getValue().getX(), (int)(box.getValue().getY()+box.getValue().getHeight()));
 		}
 

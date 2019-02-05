@@ -22,6 +22,8 @@
  */
 package hu.basicvlcj.srt;
 
+import org.jsoup.Jsoup;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
@@ -89,8 +91,8 @@ public class SRTReader {
         
         return srtInfo;
     }
-    
-    private static SRT parse(BufferedLineReader reader) throws IOException, EOFException {
+
+    private static SRT parse(BufferedLineReader reader) throws IOException {
         String nString = reader.readLine();
         // ignore all empty lines
         while (nString != null && nString.isEmpty()) {
@@ -154,6 +156,7 @@ public class SRTReader {
             if (line.trim().isEmpty()) {
                 break;
             }
+            line = Jsoup.parse(line).text();
             subtitleLines.add(line);
         }
         
