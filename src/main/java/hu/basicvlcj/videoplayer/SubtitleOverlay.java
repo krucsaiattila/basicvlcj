@@ -41,7 +41,7 @@ public class SubtitleOverlay extends Window implements MouseListener {
 
 	// offset from the bottom of the overlay
 	private int subtitleYOffset = 20;
-	private int fontSize = 20; // size of the subtitle
+	public static int fontSize = 20; // size of the subtitle
 	private int lineSpacing = 10; // pixels between lines
 
 	private WordService wordsService = new WordService();

@@ -25,6 +25,8 @@ public class MenuBar extends JMenuBar implements ActionListener {
     private JMenuItem helpAboutMenuItem;
     private JMenu generateMenu;
     private JMenuItem generatePdfMenuItem;
+    private JMenu optionsMenu;
+    private JMenuItem subtitleSizeMenuItem;
 
     private JFrame mainFrame;
     private TestPlayer testPlayer;
@@ -60,6 +62,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
         add(helpMenu);
 
         quizMenu = new JMenu("Quiz");
+        quizMenu.setMnemonic('q');
         quizMenuItem = new JMenuItem("Take quiz...");
         quizMenuItem.addActionListener(this);
         quizMenu.add(quizMenuItem);
@@ -67,11 +70,20 @@ public class MenuBar extends JMenuBar implements ActionListener {
         add(quizMenu);
 
         generateMenu = new JMenu("Generate");
+        generateMenu.setMnemonic('g');
         generatePdfMenuItem = new JMenuItem("Generate PDF from unknown words");
         generatePdfMenuItem.addActionListener(this);
         generateMenu.add(generatePdfMenuItem);
 
         add(generateMenu);
+
+        optionsMenu = new JMenu("Options");
+        optionsMenu.setMnemonic('o');
+        subtitleSizeMenuItem = new JMenuItem("Set subtitle size");
+        subtitleSizeMenuItem.addActionListener(this);
+        optionsMenu.add(subtitleSizeMenuItem);
+
+        add(optionsMenu);
     }
 
     @Override
@@ -94,6 +106,8 @@ public class MenuBar extends JMenuBar implements ActionListener {
             } catch (FileNotFoundException | DocumentException e1) {
                 JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Failed to create PDF file", "Error", JOptionPane.ERROR_MESSAGE);
             }
+        } else if (e.getSource() == subtitleSizeMenuItem) {
+            new SubtitleFontSizeFrame();
         }
     }
 }
