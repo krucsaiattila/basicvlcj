@@ -241,20 +241,13 @@ public class PlayerControlsPanel extends JPanel {
         bottomPanel.add(playButton);
         bottomPanel.add(fastForwardButton);
         bottomPanel.add(nextChapterButton);
-
         bottomPanel.add(volumeSlider);
         bottomPanel.add(toggleMuteButton);
-
         bottomPanel.add(captureButton);
-
         bottomPanel.add(ejectButton);
-
         bottomPanel.add(fullScreenButton);
-
         bottomPanel.add(subTitlesButton);
-
         bottomPanel.add(languageSelectorButton);
-
         bottomPanel.add(searchForSubtitlesButton);
 
         add(bottomPanel, BorderLayout.SOUTH);

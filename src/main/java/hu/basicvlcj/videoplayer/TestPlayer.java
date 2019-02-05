@@ -170,7 +170,7 @@ public class TestPlayer implements MouseMotionListener, MouseListener {
     @Override
     public void mouseClicked(MouseEvent e) {
         if(e.getClickCount() == 1) {
-        	((SubtitleOverlay)(mediaPlayer.getOverlay())).dispatchEvent(e);
+            mediaPlayer.getOverlay().dispatchEvent(e);
         }
     	
     	if (e.getClickCount() == 2 && !e.isConsumed()) {
@@ -208,10 +208,10 @@ public class TestPlayer implements MouseMotionListener, MouseListener {
     @Override
     public void mouseMoved(MouseEvent e) {
     	if(mediaPlayer.isFullScreen()) {
-            if (e.getYOnScreen() < 1000 && controlsPanel.isVisible()) {
+            if (e.getYOnScreen() < 1060 && controlsPanel.isVisible()) {
                 controlsPanel.setVisible(false);
                 ((SubtitleOverlay)(mediaPlayer.getOverlay())).decreaseYOffset(controlsPanel.getHeight());
-            } else if(e.getYOnScreen() >= 1000 && !controlsPanel.isVisible()) {
+            } else if (e.getYOnScreen() >= 1060 && !controlsPanel.isVisible()) {
                 controlsPanel.setVisible(true);
                 ((SubtitleOverlay)(mediaPlayer.getOverlay())).increaseYOffset(controlsPanel.getHeight());
             }

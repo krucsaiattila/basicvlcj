@@ -156,6 +156,7 @@ public class SRTReader {
             if (line.trim().isEmpty()) {
                 break;
             }
+            //remove html tags, like <i>
             line = Jsoup.parse(line).text();
             subtitleLines.add(line);
         }
