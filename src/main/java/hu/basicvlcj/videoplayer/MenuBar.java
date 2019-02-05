@@ -6,6 +6,8 @@ import hu.basicvlcj.service.PDFGeneratorService;
 import hu.basicvlcj.service.WordService;
 
 import javax.swing.*;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -27,6 +29,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
     private JMenuItem generatePdfMenuItem;
     private JMenu optionsMenu;
     private JMenuItem subtitleSizeMenuItem;
+    private JMenuItem subtitleDelayMenuItem;
 
     private JFrame mainFrame;
     private TestPlayer testPlayer;
@@ -79,9 +82,28 @@ public class MenuBar extends JMenuBar implements ActionListener {
 
         optionsMenu = new JMenu("Options");
         optionsMenu.setMnemonic('o');
-        subtitleSizeMenuItem = new JMenuItem("Set subtitle size");
-        subtitleSizeMenuItem.addActionListener(this);
-        optionsMenu.add(subtitleSizeMenuItem);
+        optionsMenu.addMenuListener(new MenuListener() {
+            @Override
+            public void menuSelected(MenuEvent e) {
+                new SubtitleOptionsFrame();
+            }
+
+            @Override
+            public void menuDeselected(MenuEvent e) {
+
+            }
+
+            @Override
+            public void menuCanceled(MenuEvent e) {
+
+            }
+        });
+//        subtitleSizeMenuItem = new JMenuItem("Set subtitle size");
+//        subtitleSizeMenuItem.addActionListener(this);
+//        optionsMenu.add(subtitleSizeMenuItem);
+//        subtitleDelayMenuItem = new JMenuItem("Set subtitle delay");
+//        subtitleDelayMenuItem.addActionListener(this);
+//        optionsMenu.add(subtitleDelayMenuItem);
 
         add(optionsMenu);
     }
@@ -106,8 +128,8 @@ public class MenuBar extends JMenuBar implements ActionListener {
             } catch (FileNotFoundException | DocumentException e1) {
                 JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Failed to create PDF file", "Error", JOptionPane.ERROR_MESSAGE);
             }
-        } else if (e.getSource() == subtitleSizeMenuItem) {
-            new SubtitleFontSizeFrame();
+        } else if (e.getSource() == optionsMenu) {
+            new SubtitleOptionsFrame();
         }
     }
 }

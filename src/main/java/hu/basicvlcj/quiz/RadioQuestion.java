@@ -1,26 +1,29 @@
 package hu.basicvlcj.quiz;
 
+import lombok.Getter;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 
 public class RadioQuestion extends JPanel implements ActionListener {
-    String correctAns;
-    Quiz quiz;
-    String selected;
-    boolean used;
+    private String correctAns;
+    private Quiz quiz;
+    private String selected;
+    @Getter
+    private boolean used;
     //questions
-    JPanel qPanel = new JPanel();
-    JPanel q2Panel = new JPanel();
+    private JPanel qPanel = new JPanel();
+    private JPanel q2Panel = new JPanel();
     //answers
-    JPanel aPanel = new JPanel();
-    JRadioButton[] responses;
-    ButtonGroup group = new ButtonGroup();
+    private JPanel aPanel = new JPanel();
+    private JRadioButton[] responses;
+    private ButtonGroup group = new ButtonGroup();
     //bottom
-    JPanel botPanel = new JPanel();
-    JButton next = new JButton("Next");
-    JButton finish = new JButton("Finish");
+    private JPanel botPanel = new JPanel();
+    private JButton next = new JButton("Next");
+    private JButton finish = new JButton("Finish");
 
     public RadioQuestion(String[] options, String question, String ans, Quiz quiz) {
         this.quiz = quiz;
@@ -74,11 +77,11 @@ public class RadioQuestion extends JPanel implements ActionListener {
 
     public void showResult() {
         String text = selected;
-        quiz.total++;
+        quiz.setTotal(quiz.getTotal() + 1);
         if (selected.equals(correctAns)) {
             JOptionPane.showMessageDialog(null, text + " is correct!\nGood Job!");
         } else {
-            quiz.wrongs++;
+            quiz.setTotal(quiz.getTotal() + 1);
             JOptionPane.showMessageDialog(null, text + " is wrong.\nTry again!");
         }
     }

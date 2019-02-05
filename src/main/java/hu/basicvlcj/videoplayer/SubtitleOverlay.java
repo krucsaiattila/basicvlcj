@@ -37,6 +37,8 @@ public class SubtitleOverlay extends Window implements MouseListener {
 	@Setter
 	private File actualFile;
 
+	public static long subtitleDelay;
+
 	private List<Entry<String, Rectangle2D>> boundingBoxes = new ArrayList<Map.Entry<String, Rectangle2D>>();
 
 	// offset from the bottom of the overlay
@@ -56,6 +58,8 @@ public class SubtitleOverlay extends Window implements MouseListener {
 		    public void componentResized(ComponentEvent componentEvent) {
 		    	update(true); // force a subtitle update
 		    }});
+
+		subtitleDelay = 0;
 
 		setLayout(null);
 	}
@@ -153,7 +157,8 @@ public class SubtitleOverlay extends Window implements MouseListener {
 	public void update(boolean force) {
 		mediaPlayer.setSpu(-1);
 
-		long time = mediaPlayer.getTime();
+		//subtitle delay
+		long time = mediaPlayer.getTime() + subtitleDelay;
 
 		// no update was needed
 		if (!seekActSubtitle(time) && !force) {

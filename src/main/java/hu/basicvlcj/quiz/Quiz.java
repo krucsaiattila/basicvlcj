@@ -3,6 +3,8 @@ package hu.basicvlcj.quiz;
 import hu.basicvlcj.model.Word;
 import hu.basicvlcj.service.WordService;
 import hu.basicvlcj.videoplayer.PlayerControlsPanel;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,16 +13,20 @@ import java.util.List;
 import java.util.Random;
 
 public class Quiz extends JFrame {
-    JPanel p = new JPanel();
-    CardLayout cards = new CardLayout();
-    int numQs;
-    int wrongs = 0;
-    int total = 0;
+    private JPanel p = new JPanel();
+    private CardLayout cards = new CardLayout();
+    private int numQs;
+    @Getter
+    @Setter
+    private int wrongs = 0;
+    @Getter
+    @Setter
+    private int total = 0;
 
     private WordService wordService;
     private List<Word> words;
 
-    RadioQuestion[] questions;
+    private RadioQuestion[] questions;
 
     public Quiz(PlayerControlsPanel playerControlsPanel) {
         super("Corevia");
@@ -76,7 +82,7 @@ public class Quiz extends JFrame {
             int i = 0;
             while (!found) {
                 i = r.nextInt(numQs);
-                if (!questions[i].used) {
+                if (!questions[i].isUsed()) {
                     found = true;
                 }
             }
