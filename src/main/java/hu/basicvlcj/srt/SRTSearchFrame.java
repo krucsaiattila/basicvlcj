@@ -30,12 +30,16 @@ public class SRTSearchFrame extends JFrame implements ActionListener {
 
     private JToggleButton isSerial;
 
-    public SRTSearchFrame() {
+    private String directoryPath;
+
+    public SRTSearchFrame(String directoryPath) {
         setTitle("Search for subtitles online");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(700, 100);
         setAlwaysOnTop(true);
         setMinimumSize(new Dimension(700, 100));
+
+        this.directoryPath = directoryPath;
 
         JPanel panel = new JPanel(new FlowLayout());
 
@@ -103,11 +107,7 @@ public class SRTSearchFrame extends JFrame implements ActionListener {
                         @Override
                         public void mouseClicked(MouseEvent e) {
                             int row = subtitlesTable.rowAtPoint(e.getPoint());
-                            try {
-                                Wget.wGet(subtitles.get(row).getFileName() + ".zip", subtitles.get(row).getDownloadLink());
-                            } catch (Exception ex) {
-                                JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Failed to download subtitle file", "Error", JOptionPane.ERROR_MESSAGE);
-                            }
+                            Wget.wGet(subtitles.get(row).getZipDownloadLink(), directoryPath);
                         }
                     });
 

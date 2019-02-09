@@ -78,7 +78,7 @@ public class SRTReader {
 
         SRTInfo srtInfo = new SRTInfo();
         try (BufferedReader br = new BufferedReader(new InputStreamReader(
-                new FileInputStream(srtFile), StandardCharsets.ISO_8859_1))) {
+                new FileInputStream(srtFile), StandardCharsets.UTF_8))) {
             BufferedLineReader reader = new BufferedLineReader(br);
             while (true) {
                 srtInfo.add(parse(reader));

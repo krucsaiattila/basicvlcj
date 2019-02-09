@@ -22,7 +22,6 @@ import hu.basicvlcj.srt.SRTInfo;
 import hu.basicvlcj.srt.SRTReader;
 import hu.basicvlcj.srt.SRTSearchFrame;
 import hu.basicvlcj.translate.LanguageSelectorFrame;
-import lombok.Getter;
 import uk.co.caprica.vlcj.binding.LibVlcConst;
 import uk.co.caprica.vlcj.filter.swing.SwingFileFilterFactory;
 import uk.co.caprica.vlcj.player.MediaPlayer;
@@ -87,8 +86,8 @@ public class PlayerControlsPanel extends JPanel {
 
     private boolean mousePressedPlaying = false;
 
-    @Getter
-    private File actualFile;
+    public static File actualMediaFile;
+    public static File actualSubtitleFile;
 
     public PlayerControlsPanel(EmbeddedMediaPlayer mediaPlayer, MainPlayer mainPlayer) {
         this.mediaPlayer = mediaPlayer;
@@ -423,15 +422,13 @@ public class PlayerControlsPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    if (actualFile != null) {
-                        subtitleChooser.setCurrentDirectory(actualFile);
-                    }
+                    setCurrentDirectories();
                     if (JFileChooser.APPROVE_OPTION == subtitleChooser.showOpenDialog(PlayerControlsPanel.this)) {
-                        actualFile = new File(subtitleChooser.getSelectedFile().getAbsolutePath());
+                        actualSubtitleFile = new File(subtitleChooser.getSelectedFile().getAbsolutePath());
                         SubtitleOverlay subtitleOverlay = (SubtitleOverlay) mediaPlayer.getOverlay();
-                        SRTInfo info = SRTReader.read(actualFile);
+                        SRTInfo info = SRTReader.read(actualSubtitleFile);
                         subtitleOverlay.setSRTInfo(info);
-                        subtitleOverlay.setActualFile(actualFile);
+                        subtitleOverlay.setActualFile(actualSubtitleFile);
                     }
                     LanguageSelectorFrame.languageDetection = true;
                     LanguageSelectorFrame.currentFromLanguage = "";
@@ -445,10 +442,10 @@ public class PlayerControlsPanel extends JPanel {
         searchForSubtitlesButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(actualFile != null){
-                    new SRTSearchFrame();
+                if (actualMediaFile != null) {
+                    new SRTSearchFrame(actualMediaFile.getAbsolutePath());
                 } else {
-                    JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "No file has been selected!");
+                    new SRTSearchFrame(System.getProperty("user.dir"));
                 }
             }
         });
@@ -456,10 +453,10 @@ public class PlayerControlsPanel extends JPanel {
         languageSelectorButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (actualFile != null || LanguageSelectorFrame.currentFromLanguage != null) {
+                if (actualMediaFile != null || LanguageSelectorFrame.currentFromLanguage != null) {
                     new LanguageSelectorFrame();
                 } else {
-                    JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "No file has been selected!");
+                    JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "No media file has been selected!");
                 }
             }
         });
@@ -523,14 +520,23 @@ public class PlayerControlsPanel extends JPanel {
 
     public void addMedia() {
         mediaPlayer.enableOverlay(false);
-        if(actualFile != null){
-            fileChooser.setCurrentDirectory(actualFile);
-        }
+        setCurrentDirectories();
+
         if(JFileChooser.APPROVE_OPTION == fileChooser.showOpenDialog(PlayerControlsPanel.this)) {
-            actualFile = new File(fileChooser.getSelectedFile().getAbsolutePath());
-            mediaPlayer.playMedia(actualFile.getAbsolutePath());
+            actualMediaFile = new File(fileChooser.getSelectedFile().getAbsolutePath());
+            mediaPlayer.playMedia(actualMediaFile.getAbsolutePath());
             positionSlider.setValue(0);
         }
         mediaPlayer.enableOverlay(true);
+    }
+
+    private void setCurrentDirectories() {
+        if (actualSubtitleFile != null) {
+            subtitleChooser.setCurrentDirectory(actualSubtitleFile);
+            fileChooser.setCurrentDirectory(actualSubtitleFile);
+        } else if (actualMediaFile != null) {
+            subtitleChooser.setCurrentDirectory(actualMediaFile);
+            fileChooser.setCurrentDirectory(actualMediaFile);
+        }
     }
 }

@@ -1,46 +1,38 @@
 package hu.basicvlcj.wget;
 
-import java.io.*;
-import java.net.MalformedURLException;
+import org.apache.commons.compress.archivers.ArchiveInputStream;
+import org.apache.commons.compress.archivers.ArchiveStreamFactory;
+import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
+import org.apache.commons.compress.utils.IOUtils;
+
+import javax.swing.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.file.Paths;
 
 public class Wget {
 
-    public static WgetStatus wGet(String saveAsFile, String urlOfFile) {
-        InputStream httpIn = null;
-        OutputStream fileOutput = null;
-        OutputStream bufferedOut = null;
+    public static void wGet(String urlOfFile, String directory) {
         try {
-            // check the http connection before we do anything to the fs
-            httpIn = new BufferedInputStream(new URL(urlOfFile).openStream());
-            // prep saving the file
-            fileOutput = new FileOutputStream(saveAsFile);
-            bufferedOut = new BufferedOutputStream(fileOutput, 1024);
-            byte[] data = new byte[1024];
-            boolean fileComplete = false;
-            int count = 0;
-            while (!fileComplete) {
-                count = httpIn.read(data, 0, 1024);
-                if (count <= 0) {
-                    fileComplete = true;
-                } else {
-                    bufferedOut.write(data, 0, count);
-                }
-            }
-        } catch (MalformedURLException e) {
-            return WgetStatus.MalformedUrl;
-        } catch (IOException e) {
-            return WgetStatus.IoException;
-        } finally {
-            try {
-                bufferedOut.close();
-                fileOutput.close();
-                httpIn.close();
-            } catch (IOException e) {
-                return WgetStatus.UnableToCloseOutputStream;
-            }
-        }
-        return WgetStatus.Success;
-    }
+            URL url = new URL(urlOfFile);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            InputStream is = connection.getInputStream();
+            ArchiveInputStream inputStream = new ArchiveStreamFactory().createArchiveInputStream("zip", is);
+            ZipArchiveEntry entry = (ZipArchiveEntry) inputStream.getNextEntry();
+            OutputStream outputStream = new FileOutputStream(new File(Paths.get(directory).toAbsolutePath().getParent().toString(), entry.getName()));
+            IOUtils.copy(inputStream, outputStream);
+            outputStream.close();
+            inputStream.close();
 
+            JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Subtitle successfully downloaded to " + Paths.get(directory).toAbsolutePath().getParent());
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Failed to download subtitle file", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 }

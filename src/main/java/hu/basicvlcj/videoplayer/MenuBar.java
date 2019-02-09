@@ -109,7 +109,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
         } else if(e.getSource() == mediaPlayFileMenuItem){
             mainPlayer.getControlsPanel().addMedia();
         } else if(e.getSource() == quizMenuItem){
-            if (new WordService().getAllByFilename(mainPlayer.getControlsPanel().getActualFile().getName()).size() < 6) {
+            if (new WordService().getAllByFilename(PlayerControlsPanel.actualSubtitleFile.getName()).size() < 6) {
                 JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Not enough words to generate quiz!", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
                 new Quiz(mainPlayer.getControlsPanel());
@@ -117,7 +117,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
         } else if (e.getSource() == generatePdfMenuItem) {
             try {
                 PDFGeneratorService pdf = new PDFGeneratorService();
-                pdf.createDictionary(mainPlayer.getControlsPanel().getActualFile().getName());
+                pdf.createDictionary(PlayerControlsPanel.actualSubtitleFile.getName());
                 JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "PDF file successfully created");
             } catch (FileNotFoundException | DocumentException e1) {
                 JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Failed to create PDF file", "Error", JOptionPane.ERROR_MESSAGE);

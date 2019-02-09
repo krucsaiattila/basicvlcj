@@ -35,7 +35,7 @@ public class Quiz extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         wordService = new WordService();
-        words = wordService.getAllByFilename(playerControlsPanel.getActualFile().getName());
+        words = wordService.getAllByFilename(PlayerControlsPanel.actualSubtitleFile.getName());
 
         questions = new RadioQuestion[words.size()];
         for (int i = 0; i < questions.length; i++) {
