@@ -4,13 +4,13 @@ import com.sun.awt.AWTUtilities;
 import com.sun.jna.platform.WindowUtils;
 import hu.basicvlcj.model.Word;
 import hu.basicvlcj.popupwindow.PopupMessageBuilder;
+import hu.basicvlcj.service.TranslatorService;
 import hu.basicvlcj.service.WordService;
 import hu.basicvlcj.srt.SRT;
 import hu.basicvlcj.srt.SRTInfo;
 import hu.basicvlcj.translate.DetectedLanguageResponse;
 import hu.basicvlcj.translate.LanguageSelectorFrame;
 import hu.basicvlcj.translate.TranslateResponse;
-import hu.basicvlcj.translate.Translator;
 import lombok.Setter;
 import org.apache.logging.log4j.util.Strings;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
@@ -213,7 +213,7 @@ public class SubtitleOverlay extends Window implements MouseListener {
 		if (clickedWord != null) {
 
 			//saving the clicked word with the translation to the database
-			Translator translator = new Translator();
+            TranslatorService translatorService = new TranslatorService();
 			try {
 				String parsedWord = clickedWord.replaceAll("[-+.^:,]","");
 
@@ -221,13 +221,13 @@ public class SubtitleOverlay extends Window implements MouseListener {
 				DetectedLanguageResponse[] detectedLanguageResponse;
 				//language detection
 				if (LanguageSelectorFrame.currentFromLanguage.equals("")) {
-					detectedLanguageResponse = translator.PostWithLanguageDetection(parsedWord);
+                    detectedLanguageResponse = translatorService.PostWithLanguageDetection(parsedWord);
 					//now we look up in the dictionary
-					response = translator.PostWithGivenLanguages(detectedLanguageResponse[0].getLanguage(), LanguageSelectorFrame.currentToLanguage, parsedWord);
+                    response = translatorService.PostWithGivenLanguages(detectedLanguageResponse[0].getLanguage(), LanguageSelectorFrame.currentToLanguage, parsedWord);
 
 				//chosen languages
 				} else {
-					response = translator.PostWithGivenLanguages(LanguageSelectorFrame.currentFromLanguage, LanguageSelectorFrame.currentToLanguage, parsedWord);
+                    response = translatorService.PostWithGivenLanguages(LanguageSelectorFrame.currentFromLanguage, LanguageSelectorFrame.currentToLanguage, parsedWord);
 				}
 				Word word = new Word();
 
@@ -257,7 +257,7 @@ public class SubtitleOverlay extends Window implements MouseListener {
 				}
 
 			} catch (Exception ex){
-				JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "An unexpected error has occured", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "An unexpected error has occurred", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	}

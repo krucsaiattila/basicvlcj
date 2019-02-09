@@ -434,7 +434,7 @@ public class PlayerControlsPanel extends JPanel {
                     LanguageSelectorFrame.currentFromLanguage = "";
                     LanguageSelectorFrame.currentToLanguage = System.getProperty("user.language");
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Unexpected error has occured!", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Unexpected error has occurred!", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });

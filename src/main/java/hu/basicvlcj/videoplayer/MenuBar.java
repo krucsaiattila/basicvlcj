@@ -28,8 +28,6 @@ public class MenuBar extends JMenuBar implements ActionListener {
     private JMenu generateMenu;
     private JMenuItem generatePdfMenuItem;
     private JMenu optionsMenu;
-    private JMenuItem subtitleSizeMenuItem;
-    private JMenuItem subtitleDelayMenuItem;
 
     private JFrame mainFrame;
     private MainPlayer mainPlayer;
@@ -117,9 +115,9 @@ public class MenuBar extends JMenuBar implements ActionListener {
         } else if (e.getSource() == generatePdfMenuItem) {
             try {
                 PDFGeneratorService pdf = new PDFGeneratorService();
-                pdf.createDictionary(PlayerControlsPanel.actualSubtitleFile.getName());
-                JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "PDF file successfully created");
+                pdf.createDictionary();
             } catch (FileNotFoundException | DocumentException e1) {
+                e1.printStackTrace();
                 JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Failed to create PDF file", "Error", JOptionPane.ERROR_MESSAGE);
             }
         } else if (e.getSource() == optionsMenu) {

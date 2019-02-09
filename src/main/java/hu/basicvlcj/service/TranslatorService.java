@@ -1,15 +1,17 @@
-package hu.basicvlcj.translate;
+package hu.basicvlcj.service;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.*;
+import hu.basicvlcj.translate.DetectedLanguageResponse;
+import hu.basicvlcj.translate.TranslateResponse;
 
 import java.io.IOException;
 
 /**
  * A class that is responsible for the translation. It uses the Microsoft Translate API.
  */
-public class Translator {
+public class TranslatorService {
 
     private String subscriptionKey = "69be7b5e75ff473492695708eebc332d";
     private String givenLanguageUrl = "https://api.cognitive.microsofttranslator.com/dictionary/lookup?api-version=3.0&from=";

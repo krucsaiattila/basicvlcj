@@ -8,9 +8,13 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import hu.basicvlcj.model.Word;
+import hu.basicvlcj.videoplayer.PlayerControlsPanel;
 
+import javax.swing.*;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.nio.file.Paths;
 import java.util.stream.Stream;
 
 /**
@@ -50,24 +54,31 @@ public class PDFGeneratorService {
     /**
      * A method that creates the document.
      *
-     * @param filename the name of the output PDF document
      * @throws FileNotFoundException
      * @throws DocumentException
      */
-    public void createDictionary(String filename) throws FileNotFoundException, DocumentException {
+    public void createDictionary() throws FileNotFoundException, DocumentException {
+        if (PlayerControlsPanel.actualSubtitleFile == null) {
+            JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Subtitle file must be set.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         Document document = new Document();
-        PdfWriter.getInstance(document, new FileOutputStream(filename + ".pdf"));
+        PdfWriter.getInstance(document, new FileOutputStream(new File(Paths.get(PlayerControlsPanel.actualSubtitleFile.getAbsolutePath()).toAbsolutePath().getParent().toString()
+                + "\\" + PlayerControlsPanel.actualSubtitleFile.getName()
+                + ".pdf")));
 
         document.open();
 
         PdfPTable table = new PdfPTable(3);
         addTableHeader(table);
 
-        for (Word word : new WordService().getAllByFilename(filename)) {
+        for (Word word : new WordService().getAllByFilename(PlayerControlsPanel.actualSubtitleFile.getName())) {
             addRow(table, word.getForeignWord(), word.getMeaning(), word.getExample());
         }
 
         document.add(table);
         document.close();
+        JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "PDF file successfully created in "
+                + Paths.get(PlayerControlsPanel.actualSubtitleFile.getAbsolutePath()).toAbsolutePath().getParent().toString());
     }
 }

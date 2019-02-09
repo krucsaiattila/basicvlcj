@@ -9,9 +9,8 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * A service class that is responsible for communicating with the {@link hu.basicvlcj.repository.WordRepository}.
+ * A service class that is responsible for communicating with the database
  */
-//@Service
 public class WordService {
 
     public void create(Word word) {
@@ -25,7 +24,7 @@ public class WordService {
 
             stat.executeUpdate();
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "An unexpected error has occured", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "An unexpected error has occurred", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -44,7 +43,7 @@ public class WordService {
                 wordsList.add(w);
             }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "An unexpected error has occured", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "An unexpected error has occurred", "Error", JOptionPane.ERROR_MESSAGE);
         }
         return wordsList;
     }
@@ -60,7 +59,7 @@ public class WordService {
                 wordsList.add(w);
             }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "An unexpected error has occured", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "An unexpected error has occurred", "Error", JOptionPane.ERROR_MESSAGE);
         }
         return !wordsList.isEmpty();
     }
@@ -71,7 +70,7 @@ public class WordService {
             stat.executeUpdate("DELETE FROM WORDS");
 
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "An unexpected error has occured", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "An unexpected error has occurred", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 }

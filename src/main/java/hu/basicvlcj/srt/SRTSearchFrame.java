@@ -126,7 +126,7 @@ public class SRTSearchFrame extends JFrame implements ActionListener {
                 }
                 osClient.logout();
             } catch (IOException | XmlRpcException ex) {
-                JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "An unexpected error has occured. Please check your internet connection.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "An unexpected error has occurred. Please check your internet connection.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
 
