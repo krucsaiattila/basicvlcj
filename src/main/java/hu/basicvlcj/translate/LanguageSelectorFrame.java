@@ -10,7 +10,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-
+/**
+ * A class that is used to select the translation languages
+ */
 public class LanguageSelectorFrame extends JFrame implements ActionListener {
 
     public static String currentFromLanguage;
@@ -179,29 +181,26 @@ public class LanguageSelectorFrame extends JFrame implements ActionListener {
             }
             this.dispose();
         } else if (e.getSource() == fromComboBox) {
-            if (!languageDetection) {
-                if (!fromComboBox.getSelectedItem().equals("English")) {
-                    toComboBox.setSelectedItem("English");
-                    toComboBox.setEnabled(false);
-                } else {
-                    toComboBox.setEnabled(true);
-                }
-            }
+            enableOrDisableComboBoxes();
         } else if (e.getSource() == toComboBox) {
-            if (!languageDetection) {
-                if (!toComboBox.getSelectedItem().equals("English")) {
-                    fromComboBox.setSelectedItem("English");
-                    fromComboBox.setEnabled(false);
-                } else {
-                    fromComboBox.setEnabled(true);
-                }
-            }
+            enableOrDisableComboBoxes();
         } else if (e.getSource() == detectLanguageRadioButton) {
             languageDetection = !languageDetection;
             fromComboBox.setEnabled(!languageDetection);
             toComboBox.setEnabled(!languageDetection);
             if (languageDetection) {
                 toComboBox.setSelectedItem("English");
+            }
+        }
+    }
+
+    private void enableOrDisableComboBoxes(){
+        if (!languageDetection) {
+            if (!toComboBox.getSelectedItem().equals("English")) {
+                fromComboBox.setSelectedItem("English");
+                fromComboBox.setEnabled(false);
+            } else {
+                fromComboBox.setEnabled(true);
             }
         }
     }

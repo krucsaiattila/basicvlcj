@@ -303,7 +303,6 @@ public class PlayerControlsPanel extends JPanel {
         mediaPlayer.addMediaPlayerEventListener(new MediaPlayerEventAdapter() {
             @Override
             public void playing(MediaPlayer mediaPlayer) {
-//                updateVolume(mediaPlayer.getVolume());
             }
         });
 
@@ -453,10 +452,10 @@ public class PlayerControlsPanel extends JPanel {
         languageSelectorButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (actualMediaFile != null || LanguageSelectorFrame.currentFromLanguage != null) {
+                if ((actualMediaFile != null && actualSubtitleFile != null)|| LanguageSelectorFrame.currentFromLanguage != null) {
                     new LanguageSelectorFrame();
                 } else {
-                    JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "No media file has been selected!");
+                    JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "No media and/or subtitle file has been selected!");
                 }
             }
         });
@@ -518,7 +517,10 @@ public class PlayerControlsPanel extends JPanel {
         volumeSlider.setValue(value);
     }
 
-    public void addMedia() {
+    /**
+     * Adds the media to the player
+     */
+    protected void addMedia() {
         mediaPlayer.enableOverlay(false);
         setCurrentDirectories();
 

@@ -58,12 +58,6 @@ public abstract class Vlcj {
      * Static initialisation.
      */
     static {
-        // Initialise Log4J (this is good enough for testing, vlcj depends on log4j only for testing here)
-        //BasicConfigurator.configure();
-
-        // Safely try to initialise LibX11 to reduce the opportunity for native
-        // crashes - this will silently throw an Error on Windows (and maybe MacOS)
-        // that can safely be ignored
         LibXUtil.initialise();
 
         if(null != NATIVE_LIBRARY_SEARCH_PATH) {
@@ -92,7 +86,6 @@ public abstract class Vlcj {
             UIManager.setLookAndFeel(lookAndFeelClassName);
         }
         catch(Exception e) {
-            // Silently fail, it doesn't matter
         }
     }
 }

@@ -14,7 +14,7 @@ import java.awt.event.WindowEvent;
 import java.io.FileNotFoundException;
 
 /**
- * A class that represents the menubar on the top of the window.
+ * A class that represents the menubar on the top of the media player window.
  */
 public class MenuBar extends JMenuBar implements ActionListener {
 
@@ -110,7 +110,7 @@ public class MenuBar extends JMenuBar implements ActionListener {
             if (new WordService().getAllByFilename(PlayerControlsPanel.actualSubtitleFile.getName()).size() < 6) {
                 JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Not enough words to generate quiz!", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
-                new Quiz(mainPlayer.getControlsPanel());
+                new Quiz();
             }
         } else if (e.getSource() == generatePdfMenuItem) {
             try {

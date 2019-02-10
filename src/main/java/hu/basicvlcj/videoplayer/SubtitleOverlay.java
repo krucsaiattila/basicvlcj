@@ -8,9 +8,9 @@ import hu.basicvlcj.service.TranslatorService;
 import hu.basicvlcj.service.WordService;
 import hu.basicvlcj.srt.SRT;
 import hu.basicvlcj.srt.SRTInfo;
-import hu.basicvlcj.translate.DetectedLanguageResponse;
+import hu.basicvlcj.model.DetectedLanguageResponse;
 import hu.basicvlcj.translate.LanguageSelectorFrame;
-import hu.basicvlcj.translate.TranslateResponse;
+import hu.basicvlcj.model.TranslateResponse;
 import lombok.Setter;
 import org.apache.logging.log4j.util.Strings;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
@@ -27,6 +27,9 @@ import java.util.List;
 import java.util.*;
 import java.util.Map.Entry;
 
+/**
+ * A class that manages the subtitles on the media player.
+ */
 public class SubtitleOverlay extends Window implements MouseListener {
 
 	private static final long serialVersionUID = 1L;
@@ -189,7 +192,7 @@ public class SubtitleOverlay extends Window implements MouseListener {
 		}
 		
 		
-		actSubtitle = new ArrayList<String>();
+		actSubtitle = new ArrayList<>();
 		actSubtitle.add("");
 		
 		return oldSubtitle != actSubtitle;

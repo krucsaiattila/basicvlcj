@@ -14,6 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Class that is responsible for generating a quiz from the words, that the user clicked on.
+ */
 public class Quiz extends JFrame {
     private JPanel p = new JPanel();
     private CardLayout cards = new CardLayout();
@@ -30,7 +33,7 @@ public class Quiz extends JFrame {
 
     private RadioQuestion[] questions;
 
-    public Quiz(PlayerControlsPanel playerControlsPanel) {
+    public Quiz() {
         super("Corevia");
         setResizable(true);
         setSize(650, 300);
@@ -56,6 +59,11 @@ public class Quiz extends JFrame {
         setVisible(true);
     }
 
+    /**
+     *
+     * @param i the answer or the current question
+     * @return an array of random alternatives and the answer for the question
+     */
     private String[] generateRandomAnswers(int i) {
         List<String> alternatives = new ArrayList<>();
 
@@ -75,7 +83,10 @@ public class Quiz extends JFrame {
         return alternatives.toArray(new String[4]);
     }
 
-    public void next() {
+    /**
+     * Shows the next question
+     */
+    private void next() {
         if ((total - wrongs) == numQs) {
             showSummary();
         } else {
@@ -92,7 +103,10 @@ public class Quiz extends JFrame {
         }
     }
 
-    public void showSummary() {
+    /**
+     * Shows the summary after a finished quiz
+     */
+    private void showSummary() {
         JOptionPane.showMessageDialog(null, "That's it! Here is your summary:" +
                 "\nYou answered " + wrongs + " questions wrong" +
                 "\nYou answered " + (total - wrongs) + " right" +
@@ -101,6 +115,9 @@ public class Quiz extends JFrame {
         this.dispose();
     }
 
+    /**
+     * Class that represents a question from the quiz
+     */
     class RadioQuestion extends JPanel implements ActionListener {
         private String correctAns;
         private Quiz quiz;
@@ -119,7 +136,7 @@ public class Quiz extends JFrame {
         private JButton next = new JButton("Next");
         private JButton finish = new JButton("Finish");
 
-        public RadioQuestion(String[] options, String question, String ans, Quiz quiz) {
+        RadioQuestion(String[] options, String question, String ans, Quiz quiz) {
             this.quiz = quiz;
             setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
             correctAns = ans;
@@ -152,7 +169,7 @@ public class Quiz extends JFrame {
             //next button
             if (src.equals(next)) {
                 showResult();
-                if (selected == correctAns) {
+                if (selected.equals(correctAns)) {
                     used = true;
                     quiz.next();
                 }
@@ -169,7 +186,10 @@ public class Quiz extends JFrame {
             }
         }
 
-        public void showResult() {
+        /**
+         * Method that shows the user the correctness of his/her answer
+         */
+        private void showResult() {
             String text = selected;
             quiz.setTotal(quiz.getTotal() + 1);
             if (selected.equals(correctAns)) {

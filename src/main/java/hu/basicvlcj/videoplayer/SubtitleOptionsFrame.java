@@ -5,6 +5,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * A class that manages the options for the subtitles. The font size, and the delay can be set here.
+ */
 public class SubtitleOptionsFrame extends JFrame implements ActionListener {
 
     private JButton okButton;

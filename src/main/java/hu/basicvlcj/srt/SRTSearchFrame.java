@@ -26,6 +26,9 @@ public class SRTSearchFrame extends JFrame implements ActionListener {
     private JTextField seasonTextField;
     private JTextField episodeTextField;
 
+    private JLabel seasonLabel;
+    private JLabel episodeLabel;
+
     private JButton okButton;
 
     private JToggleButton isSerial;
@@ -53,16 +56,18 @@ public class SRTSearchFrame extends JFrame implements ActionListener {
         nameTextField = new JTextField("", 20);
         panel.add(nameTextField);
 
-        panel.add(new JLabel("Season:"));
-
+        seasonLabel = new JLabel("Season:");
+        seasonLabel.setVisible(false);
+        panel.add(seasonLabel);
         seasonTextField = new JTextField("", 4);
-        seasonTextField.setEnabled(false);
+        seasonTextField.setVisible(false);
         panel.add(seasonTextField);
 
-        panel.add(new JLabel("Episode:"));
-
+        episodeLabel = new JLabel("Episode:");
+        episodeLabel.setVisible(false);
+        panel.add(episodeLabel);
         episodeTextField = new JTextField("", 4);
-        episodeTextField.setEnabled(false);
+        episodeTextField.setVisible(false);
         panel.add(episodeTextField);
 
         okButton = new JButton("Search");
@@ -77,8 +82,10 @@ public class SRTSearchFrame extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == isSerial) {
-            seasonTextField.setEnabled(!seasonTextField.isEnabled());
-            episodeTextField.setEnabled(!episodeTextField.isEnabled());
+            seasonTextField.setVisible(!seasonTextField.isVisible());
+            seasonLabel.setVisible(!seasonLabel.isVisible());
+            episodeTextField.setVisible(!episodeTextField.isVisible());
+            episodeLabel.setVisible(!episodeLabel.isVisible());
         } else if (e.getSource() == okButton) {
             this.dispose();
             try {
@@ -127,31 +134,6 @@ public class SRTSearchFrame extends JFrame implements ActionListener {
                 osClient.logout();
             } catch (IOException | XmlRpcException ex) {
                 JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "An unexpected error has occurred. Please check your internet connection.", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-
-
-        /**
-         * class to add JButton to the JTable column
-         */
-        class ButtonRenderer extends JButton implements TableCellRenderer {
-
-            public ButtonRenderer() {
-                setOpaque(true);
-            }
-
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object value,
-                                                           boolean isSelected, boolean hasFocus, int row, int column) {
-                if (isSelected) {
-                    setForeground(table.getSelectionForeground());
-                    setBackground(table.getSelectionBackground());
-                } else {
-                    setForeground(table.getForeground());
-                    setBackground(UIManager.getColor("Button.background"));
-                }
-                setText((value == null) ? "" : value.toString());
-                return this;
             }
         }
     }

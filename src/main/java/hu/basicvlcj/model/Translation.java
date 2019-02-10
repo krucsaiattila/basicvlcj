@@ -1,4 +1,4 @@
-package hu.basicvlcj.translate;
+package hu.basicvlcj.model;
 
 import lombok.Data;
 

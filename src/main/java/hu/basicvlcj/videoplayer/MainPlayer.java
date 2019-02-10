@@ -60,10 +60,8 @@ public class MainPlayer implements MouseMotionListener, MouseListener {
         videoSurface = new Canvas();
 
         videoSurface.setBackground(Color.black);
-        videoSurface.setSize(800, 600); // Only for initial layout
+        videoSurface.setSize(800, 600);
 
-        // Since we're mixing lightweight Swing components and heavyweight AWT
-        // components this is probably a good idea
         JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 
         List<String> vlcArgs = new ArrayList<String>();
@@ -75,7 +73,6 @@ public class MainPlayer implements MouseMotionListener, MouseListener {
         vlcArgs.add("dummy");
 
         mainFrame = new JFrame("VLCJ Test Player");
-//        mainFrame.setIconImage(new ImageIcon(getClass().getResource("/icons/vlcj-logo.png")).getImage());
 
         FullScreenStrategy fullScreenStrategy = new Win32FullScreenStrategy(mainFrame);
 
@@ -115,8 +112,7 @@ public class MainPlayer implements MouseMotionListener, MouseListener {
             }
         });
 
-        // Global AWT key handler, you're better off using Swing's InputMap and
-        // ActionMap with a JFrame - that would solve all sorts of focus issues too
+        // Global AWT key handler
         Toolkit.getDefaultToolkit().addAWTEventListener(new AWTEventListener() {
             public void eventDispatched(AWTEvent event) {
                 if(event instanceof KeyEvent) {
@@ -258,7 +254,6 @@ public class MainPlayer implements MouseMotionListener, MouseListener {
                 });
             }
 
-            // Demo the marquee
             mediaPlayer.setMarqueeSize(40);
             mediaPlayer.setMarqueeOpacity(95);
             mediaPlayer.setMarqueeColour(Color.white);
@@ -296,7 +291,10 @@ public class MainPlayer implements MouseMotionListener, MouseListener {
         }
     }
 
-    public void controlFullScreen(){
+    /**
+     * Method that controls the full screen
+     */
+    protected void controlFullScreen(){
         mediaPlayer.toggleFullScreen();
         
         if(mediaPlayer.isFullScreen()){
