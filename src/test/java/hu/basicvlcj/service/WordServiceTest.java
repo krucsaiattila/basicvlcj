@@ -3,7 +3,6 @@ package hu.basicvlcj.service;
 import hu.basicvlcj.model.Word;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 
 import java.sql.*;
@@ -12,13 +11,8 @@ import java.util.List;
 
 public class WordServiceTest {
 
-    private WordService testObj;
+    private WordService testObj = new WordService();
 
-
-    @BeforeEach
-    public void init() {
-        testObj = new WordService();
-    }
 
     @Test
     @DisplayName("Should test creating word")
@@ -28,6 +22,7 @@ public class WordServiceTest {
         w.setForeignWord("Test");
         w.setMeaning("Teszt");
         w.setExample("This is a test.");
+        w.setFilename("test.file");
 
         testObj.create(w);
 

@@ -58,15 +58,16 @@ public class PDFGeneratorService {
      * @throws DocumentException
      */
     public void createDictionary() throws FileNotFoundException, DocumentException {
-        if (PlayerControlsPanel.actualSubtitleFile == null) {
-            JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Subtitle file must be set.", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        Document document = new Document();
-        PdfWriter.getInstance(document, new FileOutputStream(new File(Paths.get(PlayerControlsPanel.actualSubtitleFile.getAbsolutePath()).toAbsolutePath().getParent().toString()
-                + "\\" + PlayerControlsPanel.actualSubtitleFile.getName()
-                + ".pdf")));
 
+        Document document = new Document();
+        if (PlayerControlsPanel.actualSubtitleFile == null) {
+            PdfWriter.getInstance(document, new FileOutputStream(new File(System.getProperty("user.dir")
+                    + "\\.dictionary.pdf")));
+        } else {
+            PdfWriter.getInstance(document, new FileOutputStream(new File(Paths.get(PlayerControlsPanel.actualSubtitleFile.getAbsolutePath()).toAbsolutePath().getParent().toString()
+                    + "\\" + PlayerControlsPanel.actualSubtitleFile.getName()
+                    + ".pdf")));
+        }
         document.open();
 
         PdfPTable table = new PdfPTable(3);
