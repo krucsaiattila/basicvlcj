@@ -1,5 +1,7 @@
 package hu.basicvlcj.translate;
 
+import hu.basicvlcj.service.WordService;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -150,6 +152,7 @@ public class LanguageSelectorFrame extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == okButton){
+            new WordService().deleteAll();
             setLanguages();
             Iterator it = languageAndLanguageCodes.entrySet().iterator();
 

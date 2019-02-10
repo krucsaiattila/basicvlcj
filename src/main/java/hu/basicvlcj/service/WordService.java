@@ -39,6 +39,7 @@ public class WordService {
                 w.setForeignWord(rs.getString(rs.findColumn("FOREIGN_WORD")));
                 w.setMeaning(rs.getString(rs.findColumn("MEANING")));
                 w.setExample(rs.getString(rs.findColumn("EXAMPLE")));
+                w.setFilename(rs.getString(rs.findColumn("FILENAME")));
 
                 wordsList.add(w);
             }
@@ -72,5 +73,27 @@ public class WordService {
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "An unexpected error has occurred", "Error", JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    public List<Word> getAll() {
+        List<Word> wordsList = new ArrayList<>();
+
+        try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres", "postgres", "postgres");
+             Statement stat = connection.createStatement()) {
+            ResultSet rs = stat.executeQuery("SELECT * FROM WORDS");
+            while (rs.next()) {
+                Word w = new Word();
+                w.setId(rs.getString(rs.findColumn("WORDS_ID")));
+                w.setForeignWord(rs.getString(rs.findColumn("FOREIGN_WORD")));
+                w.setMeaning(rs.getString(rs.findColumn("MEANING")));
+                w.setExample(rs.getString(rs.findColumn("EXAMPLE")));
+                w.setFilename(rs.getString(rs.findColumn("FILENAME")));
+
+                wordsList.add(w);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return wordsList;
     }
 }

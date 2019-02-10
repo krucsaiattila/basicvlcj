@@ -1,51 +1,107 @@
 package hu.basicvlcj.service;
 
 import hu.basicvlcj.model.Word;
-import org.junit.Test;
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
-import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 
-public class WordServiceTest {
+import static org.junit.jupiter.api.Assertions.*;
 
-    private WordService testObj = new WordService();
+class WordServiceTest {
+
+    private WordService testObj;
+
+    private Word w;
+    private Word w2;
+    private Word w3;
 
 
-    @Test
-    @DisplayName("Should test creating word")
-    public void should_test_creating_word() {
+    @BeforeEach
+    void init(){
+        testObj = new WordService();
 
-        Word w = new Word();
+        testObj.deleteAll();
+
+        w = new Word();
         w.setForeignWord("Test");
         w.setMeaning("Teszt");
         w.setExample("This is a test.");
         w.setFilename("test.file");
 
+        w2 = new Word();
+        w2.setForeignWord("Test2");
+        w2.setMeaning("Teszt2");
+        w2.setExample("This is another test.");
+        w2.setFilename("test.file");
+
+        w3 = new Word();
+        w3.setForeignWord("Test3");
+        w3.setMeaning("Teszt3");
+        w3.setExample("More tests.");
+        w3.setFilename("another.file");
+    }
+
+    @AfterEach
+    void delete(){
+        testObj.deleteAll();
+    }
+
+    @Test
+    @DisplayName("Should test creating word")
+    void should_test_creating_word() {
         testObj.create(w);
 
-        Assertions.assertEquals(w, getAll());
+        Word createdWord = testObj.getAll().get(0);
+
+        assertEquals(w, createdWord);
     }
 
-    private List<Word> getAll() {
-        List<Word> wordsList = new ArrayList<>();
+    @Test
+    @DisplayName("Should test getting all words by filename.")
+    void should_test_getting_all_words_by_filename(){
+        testObj.create(w);
+        testObj.create(w2);
+        testObj.create(w3);
 
-        try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres", "postgres", "postgres");
-             Statement stat = connection.createStatement()) {
-            ResultSet rs = stat.executeQuery("SELECT * FROM WORDS");
-            while (rs.next()) {
-                Word w = new Word();
-                w.setForeignWord(rs.getString(rs.findColumn("FOREIGN_WORD")));
-                w.setMeaning(rs.getString(rs.findColumn("MEANING")));
-                w.setExample(rs.getString(rs.findColumn("EXAMPLE")));
+        List<Word> wordList = testObj.getAllByFilename("test.file");
 
-                wordsList.add(w);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return wordsList;
+        assertAll(
+                () -> assertEquals(2, wordList.size()),
+                () -> assertTrue(wordList.contains(w)),
+                () -> assertTrue(wordList.contains(w2))
+        );
     }
+
+    @Test
+    @DisplayName("Should test is already saved word method")
+    void should_test_is_already_saved_method(){
+        testObj.create(w);
+
+        assertAll(
+                () -> assertTrue(testObj.isAlreadySaved(w.getForeignWord())),
+                () -> assertFalse(testObj.isAlreadySaved(w2.getForeignWord()))
+        );
+    }
+
+    @Test
+    @DisplayName("Should test get all method")
+    void should_test_get_all_method(){
+        testObj.create(w);
+        testObj.create(w2);
+        testObj.create(w3);
+
+        List<Word> wordList = testObj.getAll();
+
+        assertAll(
+                () -> assertEquals(3, wordList.size()),
+                () -> assertTrue(wordList.contains(w)),
+                () -> assertTrue(wordList.contains(w2)),
+                () -> assertTrue(wordList.contains(w3))
+        );
+    }
+
+
 }
