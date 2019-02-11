@@ -23,8 +23,8 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 
 [Files]
 Source: "C:\Users\Dell\Documents\workspace\VideoLAN\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "C:\Users\Dell\Documents\workspace\basicvlcj\basic-vlcj-1.0.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\Dell\Documents\workspace\basicvlcj\icon.ico"; DestDir: "{app}"; Flags: ignoreversion;
+Source: "C:\Users\Dell\Documents\workspace\basicvlcj\installer-files\basic-vlcj-1.0.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\Dell\Documents\workspace\basicvlcj\installer-files\icon.ico"; DestDir: "{app}"; Flags: ignoreversion;
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
