@@ -18,7 +18,7 @@ public class WordService {
      * @param word the word to be saved
      */
     public void create(Word word) {
-        try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres", "postgres", "postgres");
+        try (Connection connection = DriverManager.getConnection("jdbc:h2:file:~/basicvlcj", "sa", "");
              PreparedStatement stat = connection.prepareStatement("INSERT INTO WORDS (WORDS_ID, FOREIGN_WORD, MEANING, EXAMPLE, FILENAME) VALUES (?,?,?,?,?)")) {
             stat.setString(1, UUID.randomUUID().toString());
             stat.setString(2, word.getForeignWord());
@@ -40,7 +40,7 @@ public class WordService {
     public List<Word> getAllByFilename(String filename){
         List<Word> wordsList = new ArrayList<>();
 
-        try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres", "postgres", "postgres");
+        try (Connection connection = DriverManager.getConnection("jdbc:h2:file:~/basicvlcj", "sa", "");
              Statement stat = connection.createStatement()) {
             ResultSet rs = stat.executeQuery("SELECT * FROM WORDS WHERE FILENAME=" + "'" + filename + "'");
             while (rs.next()) {
@@ -63,7 +63,7 @@ public class WordService {
     public boolean isAlreadySaved(String foreignWord) {
         List<Word> wordsList = new ArrayList<>();
 
-        try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres", "postgres", "postgres");
+        try (Connection connection = DriverManager.getConnection("jdbc:h2:file:~/basicvlcj", "sa", "");
              Statement stat = connection.createStatement()) {
             ResultSet rs = stat.executeQuery("SELECT * FROM WORDS WHERE FOREIGN_WORD=" + "'" + foreignWord + "'");
             while (rs.next()) {
@@ -80,7 +80,7 @@ public class WordService {
      * A method that deletes all records from the database
      */
     public void deleteAll() {
-        try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres", "postgres", "postgres");
+        try (Connection connection = DriverManager.getConnection("jdbc:h2:file:~/basicvlcj", "sa", "");
              Statement stat = connection.createStatement()) {
             stat.executeUpdate("DELETE FROM WORDS");
 
@@ -96,7 +96,7 @@ public class WordService {
     public List<Word> getAll() {
         List<Word> wordsList = new ArrayList<>();
 
-        try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres", "postgres", "postgres");
+        try (Connection connection = DriverManager.getConnection("jdbc:h2:file:~/basicvlcj", "sa", "");
              Statement stat = connection.createStatement()) {
             ResultSet rs = stat.executeQuery("SELECT * FROM WORDS");
             while (rs.next()) {
