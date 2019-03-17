@@ -1,8 +1,9 @@
 *.aux
 *.toc
-*.txt
 *.docx
 *.pdf
 *.gz
 *.log
 *.dvi
+*.iml
+.idea/
