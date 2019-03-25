@@ -1,0 +1,20 @@
+2. Teljes képernyõs mód
+
+Az eddig elkészült alkalmazás már képes videofájlok lejátszására, illetve alapvetõ vezérlési funkciókat is ismer, azonban a szoftver egy fontos része hiányos, tekintve, hogy elsõsorban film lejátszására ajánlott, ami a tényleges teljes képernyõs mód. A jelenlegi verzió már beépítetten támogatja a teljes képernyõs módot, azonban csak olyan módon, hogy a felsõ menüsáv, és az alsó kezelõfelület végig látszódik, idõ elteltével sem tûnik el. Ez bármilyen médiatartalom hosszútávú nézése során rendkívül zavaró, hasznos képernyõfelületet takar el feleslegesen. Ezt úgy orvosoltam, hogy a teljes képernyõ gomb megnyomásakor a videó kitölti a képernyõfelület egészét, eltûntetve ezzel a menüsávot és a kezelõpanelt. Ehhez szükség volt a következõ kódsor beillesztésére az alkalmazás forráskódjába, amely a natív Win32 API-t használja a teljes képernyõs mód elérésére.
+FullScreenStrategy fullScreenStrategy = new Win32FullScreenStrategy(mainFrame);
+Az új funkció alkalmazása azonban egy új problémát vetett fel: ha a képernyõ egésze foglalt, és nem jelenik meg a kezelõsáv, akkor a felhasználó nem tudja a teljes képernyõs módot bezárni. Ennek megoldására egy általánosan használt módszert alkalmaztam. Ha a felhasználó a kurzort a képernyõ alsó felére húzza, a vezérlõpanel megjelenik, és megjelenítve is marad mindaddig, amíg a felhasználó el nem távolítja az alsó területrõl a kurzort. Itt egyszerûen a teljes képernyõs mód gombjára kattintva kiléphetünk abból. Ennek a megvalósításáért, illetve a panel megjelenítésének kezeléséért egy MouseListener felel. Amennyiben az alkalmazás teljes képernyõs módban van, a figyelõ ellenõrzi a kurzor aktuális Y koordináta szerinti pozícióját, és ha ez egy bizonyos szám alatti, vagy feletti, akkor a szerint jeleníti meg, valamint rejti el a vezérlõpanelt, illetve ennek megfelelõen igazítja a vásznat és a feliratokat.
+@Override
+public void mouseMoved(MouseEvent e) {
+   if(mediaPlayer.isFullScreen()) {
+        if (e.getYOnScreen() < 1060 && controlsPanel.isVisible()) {
+            controlsPanel.setVisible(false);
+            ((SubtitleOverlay)(mediaPlayer.getOverlay())).decreaseYOffset(controlsPanel.getHeight());
+        } else if (e.getYOnScreen() >= 1060 && !controlsPanel.isVisible()) {
+            controlsPanel.setVisible(true);
+            ((SubtitleOverlay)(mediaPlayer.getOverlay())).increaseYOffset(controlsPanel.getHeight());
+        }
+    }
+}
+Ezen felül további kényelmi funkciókat is implementáltam a hatékonyabb teljes képernyõs mód kezeléséért. A mód aktiválható a vászonra történõ dupla kattintással, és meg is szüntethetõ ugyanezzel a módszerrel. Ehhez szintén egy MouseListenert vettem segítségül, amely figyeli az egymás utáni kattintások számát, és ha ez az érték kettõvel egyenlõ kettõvel, be- valamint kilép a teljes képernyõs módból. Egy másik megvalósított segédfunkció az Esc gombbal történõ vezérlés. Amennyiben az alkalmazás teljes képernyõn fut, a mód megszakítható az Esc gomb egyszeri megnyomásával. Mindkét lehetõség kényelmesebb, gyorsabb használatot tesz lehetõvé, ezzel is növelve a felhasználói komfortérzetet.
+(fullscreen.jpg)
+(Teljes képernyõs mód az új FullScrennStrategy elõtt)
