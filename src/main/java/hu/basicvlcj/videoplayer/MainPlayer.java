@@ -204,10 +204,10 @@ public class MainPlayer implements MouseMotionListener, MouseListener {
     @Override
     public void mouseMoved(MouseEvent e) {
     	if(mediaPlayer.isFullScreen()) {
-            if (e.getYOnScreen() < 1060 && controlsPanel.isVisible()) {
+            if (e.getYOnScreen() < Toolkit.getDefaultToolkit().getScreenSize().height - 5 && controlsPanel.isVisible()) {
                 controlsPanel.setVisible(false);
                 ((SubtitleOverlay)(mediaPlayer.getOverlay())).decreaseYOffset(controlsPanel.getHeight());
-            } else if (e.getYOnScreen() >= 1060 && !controlsPanel.isVisible()) {
+            } else if (e.getYOnScreen() >= Toolkit.getDefaultToolkit().getScreenSize().height - 5 && !controlsPanel.isVisible()) {
                 controlsPanel.setVisible(true);
                 ((SubtitleOverlay)(mediaPlayer.getOverlay())).increaseYOffset(controlsPanel.getHeight());
             }
