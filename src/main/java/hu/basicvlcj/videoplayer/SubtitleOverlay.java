@@ -2,15 +2,15 @@ package hu.basicvlcj.videoplayer;
 
 import com.sun.awt.AWTUtilities;
 import com.sun.jna.platform.WindowUtils;
+import hu.basicvlcj.model.DetectedLanguageResponse;
+import hu.basicvlcj.model.TranslateResponse;
 import hu.basicvlcj.model.Word;
 import hu.basicvlcj.popupwindow.PopupMessageBuilder;
 import hu.basicvlcj.service.TranslatorService;
 import hu.basicvlcj.service.WordService;
 import hu.basicvlcj.srt.SRT;
 import hu.basicvlcj.srt.SRTInfo;
-import hu.basicvlcj.model.DetectedLanguageResponse;
 import hu.basicvlcj.translate.LanguageSelectorFrame;
-import hu.basicvlcj.model.TranslateResponse;
 import lombok.Setter;
 import org.apache.logging.log4j.util.Strings;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
@@ -254,9 +254,9 @@ public class SubtitleOverlay extends Window implements MouseListener {
 					if (!new WordService().isAlreadySaved(word.getForeignWord())) {
 						wordsService.create(word);
 					}
-					new PopupMessageBuilder().at(new Point((int) e.getPoint().getX(), e.getY()-100)).withDelay(3000).withMessage(word.getMeaning()).show();
+					new PopupMessageBuilder().at(new Point((int) e.getPoint().getX(), e.getY() - (int) (Toolkit.getDefaultToolkit().getScreenSize().height * 0.1))).withDelay(3000).withMessage(word.getMeaning()).show();
 				} else {
-					new PopupMessageBuilder().at(new Point((int) e.getPoint().getX(), e.getY()-100)).withDelay(3000).withMessage("No translations available").show();
+					new PopupMessageBuilder().at(new Point((int) e.getPoint().getX(), e.getY() - (int) (Toolkit.getDefaultToolkit().getScreenSize().height * 0.1))).withDelay(3000).withMessage("No translations available").show();
 				}
 
 			} catch (Exception ex){
