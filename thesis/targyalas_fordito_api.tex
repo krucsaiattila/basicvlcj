@@ -1,19 +1,18 @@
 \section{Feliratok fordítása}
 
-Miután már lehetőségünk van arra, hogy a felhasználó szavakra történő kattintásait nyomon kövessük, a következő lépés ezek lefordítása a kívánt nyelvre. Ehhez szükséges egy fordító \textit{API}-ra, azaz egy alkalmazásprogramozási felületre, amely segítségével megvalósíthatóvá válik a szavak anyanyelvre való átültetése. Ehhez a \textit{Microsoft Translate API} interfészre esett a választásom, mivel az összes alternatíva közül ez az egyetlen ingyenes. Az \textit{API} működésének lényege, hogy a videólejátszó alkalmazás interneten keresztül elküldi a megadott címre a fordítani kívánt szót, majd innen egy \textit{JSON} formátumú válasz érkezik, ami tartalmazza az összes információt, -beleértve a fordításokat is- amelyet a szerver képes volt előállítani az elküldött információk alapján.
+Miután már lehetőségünk van arra, hogy a felhasználó szavakra történő kattintásait nyomon kövessük, a következő lépés ezek lefordítása a kívánt nyelvre. Ehhez szükségesünk van egy fordító \textit{API}-ra, azaz egy alkalmazásprogramozási felületre, amely segítségével megvalósíthatóvá válik a szavak anyanyelvre való átültetése. Ehhez a \textit{Microsoft Translate API} interfészre esett a választásom, mivel az összes alternatíva közül ez az egyetlen ingyenes, bizonyos karakterszám eléréséig. Az \textit{API} működésének lényege, hogy a videólejátszó alkalmazás interneten keresztül elküldi a megadott címre a fordítani kívánt szót, majd innen egy \textit{JSON} formátumú válasz érkezik, ami tartalmazza az összes információt, -beleértve a fordításokat is- amelyet a szerver képes volt előállítani az elküldött információk alapján.
 A szolgáltatás többféle fordítási módot is támogat:
 \begin{itemize}[noitemsep]
-\item fordítás
-\item transzliteráció
-\item szófordítás
+\item fordítás, azaz több mondatos szövegek fordítása
+\item transzliteráció, azaz nem latin betűkészletet használó nyelvek átbetűzése
+\item szófordítás, azaz egyes szavak szótárazása
 \end{itemize}
 Az alkalmazás szempontjából az utóbbi lesz megfelelő, mivel ez a funkció lehetővé teszi egy szóhoz tartozó több fordítás megjelenítését is, amely a felhasználó szókincsének bővítésére rendkívül hasznos.
 
 \subsection{Szerverrel történő kommunikáció}
-A szolgáltatás használatához regisztrálást követően igényelnem kellett egy egyedi kulcsot, amely a fiókom azonosításra szolgál. A \textit{TranslateService.java} osztály valósítja meg az információáramlást szerver és kliens között. Mivel az \textit{API} egy másik URL-en képes nyelvfelismerésre is, ezért az osztályba két publikus metódus került. Egy, amely a kiválasztott nyelv esetén hívódik, egy másik pedig amikor a nyelvfelismerés aktív. 
+A szolgáltatás használatához regisztrálást követően igényelnem kellett egy egyedi kulcsot, amely a fiókom azonosítását szolgálja. A \textit{TranslateService.java} osztály valósítja meg az információáramlást szerver és kliens között. Mivel az \textit{API} egy másik URL-en képes nyelvfelismerésre is, ezért az osztályba két publikus metódus került. Egy, amely a kiválasztott nyelv esetén hívódik, egy másik pedig amikor a nyelvfelismerés aktív (\ref{lst:adott_nyelv}). 
 
-Kiválasztott nyelv esetén alkalmazott függvény:
-\begin{verbatim}
+\begin{lstlisting}[caption=Függvény, amely kiválasztott nyelv esetén hívódik, language=java, label={lst:adott_nyelv}]
 public TranslateResponse[] PostWithGivenLanguages(
     String from,
     String to,
@@ -28,7 +27,7 @@ public TranslateResponse[] PostWithGivenLanguages(
             givenLanguageUrl).
         body().string(), TranslateResponse[].class);
     }
-\end{verbatim}
+\end{lstlisting}
 Ebben az esetben a metódus három paraméterrel rendelkezik:
 \begin{itemize}[noitemsep]
 \item String from, a forrásnyelv
@@ -37,8 +36,7 @@ Ebben az esetben a metódus három paraméterrel rendelkezik:
 \end{itemize}
 Működése közben előállít egy URL-t, amely tartalmazza a fent említett forrás- és célnyelvet, valamint a felhasználáshoz szükséges kulcsot, beégetett módon. A \textit{createResponse} metódus felelős a szerverrel történő kommunikációért, beleértve a kérés elküldését, illetve a válasz átadását is. A kapott \textit{JSON} formátumú szöveget \textit{Gson} segítségével deszerializálja, így jön létre egy \textit{TranslateResponse} tömb, amely a szervertől kapott választ hivatott reprezentálni. Ez tartalmazza az elérhető fordításokból alkotott listát, mellyel tovább dolgozhatunk.
 
-Nyelvdetektálás esetén alkalmazott függvény:
-\begin{verbatim}
+\begin{lstlisting}[caption=Függvény, amely detektált nyelv esetén hívódik, language=java, label={lst:felismert_nyelv}]
 public DetectedLanguageResponse[] PostWithLanguageDetection(
     String string) throws IOException {
         Gson gson = new GsonBuilder()
@@ -51,7 +49,7 @@ public DetectedLanguageResponse[] PostWithLanguageDetection(
                 .body().string(),
             DetectedLanguageResponse[].class);
     }
-\end{verbatim}
-Az előző metódushoz képest annyi különbség fedezhető fel, hogy a paraméterlistában csak a lefordítandó szöveg szerepel, és a POST kérés másik címre fut be. Ezen kívül a feldolgozott \textit{JSON} egy \textit{DetectedTranslateResponse}-okat tartalmazó tömbbe kerül. 
+\end{lstlisting}
+A \ref{lst:felismert_nyelv} ábrán látható a detektált nyelv esetén meghívott függvény. Az előző metódushoz képest annyi különbség fedezhető fel, hogy a paraméterlistában csak a lefordítandó szöveg szerepel, és a POST kérés másik címre fut be. Ezen kívül a feldolgozott \textit{JSON} egy \textit{DetectedTranslateResponse}-okat tartalmazó tömbbe kerül. 
 
 \subsection{Fordítások megjelenítése}
