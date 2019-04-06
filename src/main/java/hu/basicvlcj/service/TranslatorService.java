@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.*;
 import hu.basicvlcj.model.DetectedLanguageResponse;
+import hu.basicvlcj.model.OtherLanguagesResponse;
 import hu.basicvlcj.model.TranslateResponse;
 
 import java.io.IOException;
@@ -15,6 +16,8 @@ public class TranslatorService {
 
     private final String subscriptionKey = "69be7b5e75ff473492695708eebc332d";
     private String givenLanguageUrl = "https://api.cognitive.microsofttranslator.com/dictionary/lookup?api-version=3.0&from=";
+    private String otherLanguagesUrl = "https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&to=";
+
 
     private OkHttpClient client = new OkHttpClient();
 
@@ -26,7 +29,7 @@ public class TranslatorService {
      * @return a {@link hu.basicvlcj.model.TranslateResponse} array that contains the APIs responses
      * @throws IOException
      */
-    public TranslateResponse[] PostWithGivenLanguages(String from, String to, String string) throws IOException {
+    public TranslateResponse[] postWithGivenLanguages(String from, String to, String string) throws IOException {
         givenLanguageUrl += from + "&to=";
         givenLanguageUrl += to;
 
@@ -40,10 +43,17 @@ public class TranslatorService {
      * @return a {@link hu.basicvlcj.model.DetectedLanguageResponse} array that contains the APIs responses
      * @throws IOException
      */
-    public DetectedLanguageResponse[] PostWithLanguageDetection(String string) throws IOException {
+    public DetectedLanguageResponse[] postWithLanguageDetection(String string) throws IOException {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         return gson.fromJson(createResoponse(string, "https://api.cognitive.microsofttranslator.com/detect?api-version=3.0")
                 .body().string(), DetectedLanguageResponse[].class);
+    }
+
+    public OtherLanguagesResponse[] postWithOtherLanguages(String to, String string) throws IOException {
+        otherLanguagesUrl += to;
+
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        return gson.fromJson(createResoponse(string, otherLanguagesUrl).body().string(), OtherLanguagesResponse[].class);
     }
 
     private Response createResoponse(String string, String url) throws IOException{

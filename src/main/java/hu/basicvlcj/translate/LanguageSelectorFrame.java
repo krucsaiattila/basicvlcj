@@ -180,27 +180,12 @@ public class LanguageSelectorFrame extends JFrame implements ActionListener {
                 }
             }
             this.dispose();
-        } else if (e.getSource() == fromComboBox) {
-            enableOrDisableComboBoxes();
-        } else if (e.getSource() == toComboBox) {
-            enableOrDisableComboBoxes();
         } else if (e.getSource() == detectLanguageRadioButton) {
             languageDetection = !languageDetection;
             fromComboBox.setEnabled(!languageDetection);
             toComboBox.setEnabled(!languageDetection);
             if (languageDetection) {
                 toComboBox.setSelectedItem("English");
-            }
-        }
-    }
-
-    private void enableOrDisableComboBoxes(){
-        if (!languageDetection) {
-            if (!toComboBox.getSelectedItem().equals("English")) {
-                fromComboBox.setSelectedItem("English");
-                fromComboBox.setEnabled(false);
-            } else {
-                fromComboBox.setEnabled(true);
             }
         }
     }

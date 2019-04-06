@@ -17,4 +17,8 @@ public class Translation {
     private double confidence;
 
     private String prefixWord;
+
+    public Translation(String text) {
+        normalizedTarget = text;
+    }
 }

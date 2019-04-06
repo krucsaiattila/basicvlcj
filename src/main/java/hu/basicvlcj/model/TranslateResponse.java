@@ -2,6 +2,7 @@ package hu.basicvlcj.model;
 
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,4 +16,11 @@ public class TranslateResponse {
     private String displaySource;
 
     private List<Translation> translations;
+
+    public TranslateResponse(String from, String text) {
+        normalizedSource = from;
+
+        translations = new ArrayList<>();
+        translations.add(new Translation(text));
+    }
 }

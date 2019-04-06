@@ -3,6 +3,7 @@ package hu.basicvlcj.videoplayer;
 import com.sun.awt.AWTUtilities;
 import com.sun.jna.platform.WindowUtils;
 import hu.basicvlcj.model.DetectedLanguageResponse;
+import hu.basicvlcj.model.OtherLanguagesResponse;
 import hu.basicvlcj.model.TranslateResponse;
 import hu.basicvlcj.model.Word;
 import hu.basicvlcj.popupwindow.PopupMessageBuilder;
@@ -222,15 +223,37 @@ public class SubtitleOverlay extends Window implements MouseListener {
 
 				TranslateResponse[] response;
 				DetectedLanguageResponse[] detectedLanguageResponse;
+				OtherLanguagesResponse[] otherLanguagesResponses;
 				//language detection
 				if (LanguageSelectorFrame.currentFromLanguage.equals("")) {
-                    detectedLanguageResponse = translatorService.PostWithLanguageDetection(parsedWord);
-					//now we look up in the dictionary
-                    response = translatorService.PostWithGivenLanguages(detectedLanguageResponse[0].getLanguage(), LanguageSelectorFrame.currentToLanguage, parsedWord);
+					//get the language
+					detectedLanguageResponse = translatorService.postWithLanguageDetection(parsedWord);
 
+					//if the from and to are the same
+					if (detectedLanguageResponse[0].getLanguage().equals(LanguageSelectorFrame.currentToLanguage)) {
+						JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Detected language is the same as language to translate. Please set the proper languages.", "Error", JOptionPane.ERROR_MESSAGE);
+						return;
+						//if from or to is english, then we can provide more accurate translation
+					} else if (detectedLanguageResponse[0].getLanguage().equals("en") || LanguageSelectorFrame.currentToLanguage.equals("en")) {
+						//now we look up in the dictionary
+						response = translatorService.postWithGivenLanguages(detectedLanguageResponse[0].getLanguage(), LanguageSelectorFrame.currentToLanguage, parsedWord);
+						//else we just use the regular text translation
+					} else {
+						otherLanguagesResponses = translatorService.postWithOtherLanguages(LanguageSelectorFrame.currentToLanguage, parsedWord);
+						response = new TranslateResponse[1];
+						response[0] = new TranslateResponse(parsedWord, otherLanguagesResponses[0].getTranslations().get(0).getText());
+					}
 				//chosen languages
+					//if from or to is english
 				} else {
-                    response = translatorService.PostWithGivenLanguages(LanguageSelectorFrame.currentFromLanguage, LanguageSelectorFrame.currentToLanguage, parsedWord);
+					if (LanguageSelectorFrame.currentToLanguage.equals("en") || LanguageSelectorFrame.currentFromLanguage.equals("en")) {
+						response = translatorService.postWithGivenLanguages(LanguageSelectorFrame.currentFromLanguage, LanguageSelectorFrame.currentToLanguage, parsedWord);
+						//else we use the regular translation
+					} else {
+						otherLanguagesResponses = translatorService.postWithOtherLanguages(LanguageSelectorFrame.currentToLanguage, parsedWord);
+						response = new TranslateResponse[1];
+						response[0] = new TranslateResponse(parsedWord, otherLanguagesResponses[0].getTranslations().get(0).getText());
+					}
 				}
 				Word word = new Word();
 
@@ -260,6 +283,7 @@ public class SubtitleOverlay extends Window implements MouseListener {
 				}
 
 			} catch (Exception ex){
+				ex.printStackTrace();
                 JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "An unexpected error has occurred", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
