@@ -72,7 +72,7 @@ public class MainPlayer implements MouseMotionListener, MouseListener {
         vlcArgs.add("--intf");
         vlcArgs.add("dummy");
 
-        mainFrame = new JFrame("VLCJ Test Player");
+        mainFrame = new JFrame("VLC Language Learner");
 
         FullScreenStrategy fullScreenStrategy = new Win32FullScreenStrategy(mainFrame);
 

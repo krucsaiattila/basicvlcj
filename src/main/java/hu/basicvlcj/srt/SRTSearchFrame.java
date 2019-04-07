@@ -97,10 +97,10 @@ public class SRTSearchFrame extends JFrame implements ActionListener {
                 List<SubtitleInfo> subtitles;
                 //if it is a serial
                 if (isSerial.isSelected()) {
-                    subtitles = osClient.searchSubtitles(LanguageSelectorFrame.currentToLanguage = System.getProperty("user.language"), nameTextField.getText(), seasonTextField.getText(), episodeTextField.getText()).stream().filter(sub -> sub.getFormat().equals("srt")).collect(Collectors.toList());
+                    subtitles = osClient.searchSubtitles(System.getProperty("user.language"), nameTextField.getText(), seasonTextField.getText(), episodeTextField.getText()).stream().filter(sub -> sub.getFormat().equals("srt")).collect(Collectors.toList());
                     //if it is a movie
                 } else {
-                    subtitles = osClient.searchSubtitles(LanguageSelectorFrame.currentToLanguage = System.getProperty("user.language"), nameTextField.getText(), "0", "0").stream().filter(sub -> sub.getFormat().equals("srt")).collect(Collectors.toList());
+                    subtitles = osClient.searchSubtitles(System.getProperty("user.language"), nameTextField.getText(), "0", "0").stream().filter(sub -> sub.getFormat().equals("srt")).collect(Collectors.toList());
                 }
                 if (!subtitles.isEmpty()) {
                     JFrame availableSubtitlesFrame = new JFrame("Available subtitles online");

@@ -34,10 +34,9 @@ public class Quiz extends JFrame {
     private RadioQuestion[] questions;
 
     public Quiz() {
-        super("Corevia");
+        super("Quiz");
         setResizable(true);
         setSize(650, 300);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         wordService = new WordService();
         words = wordService.getAllByFilename(PlayerControlsPanel.actualSubtitleFile.getName());
@@ -109,8 +108,8 @@ public class Quiz extends JFrame {
     private void showSummary() {
         JOptionPane.showMessageDialog(null, "That's it! Here is your summary:" +
                 "\nYou answered " + wrongs + " questions wrong" +
-                "\nYou answered " + (total - wrongs) + " right" +
-                "\nGiving a correct answer chance: \t\t" + (int) (((float) (total - wrongs) / total) * 100) + "%"
+                "\nYou answered " + (total - wrongs) + " questions right" +
+                "\nChance of giving a correct answer: \t\t" + (int) (((float) (total - wrongs) / total) * 100) + "%"
         );
         this.dispose();
     }
@@ -195,7 +194,7 @@ public class Quiz extends JFrame {
             if (selected.equals(correctAns)) {
                 JOptionPane.showMessageDialog(null, text + " is correct!\nGood Job!");
             } else {
-                quiz.setTotal(quiz.getTotal() + 1);
+                wrongs++;
                 JOptionPane.showMessageDialog(null, text + " is wrong.\nTry again!");
             }
         }

@@ -64,11 +64,15 @@ public class SubtitleOptionsFrame extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == okButton) {
             try {
-                SubtitleOverlay.fontSize = Integer.parseInt(fontSizeTextField.getText());
+                if(Integer.parseInt(fontSizeTextField.getText()) <= 0){
+                    JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Only numbers that are greater than zero can be set!", "Error", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    SubtitleOverlay.fontSize = Integer.parseInt(fontSizeTextField.getText());
+                }
                 SubtitleOverlay.subtitleDelay = Long.parseLong(delayTextField.getText());
                 this.dispose();
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Only numbers can be set!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(JOptionPane.getRootFrame(), "Only whole numbers can be set!", "Error", JOptionPane.ERROR_MESSAGE);
             }
         } else if (e.getSource() == cancelButton) {
             dispose();

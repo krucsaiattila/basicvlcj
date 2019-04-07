@@ -184,9 +184,6 @@ public class LanguageSelectorFrame extends JFrame implements ActionListener {
             languageDetection = !languageDetection;
             fromComboBox.setEnabled(!languageDetection);
             toComboBox.setEnabled(!languageDetection);
-            if (languageDetection) {
-                toComboBox.setSelectedItem("English");
-            }
         }
     }
 }
