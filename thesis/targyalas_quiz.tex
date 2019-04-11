@@ -1,6 +1,7 @@
 \section{Tudásellenőrző kvíz generálása ismeretlen szavakból}
 
-A funkció célja, hogy egy film végignézése után a felhasználó játékos módon ellenőrizni tudja, hogy az általa ismeretlen szavak mennyire rögzültek filmnézés alatt. Erre egy kvíz tökéletes megoldás, hiszen így gyorsan, könnyedén, alternatívák közül választva érhet el a felhasználó egy adott pontszámot, amely a filmnézés közben szerzett nyelvtudását tükrözi. Egy ilyen tudásellenőrző még jobban ösztönözheti kitöltőjét az ismeretlen szavak elsajátítására, hiszen a kvízben elért magas pontszám sikerélménnyel párosulhat.
+A funkció célja, hogy egy film végignézése után a felhasználó játékos módon ellenőrizni tudja, hogy az általa ismeretlen szavak mennyire rögzültek filmnézés alatt.
+Erre egy kvíz tökéletes megoldás, hiszen így gyorsan, könnyedén, alternatívák közül választva érhet el a felhasználó egy adott pontszámot, amely a filmnézés közben szerzett nyelvtudását tükrözi. Egy ilyen tudásellenőrző még jobban ösztönözheti kitöltőjét az ismeretlen szavak elsajátítására, hiszen a kvízben elért magas pontszám sikerélménnyel párosulhat.
 
 \begin{figure}
   \includegraphics[width=\linewidth]{images/quiz.jpg}
@@ -27,7 +28,7 @@ questions = new RadioQuestion[words.size()];
 
  A kérdések a \textit{Quiz.java} osztály konstruktorában kerülnek előállításra, és egy tömbben tárolódnak. Először az adatbázisban tárolt szavakat fájlnév szerint lekérdezi, amiket egy listába ment el. Majd ugyanilyen mérettel létrejön egy tömb a kérdés objektumoknak. A függvény végig iterál a tömbön, és minden helyre egy kérdés objektumot hoz létre az alábbi paraméterekkel: Az első paraméter a \textit{generateRandomAnswers} függvény, ami egy \textit{String} tömbbel tér vissza, mely három véletlenszerű alternatívát és egy megoldást tartalmaz. A következő paraméterek az eredeti szó jelentése(i), az eredeti, idegen szó, valamint maga az \textit{Quiz} objektum (\ref{lst:questions}-es kódrészlet). Az alkalmazás ettől kezdve váltogatja a kérdéseket, amikor pedig mindre válaszoltunk egy összesítő ablakot jelenít meg, amelyben láthatjuk hányszor válaszolunk helyesen, és hányszor helytelenül (\ref{fig:summary}-es ábra).
  
-\begin{figure}
+\begin{figure}[!h]
 \centering
   \includegraphics[width=.5\linewidth]{images/summary.jpg}
   \caption{Pontösszesítő ablak}

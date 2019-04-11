@@ -37,8 +37,9 @@ Ebben az esetben a metódus három paraméterrel rendelkezik:
 \end{itemize}
 Működése közben előállít egy URL-t, amely tartalmazza a fent említett forrás- és célnyelvet, valamint a felhasználáshoz szükséges kulcsot, beégetett módon. A \textit{createResponse} metódus felelős a szerverrel történő kommunikációért, beleértve a kérés elküldését, illetve a válasz átadását is. A kapott \textit{JSON} formátumú szöveget \textit{Gson} segítségével deszerializálja, így jön létre egy \textit{TranslateResponse} tömb, amely a szervertől kapott választ hivatott reprezentálni. Ez tartalmazza az elérhető fordításokból alkotott listát, mellyel tovább dolgozhatunk.
 
+\todo{caption}
 %caption=Függvény, amely detektált nyelv esetén hívódik, 
-\begin{lstlisting}[language=java, label={lst:felismert_nyelv}]
+\begin{lstlisting}[language=java, label={lst:felismert_nyelv}, showstringspaces=false]
 public DetectedLanguageResponse[] PostWithLanguageDetection(
     String string) throws IOException {
         Gson gson = new GsonBuilder()
@@ -47,7 +48,7 @@ public DetectedLanguageResponse[] PostWithLanguageDetection(
         return gson.fromJson(createResoponse
             (string,
             "https://api.cognitive.microsofttranslator.com
-            /detect?api-version=3.0")
+             /detect?api-version=3.0")
                 .body().string(),
             DetectedLanguageResponse[].class);
     }

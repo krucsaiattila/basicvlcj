@@ -4,15 +4,17 @@ A feliratok megjelenítése az alkalmazás magját alkotó funkciók közé soro
 \subsection{Feliratfájlok beolvasása}
 Ahhoz, hogy a szoftver képes legyen feliratokat megjeleníteni, tudnia kell azokat a felhasználó számítógépéről felolvasni, kezelni. Az alkalmazás jelenleg csak a \textit{SubRip}, azaz \textit{.srt} kiterjesztésű fájlok kezelését támogatja, mivel az említett formátum a legelterjedtebb típusok közé sorolható. Előállításuk, interneten való fellelésük rendkívül könnyű, gyors, emiatt nagy népszerűségnek örvend mind a felirat elkészítői, mind a felirat használói közt. Strukturális felépítése egyszerű, a \ref{lst:srt} ábrán látható.
 
+
+\todo[inline]{Legyen lst listing ez is}
 \begin{verbatim}
 1
 00:00:01,100 --> 00:00:01,500
-Első sor
-Második sor
+First line
+Second line
  
 2 
 00:00:25,0004 --> 00:00:30,200 
-További szöveg...
+Additional text...
 \end{verbatim}
 
 A fájl blokkokra osztható, amelyek egy-egy megjelenítendő feliratrészletnek felelnek meg. Minden ilyen rész első sorában egy sorszám található. Ezek a részletek azonosítására szolgálnak. A következő sorban a kezdő-, illetve a végidőpontok helyezkednek el, közöttük egy szigorúan „-->” alakú nyíllal, előtte és utána szóközökkel határolva. Az időpontokat konvenció szerint óra:perc:másodperc,ezredmásodperc formátumban kötelező megadni. Ezután a vászonra kirajzolandó sorok találhatóak. Itt fontos megemlíteni, hogy a fájl érzékeny a sortörésekre, hiszen ezek alapján tesz különbséget a más-más sorokba kerülő szövegek között. A szöveg sora(i) után legalább egy üres sornak kell szerepelnie. Amennyiben ez hiányzik, a következő blokk az előző szövegrészébe kerül.
