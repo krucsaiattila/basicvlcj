@@ -1,6 +1,6 @@
 \section{Nyelvek kiválasztása}
 
-\begin{figure}
+\begin{figure}[h!]
   \includegraphics[width=\linewidth]{images/language_selection.jpg}
   \caption{A nyelvválasztó kezelőfelülete}
   \label{fig:language_selection}
@@ -10,7 +10,8 @@ Miután az alkalmazás képes kezelni a fordításokat, a következő lépés a 
 
 Mivel az \textit{API} nyelvkódokat használ a nyelvek azonosítására, például \textit{"hu"}, viszont a felhasználó számára megjelenített nyelvek teljes értékű szavak, például \textit{"Hungarian"}, szükség volt ezek összekapcsolására. A nyelv-nyelvkód párokat egy \textit{HashMap}-ben tároljuk kulcs-érték páronként, amelyeket minden egyes nyelvállításkor megvizsgálunk, és  a kulcs alapján az alkalmazás beállítja az annak megfelelő kódot. (\ref{lst:kulcs_ertek}).
 
-\begin{lstlisting}[caption=Aktuális nyelvek beállítása, language=java, label={lst:kulcs_érték}]
+\begin{spacing}{1.25}
+\begin{lstlisting}[caption=Aktuális nyelvek beállítása, language=java, label={lst:kulcs_ertek}]
 while (it.hasNext()) {
     Map.Entry pair = (Map.Entry) it.next();
     if (pair.getKey().equals(fromComboBox.getSelectedItem())) {
@@ -22,5 +23,6 @@ while (it.hasNext()) {
     it.remove();
 }
 \end{lstlisting}
+\end{spacing}
 
 Mint említettem, alapesetben a nyelvdetektálás mindig aktív. Ez azt jelenti, hogy a felhasználónak nem kell a nyelvválasztással foglalkoznia, elvégzi ezt helyette az alkalmazás. Emellett ilyen esetben a célnyelv, azaz az a nyelv amire a fordítás történik, mindig a felhasználó számítógépének rendszernyelve, amelyet az alkalmazás a \textit{user.language} változóból olvas ki. Így a a felhasználó számára legkényelmesebben, legkevesebb konfigurációval, mindemellett nagy pontossággal valószínűsíthető, hogy a fordítás mely két nyelv között fog végbemenni, hiszen az \textit{API} nyelvfelismerő funkciója rendkívül megbízható, illetve legtöbbször az operációs rendszer nyelve megegyezik a felszanálója anyanyelvével.

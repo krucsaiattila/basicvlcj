@@ -13,7 +13,12 @@ Az alkalmazás szempontjából az utóbbi lesz megfelelő, mivel ez a funkció l
 A szolgáltatás használatához regisztrálást követően igényelnem kellett egy egyedi kulcsot, amely a fiókom azonosítását szolgálja. A \textit{TranslateService.java} osztály valósítja meg az információáramlást szerver és kliens között. Mivel az \textit{API} egy másik URL-en képes nyelvfelismerésre is, ezért az osztályba két publikus metódus került. Egy, amely a kiválasztott nyelv esetén hívódik, egy másik pedig amikor a nyelvfelismerés aktív (\ref{lst:adott_nyelv}). 
 
 %caption=Függvény, amely kiválasztott nyelv esetén hívódik, 
-\begin{lstlisting}[language=java, label={lst:adott_nyelv}]
+\begin{spacing}{1.25}
+\begin{lstlisting}[
+language=java, 
+label={lst:adott_nyelv},
+caption={Függvény, amely kiválasztott nyelv esetén hívódik}]
+
 public TranslateResponse[] PostWithGivenLanguages(
     String from,
     String to,
@@ -29,6 +34,8 @@ public TranslateResponse[] PostWithGivenLanguages(
         body().string(), TranslateResponse[].class);
     }
 \end{lstlisting}
+\end{spacing}
+
 Ebben az esetben a metódus három paraméterrel rendelkezik:
 \begin{itemize}[noitemsep]
 \item String from, a forrásnyelv
@@ -37,9 +44,8 @@ Ebben az esetben a metódus három paraméterrel rendelkezik:
 \end{itemize}
 Működése közben előállít egy URL-t, amely tartalmazza a fent említett forrás- és célnyelvet, valamint a felhasználáshoz szükséges kulcsot, beégetett módon. A \textit{createResponse} metódus felelős a szerverrel történő kommunikációért, beleértve a kérés elküldését, illetve a válasz átadását is. A kapott \textit{JSON} formátumú szöveget \textit{Gson} segítségével deszerializálja, így jön létre egy \textit{TranslateResponse} tömb, amely a szervertől kapott választ hivatott reprezentálni. Ez tartalmazza az elérhető fordításokból alkotott listát, mellyel tovább dolgozhatunk.
 
-\todo{caption}
-%caption=Függvény, amely detektált nyelv esetén hívódik, 
-\begin{lstlisting}[language=java, label={lst:felismert_nyelv}, showstringspaces=false]
+\begin{spacing}{1.25}
+\begin{lstlisting}[language=java, label={lst:felismert_nyelv}, caption={Függvény, amely detektált nyelv esetén hívódik}, showstringspaces=false]
 public DetectedLanguageResponse[] PostWithLanguageDetection(
     String string) throws IOException {
         Gson gson = new GsonBuilder()
@@ -53,6 +59,8 @@ public DetectedLanguageResponse[] PostWithLanguageDetection(
             DetectedLanguageResponse[].class);
     }
 \end{lstlisting}
+\end{spacing}
+
 A \ref{lst:felismert_nyelv} ábrán látható a detektált nyelv esetén meghívott függvény. Az előző metódushoz képest annyi különbség fedezhető fel, hogy a paraméterlistában csak a lefordítandó szöveg szerepel, és a POST kérés másik címre fut be. Ezen kívül a feldolgozott \textit{JSON} egy \textit{DetectedTranslateResponse}-okat tartalmazó tömbbe kerül. 
 
 \subsection{Fordítások megjelenítése}
