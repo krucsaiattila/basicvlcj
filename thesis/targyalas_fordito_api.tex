@@ -10,7 +10,7 @@ A szolgáltatás többféle fordítási módot is támogat:
 Az alkalmazás szempontjából az utóbbi lesz megfelelő, mivel ez a funkció lehetővé teszi egy szóhoz tartozó több fordítás megjelenítését is, amely a felhasználó szókincsének bővítésére rendkívül hasznos.
 
 \subsection{Szerverrel történő kommunikáció}
-A szolgáltatás használatához regisztrálást követően igényelnem kellett egy egyedi kulcsot, amely a fiókom azonosítását szolgálja. A \textit{TranslateService.java} osztály valósítja meg az információáramlást szerver és kliens között. Mivel az \textit{API} egy másik URL-en képes nyelvfelismerésre is, ezért az osztályba két publikus metódus került. Egy, amely a kiválasztott nyelv esetén hívódik, egy másik pedig amikor a nyelvfelismerés aktív (\ref{lst:adott_nyelv}). 
+A szolgáltatás használatához regisztrálást követően igényelnem kellett egy egyedi kulcsot, amely a fiókom azonosítását szolgálja. A \textit{TranslateService.java} osztály valósítja meg az információáramlást szerver és kliens között. Mivel az \textit{API} egy másik URL-en képes nyelvfelismerésre is, ezért az osztályba két publikus metódus került. Egy, amely a kiválasztott nyelv esetén hívódik, egy másik pedig amikor a nyelvfelismerés aktív. Működése a \ref{lst:adott_nyelv}-es kódrészleten látható. 
 
 %caption=Függvény, amely kiválasztott nyelv esetén hívódik, 
 \begin{spacing}{1.25}

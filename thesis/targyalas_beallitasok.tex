@@ -20,7 +20,7 @@ public void update(boolean force) {
 }
 \end{lstlisting}
 
-Késleltetés módosítása esetén a függvény törzsében (\ref{lst:delay}), amely a feliratok képernyőn történő frissítését végzi, az aktuális időhöz hozzáadjuk a beállított késleltetést. Így a felirat időzítése a kívánt értékkel elcsúszik. Az eltolás mindkét irányban lehetséges, attól függően, hogy pozitív, vagy negatív értékkel rendelkezik a \textit{subtitleDelay}. Csak egész számok adhatóak meg, alapértelmezett értéke nulla.
+A \ref{lst:delay}-ös kódrészletben látható módon késleltetés módosítása esetén a függvény törzsében, amely a feliratok képernyőn történő frissítését végzi, az aktuális időhöz hozzáadjuk a beállított késleltetést. Így a felirat időzítése a kívánt értékkel elcsúszik. Az eltolás mindkét irányban lehetséges, attól függően, hogy pozitív, vagy negatív értékkel rendelkezik a \textit{subtitleDelay}. Csak egész számok adhatóak meg, alapértelmezett értéke nulla.
 
 \begin{spacing}{1.25}
 \begin{lstlisting}[caption=Feliratok mérete, label={lst:fontsize}, language=java]
@@ -32,6 +32,6 @@ public void paint(Graphics g) {
 \end{lstlisting}
 \end{spacing}
 
-Betűméret módosítása esetén a feliratokat kirajzoló metódus törzsében történik a módosítás, hiszen a betűméretet értékét egy statikus változóból olvassa ki az alkalmazás (\ref{lst:fontsize}). A megjelenített szöveg így a megadott méretűre változik. Fontos megemlíteni, hogy csak egész, nullánál nagyobb betűméret adható meg, egyéb esetben az alkalmazás hibaüzenetet jelenít meg. Alapértelmezett értéke 20, amely ablakos megjelenítésnél elegendő lehet, azonban teljes képernyős módban legtöbbször kevés, így ajánlott ennek módosítása. A feliratok méretének állítására gyorsbillentyűk is használhatók. Nagyításra a \textit{Ctrl +}, kicsinyítésre pedig a \textit{Ctrl -} billentyűkombinációk alkalmasak.
+Betűméret módosítása esetén a feliratokat kirajzoló metódus törzsében történik a módosítás, hiszen a betűméretet értékét egy statikus változóból olvassa ki az alkalmazás a \ref{lst:fontsize}-os kódrészleten látható módon. A megjelenített szöveg így a megadott méretűre változik. Fontos megemlíteni, hogy csak egész, nullánál nagyobb betűméret adható meg, egyéb esetben az alkalmazás hibaüzenetet jelenít meg. Alapértelmezett értéke 20, amely ablakos megjelenítésnél elegendő lehet, azonban teljes képernyős módban legtöbbször kevés, így ajánlott ennek módosítása. A feliratok méretének állítására gyorsbillentyűk is használhatók. Nagyításra a \textit{Ctrl +}, kicsinyítésre pedig a \textit{Ctrl -} billentyűkombinációk alkalmasak.
 
 A két segédfunkcióval a feliratozás pontossága minden esetben biztosítható, hiszen, ha a feliratfájl esetlegesen téves időpillanatokat, vagy a médiafájl csúszást tartalmaz, akkor ezek orvosolhatóak a bemutatott funkcióval. Emellett pedig a felirat láthatósága is mindig biztosítható a betűméret módosításával.

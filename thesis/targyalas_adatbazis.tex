@@ -27,11 +27,11 @@ Miután a tábla elkészült, lehetőség nyílik azon a szükséges adatbázis 
 \item \textbf{deleteAll}, törli az összes rekordot az adatbázisból
 \item \textbf{getAll}, visszetér az összes adatbázisban található rekorddal
 \end{itemize}
-Egy metódus felépítése a következő: először létrehoz egy \textit{Connection} kapcsolatot, amely az adatbázisfájl, és a hozzá tartozó azonosítók (felhasználónév, jelszó) ismeretében lehetséges. Majd ezen végrehajt egy műveletet, melyet \textit{SQL} nyelven kell megadnunk a \textit{jdbc}-nek. Amennyiben a művelet végrehajtása közben kivétel dobódott, az alkalmazás egy \textit{JOptionPane} hibapanelt jelenít meg a képernyőn, a felhasználó tudtára adva, hogy váratlan hiba keletkezett a folyamat közben (\ref{lst:deleteAll}).
+Egy metódus felépítése a \ref{lst:deleteAll}-es kódrészleten látható, és a következőképpen működik: először létrehoz egy \textit{Connection} kapcsolatot, amely az adatbázisfájl, és a hozzá tartozó azonosítók (felhasználónév, jelszó) ismeretében lehetséges. Majd ezen végrehajt egy műveletet, melyet \textit{SQL} nyelven kell megadnunk a \textit{jdbc}-nek. Amennyiben a művelet végrehajtása közben kivétel dobódott, az alkalmazás egy \textit{JOptionPane} hibapanelt jelenít meg a képernyőn, a felhasználó tudtára adva, hogy váratlan hiba keletkezett a folyamat közben.
 
 
 \begin{spacing}{1.25}
-\begin{lstlisting}[caption=Implementált deleteAll metódus, language=java, label={lst:deleteAll}]
+\begin{lstlisting}[caption=Implementált deleteAll metódus, language=java, label={lst:deleteAll}, ]
 public void deleteAll() {
     try (Connection connection = DriverManager
     .getConnection("jdbc:h2:file:~/basicvlcj", "sa", "");
