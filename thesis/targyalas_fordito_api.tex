@@ -61,7 +61,7 @@ public DetectedLanguageResponse[] PostWithLanguageDetection(
 \end{lstlisting}
 \end{spacing}
 
-A \ref{lst:felismert_nyelv} ábrán látható a detektált nyelv esetén meghívott függvény. Az előző metódushoz képest annyi különbség fedezhető fel, hogy a paraméterlistában csak a lefordítandó szöveg szerepel, és a POST kérés másik címre fut be. Ezen kívül a feldolgozott \textit{JSON} egy \textit{DetectedTranslateResponse}-okat tartalmazó tömbbe kerül. 
+A \ref{lst:felismert_nyelv}-as ábrán látható a detektált nyelv esetén meghívott függvény. Az előző metódushoz képest annyi különbség fedezhető fel, hogy a paraméterlistában csak a lefordítandó szöveg szerepel, és a POST kérés másik címre fut be. Ezen kívül a feldolgozott \textit{JSON} egy \textit{DetectedTranslateResponse}-okat tartalmazó tömbbe kerül. 
 
 \subsection{Fordítások megjelenítése}
 \begin{figure}
@@ -70,7 +70,7 @@ A \ref{lst:felismert_nyelv} ábrán látható a detektált nyelv esetén meghív
   \label{fig:popup}
 \end{figure}
 
-A fordítások és annak egyéb adatai deszerializáció után kinyerhetők egy-egy objektumtömbből. A következő feladat ezek felhasználóbarát megjelenítése volt. További kritérium, hogy komponens nem szakíthatja meg a videó folytonosságát, illetve nem zavarhatja a nézőt a jelenléte. Mindezek miatt egy felugró ablakot készítettem, amely mondatelemre történő kattintás esetén megjelenik, majd néhány másodperc elteltével eltűnik a képernyőről. Az ablak tartalmazza az aktuális szó összes elérhető fordítását, ha pedig ilyen nem található a \textit{No translations available} felirat jelenik meg. Ennek a megjelenítéséért a \textit{PopupMessageBuilder.java} osztály felelős. Maga az ablak egy \textit{JPanel}-ből származik, melyet a \textit{paintComponent} metódus segítségével rajzol az alkalmazás a képernyőre. A builder osztályt olyan módon készítettem el, hogy segítségével könnyedén, és kényelmesen lehessen felugró ablakokat megjeleníteni a felhasználói a felületen. A \ref{lst:popup}-os ábrán látható módon, pozíció, időtartam, üzenet megadásával jeleníthető meg a komponens. Jelen esetben a kattintás helye felett, három másodperces időtartammal jelenik meg az üzenet, amely a fordítást tartalmazza.
+A fordítások és annak egyéb adatai deszerializáció után kinyerhetők egy-egy objektumtömbből. A következő feladat ezek felhasználóbarát megjelenítése volt. További kritérium, hogy komponens nem szakíthatja meg a videó folytonosságát, illetve nem zavarhatja a nézőt a jelenléte. Mindezek miatt egy felugró ablakot készítettem, amely mondatelemre történő kattintás esetén megjelenik, majd néhány másodperc elteltével eltűnik a képernyőről. Az ablak tartalmazza az aktuális szó összes elérhető fordítását, ha pedig ilyen nem található a \textit{No translations available} felirat jelenik meg. Ennek a megjelenítéséért a \textit{PopupMessageBuilder.java} osztály felelős. Maga az ablak egy \textit{JPanel}-ből származik, melyet a \textit{paintComponent} metódus segítségével rajzol az alkalmazás a képernyőre. A builder osztályt olyan módon készítettem el, hogy segítségével könnyedén, és kényelmesen lehessen felugró ablakokat megjeleníteni a felhasználói a felületen. A \ref{lst:popup}-es kódrészleten látható módon, pozíció, időtartam, üzenet megadásával jeleníthető meg a komponens. Jelen esetben a kattintás helye felett, három másodperces időtartammal jelenik meg az üzenet, amely a fordítást tartalmazza.
 
 \begin{lstlisting}[caption=A \textit{PopupMessageBuilder} használata, label={lst:popup}, language=java]
 new PopupMessageBuilder()
@@ -88,4 +88,4 @@ new PopupMessageBuilder()
     .show();
 \end{lstlisting}
 
-A felugró ablak megjelenését filmnézés közben a \ref{fig:popup}-os számú ábrán láthatjuk.
+A felugró ablak megjelenését filmnézés közben a \ref{fig:popup}-es számú ábrán láthatjuk.
