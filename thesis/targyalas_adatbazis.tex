@@ -1,16 +1,24 @@
 \section{Adatbázis műveletek}
 
+\begin{table}[h!]
+\centering
+\begin{tabular}{ |p{1cm}|p{3cm}p{3cm}|  }
+\hline
+\multicolumn{3}{|c|}{WORDS} \\
+\hline
+ PK & words\_id & VARCHAR(36) \\
+ \hline
+  & foreign\_word & VARCHAR(50) \\
+  & meaning & VARCHAR(100) \\
+  & example & VARCHAR(300) \\
+  & filename & VARCHAR(100) \\
+\hline
+\end{tabular}
+\caption{Adatbázis struktúra}
+\label{table:adatbazis}
+\end{table}
 
-\begin{spacing}{1.25}
-\begin{figure}[h!]
-  \includegraphics[width=.5\linewidth]{images/entity.jpg}
-  \centering
-  \caption{Adatbázis struktúra}
-  \label{fig:entity}
-\end{figure}
-\end{spacing}\todo[inline]{ehelyett az elmosódott táblázat helyett én inkább csinálnék egy latex-es table-t, de rád bízom. Ha átszerkeszted akkor táblázatként is hivatkozz rá!}
-
-Ahhoz, hogy az alkalmazás további funkcióit, beleértve a pdf fájl, illetve tudásellenőrző teszt generálását implementálni tudjuk szükségünk van egy adatbázisra, amely az eddig elvégzett fordításokat tartalmazza kiegészítő adatokkal. Ehhez egy igazán könnyűsúlyú, egyszerűen telepíthető és használható adatbázist, a \textit{H2} adatbázist vettem segítségül. Használatához csupán a megfelelő függőséget kellett az alkalmazás \textit{.pom} állományába importálnom. Az adatbázist \textit{liquibase} segítségével hoztam létre. Az ehhez szükséges \textit{changelog.xml} mellett létrehoztam egy \textit{create-table.xml} fájlt, amely alapján a \textit{liquibase} megalkotja az adatbázistáblát, amely a \ref{fig:entity} számú ábrán látható. Ez a leírófájl 
+Ahhoz, hogy az alkalmazás további funkcióit, beleértve a pdf fájl, illetve tudásellenőrző teszt generálását implementálni tudjuk szükségünk van egy adatbázisra, amely az eddig elvégzett fordításokat tartalmazza kiegészítő adatokkal. Ehhez egy igazán könnyűsúlyú, egyszerűen telepíthető és használható adatbázist, a \textit{H2} adatbázist vettem segítségül. Használatához csupán a megfelelő függőséget kellett az alkalmazás \textit{.pom} állományába importálnom. Az adatbázist \textit{liquibase} segítségével hoztam létre. Az ehhez szükséges \textit{changelog.xml} mellett létrehoztam egy \textit{create-table.xml} fájlt, amely alapján a \textit{liquibase} megalkotja az adatbázistáblát, mely struktúrája a \ref{table:adatbazis}-es számú táblázatban látható. Ez a leírófájl 
 úgynevezett \textit{changeSet}-eket tartalmaz, melyek adatbázis műveleteket írnak le, és a \textit{liquibase} sorban, egymás után hajt végre ezeket az adatbázison. Az első létrehozza a táblát, ha még az nem volt előtte létrehozva, a második pedig hozzáadja az elsődleges kulcsot, amely jelen esetben a \textit{words\_id}. Ez egy egyedi azonosító, melynek ismeretében pontosan meghatározható bármely rekord az adatbázisban. Formátuma \textit{UUID}, ami egy 36 karakter hosszú egyedi karakterlánc. A tábla további elemei:
 \begin{itemize}
 \item \textbf{ foreign\_word}, a mondatelem, amelyre a felhasználó kattintott, legfeljebb 50 karakter hosszú
