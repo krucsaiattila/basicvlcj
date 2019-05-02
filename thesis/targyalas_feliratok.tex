@@ -2,7 +2,8 @@
 A feliratok megjelenítése az alkalmazás magját alkotó funkciók közé sorolható, hiszen enélkül maga a nyelvtanulási folyamat nehezen lenne megvalósítható. Tehát e lehetőség használhatósága kulcsfontosságú a projekt tekintetében. Ennek a működését, implementálását bemutató fejezet logikailag két részre osztható: az \textit{.srt} kiterjesztésű fájlok beolvasása, kezelése, illetve a feliratok képernyőre történő kirajzolása.
 
 \subsection{Feliratfájlok beolvasása}
-Ahhoz, hogy a szoftver képes legyen feliratokat megjeleníteni, tudnia kell azokat a felhasználó számítógépéről felolvasni, kezelni. Az alkalmazás jelenleg csak a \textit{SubRip}, azaz \textit{.srt} kiterjesztésű fájlok kezelését támogatja, mivel az említett formátum a legelterjedtebb típusok közé sorolható. Előállításuk, interneten való fellelésük rendkívül könnyű, gyors, emiatt nagy népszerűségnek örvend mind a felirat elkészítői, mind a felirat használói közt. Strukturális felépítése egyszerű, a \ref{lst:srt-es} kódrészleten látható.
+Ahhoz, hogy a szoftver képes legyen feliratokat megjeleníteni, tudnia kell azokat a felhasználó számítógépéről felolvasni, kezelni. Az alkalmazás jelenleg csak a \textit{SubRip}, azaz \textit{.srt} kiterjesztésű fájlok kezelését támogatja, mivel az említett formátum a legelterjedtebb típusok közé sorolható. Előállításuk, interneten való fellelésük rendkívül könnyű, gyors, emiatt nagy népszerűségnek örvend mind a felirat elkészítői, mind a felirat használói közt.
+Strukturális felépítése egyszerű, a \ref{lst:srt}-es kódrészleten látható.
 
 \begin{spacing}{1.25}
 \begin{lstlisting}[language=java, caption=A .srt kiterjesztésű fájlok felépítése, label={lst:srt}]
