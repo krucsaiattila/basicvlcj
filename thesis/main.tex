@@ -116,36 +116,38 @@ Szeged
 \end{center}
 
 
+
 %A tartalomjegyzék:
 \tableofcontents
 
 
-\include{feladatkiiras}
-\include{tartalmi_osszefoglalo}
-\include{bevezetes}
-\include{hatter}
-\include{architekturalis_attekintes}
-\include{targyalas_videoalapfunkciok}
-\include{targyalas_teljes_kepernyos_mod}
-\include{targyalas_tallozo}
-\include{targyalas_feliratok}
-\include{targyalas_fordito_api}
-\include{targyalas_nyelvvalaszto}
-\include{targyalas_onlinefeliartok}
-\include{targyalas_adatbazis}
-\include{targyalas_pdf}
-\include{targyalas_quiz}
-\include{targyalas_beallitasok}
-\include{targyalas_telepito}
-\include{befejezes}
-\include{nyilatkozat}
-\include{koszonet}
-
-
-
+\input{feladatkiiras}
+\input{tartalmi_osszefoglalo}
+\input{bevezetes}
+\input{hatter}
+\input{architekturalis_attekintes}
+\input{targyalas_videoalapfunkciok}
+\input{targyalas_teljes_kepernyos_mod}
+\input{targyalas_tallozo}
+\input{targyalas_feliratok}
+\input{targyalas_fordito_api}
+\input{targyalas_nyelvvalaszto}
+\input{targyalas_onlinefeliartok}
+\input{targyalas_adatbazis}
+\input{targyalas_pdf}
+\input{targyalas_quiz}
+\input{targyalas_beallitasok}
+\input{targyalas_telepito}
+\input{befejezes}
 %Irodalomjegyzek
-\bibliography{mybib}
 \bibliographystyle{plain}
+\addcontentsline{toc}{section}{Irodalomjegyzék}
+\bibliography{mybib}
+\input{nyilatkozat}
+\input{koszonet}
+
+
+
 
 
 
